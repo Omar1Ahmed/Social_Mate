@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:social_media/Responsive/ui_component/info_widget.dart';
 
@@ -51,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           // Here we take the value from the MyHomePage object that was created by
           // the App.build method, and use it to set our appbar title.
-          title: Text(widget.title,style: TextStyle(fontSize: deviceInfo.screenWidth*0.03),),
+          title: Text(widget.title, style: TextStyle(fontSize: deviceInfo.screenWidth * 0.03, fontFamily: 'Inter')),
         ),
         body: Center(
           // Center is a layout widget. It takes a single child and positions it

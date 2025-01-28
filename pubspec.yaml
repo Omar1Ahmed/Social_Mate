@@ -75,10 +75,10 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: SFPRODISPLAY
+    - family: Inter
       fonts:
-        - asset: assets\fonts\SFPRODISPLAYBLACKITALIC.OTF
-        - asset: assets/fonts/SFPRODISPLAYBOLD.OTF
+        - asset: assets/fonts/Inter-Italic-VariableFont_opsz,wght.ttf
+        - asset: assets/fonts/Inter-VariableFont_opsz,wght.ttf
   #         style: italic
   #   - family: Trajan Pro
   #     fonts:
