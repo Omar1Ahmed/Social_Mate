@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import '../../../../../theming/colors.dart';
 import '../../../../../theming/styles.dart';
 
+// ignore: must_be_immutable
 class CreatePostWidget extends StatelessWidget {
-  const CreatePostWidget({super.key, this.deviceInfo});
-
+  CreatePostWidget({super.key, this.deviceInfo});
+  TextEditingController titleTextEditingController = TextEditingController();
+  TextEditingController contentTextEditingController = TextEditingController();
   // ignore: prefer_typing_uninitialized_variables
   final deviceInfo;
   @override
@@ -33,7 +35,11 @@ class CreatePostWidget extends StatelessWidget {
             SizedBox(
               height: deviceInfo.localHeight * 0.046,
               width: deviceInfo.localWidth * 0.8,
-              child: TextField(cursorColor: ColorsManager.primaryColor, decoration: TextFieldStyles.inputDecorationTitleFiled),
+              child: TextField(
+                controller: titleTextEditingController,
+                cursorColor: ColorsManager.primaryColor,
+                decoration: TextFieldStyles.inputDecorationTitleFiled,
+              ),
             ),
             SizedBox(height: deviceInfo.localHeight * 0.01),
             Text(
@@ -45,6 +51,7 @@ class CreatePostWidget extends StatelessWidget {
               height: deviceInfo.localHeight * 0.08,
               width: deviceInfo.localWidth * 0.8,
               child: TextField(
+                controller: contentTextEditingController,
                 maxLines: 5,
                 cursorColor: ColorsManager.primaryColor,
                 decoration: TextFieldStyles.inputDecorationContentFiled,

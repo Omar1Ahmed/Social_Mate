@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:social_media/MVVM/Views/Screens/homePage_screen/widgets/create_post_widget.dart';
-import 'package:social_media/Responsive/Models/device_info.dart';
 import 'package:social_media/Responsive/ui_component/info_widget.dart';
 import 'package:social_media/theming/colors.dart';
 
