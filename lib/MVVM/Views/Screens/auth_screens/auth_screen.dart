@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_media/MVVM/View_Models/auth_cubit.dart';
-import 'package:social_media/MVVM/View_Models/auth_state.dart';
-import 'package:social_media/MVVM/Views/Screens/sign_in_screen.dart';
-import 'package:social_media/MVVM/Views/Screens/sign_up_screen.dart';
+import 'package:social_media/MVVM/View_Models/auth_cubit/auth_cubit.dart';
+import 'package:social_media/MVVM/View_Models/auth_cubit/auth_state.dart';
+import 'package:social_media/MVVM/Views/Screens/auth_screens/sign_in_screen.dart';
+import 'package:social_media/MVVM/Views/Screens/auth_screens/sign_up_screen.dart';
 
 
 

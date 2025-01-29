@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_media/MVVM/Views/ReusableWidgets/on_board_model.dart';
+import 'package:social_media/MVVM/Views/Screens/onBoarding_screen/widgets/on_board_model.dart';
 
-import '../../View_Models/on_boarding_cubit.dart';
-import '../ReusableWidgets/on_board_content.dart';
-import '../ReusableWidgets/page_indicator.dart';
-import '../ReusableWidgets/bottom_buttons.dart';
-import '../../../theming/colors.dart';
+import '../../../View_Models/onBoarding_cubit/on_boarding_cubit.dart';
+import 'on_board_content.dart';
+import 'widgets/page_indicator.dart';
+import '../auth_screens/widgets/bottom_buttons.dart';
+import '../../../../theming/colors.dart';
 import 'package:social_media/Responsive/ui_component/info_widget.dart';
 
 class OnboardingScreen extends StatelessWidget {

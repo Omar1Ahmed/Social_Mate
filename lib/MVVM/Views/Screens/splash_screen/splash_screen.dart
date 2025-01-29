@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:social_media/MVVM/Views/Screens/onboarding_screen.dart';
+import 'package:social_media/MVVM/Views/Screens/onBoarding_screen/onboarding_screen.dart';
 import 'package:social_media/Responsive/ui_component/info_widget.dart';
+import 'package:social_media/helper/extantions.dart';
+import 'package:social_media/routing/routs.dart';
 
-import '../../../theming/colors.dart';
+import '../../../../theming/colors.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -16,23 +18,18 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(const Duration(seconds: 3), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => OnboardingScreen()),
-      );
+      context.pushReplacementNamed(Routes.onBordingScreen);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return InfoWidget(builder: (context,info)
-    {
+    return InfoWidget(builder: (context, info) {
       return Scaffold(
-
         body: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors:ColorsManager.gradientColors,
+              colors: ColorsManager.gradientColors,
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -46,17 +43,15 @@ class _SplashScreenState extends State<SplashScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 90),
                   //assets/images/fullLogo.png
-                  child: Image.asset("assets/images/fullLogo.png",),
+                  child: Image.asset(
+                    "assets/images/fullLogo.png",
+                  ),
                 ),
               ],
             ),
           ),
         ),
       );
-     });
+    });
   }
 }
-
-
-
-

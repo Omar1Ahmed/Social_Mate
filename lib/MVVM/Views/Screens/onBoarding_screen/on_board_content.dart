@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:social_media/MVVM/Views/ReusableWidgets/on_board_model.dart';
+import 'package:social_media/MVVM/Views/Screens/onBoarding_screen/widgets/on_board_model.dart';
 
 class OnboardContent extends StatelessWidget {
   final OnboardModel page;

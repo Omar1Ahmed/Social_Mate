@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_media/MVVM/View_Models/password_visiblity_bloc.dart';
+import 'package:social_media/MVVM/View_Models/password_cubit/password_visiblity_bloc.dart';
 
 
 class CustomTextField extends StatelessWidget {

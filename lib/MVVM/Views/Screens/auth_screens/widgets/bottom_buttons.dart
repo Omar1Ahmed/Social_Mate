@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:social_media/MVVM/Views/Screens/auth_screen.dart';
-import 'package:social_media/MVVM/Views/Screens/sign_in_screen.dart';
+import 'package:social_media/MVVM/Views/Screens/auth_screens/auth_screen.dart';
 import 'package:social_media/theming/colors.dart';
 
 class BottomButtons extends StatelessWidget {
