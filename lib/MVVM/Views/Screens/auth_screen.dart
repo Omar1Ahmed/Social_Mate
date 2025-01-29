@@ -1,0 +1,78 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_media/MVVM/View_Models/auth_cubit.dart';
+import 'package:social_media/MVVM/View_Models/auth_state.dart';
+import 'package:social_media/MVVM/Views/Screens/sign_in_screen.dart';
+import 'package:social_media/MVVM/Views/Screens/sign_up_screen.dart';
+
+
+
+class AuthScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => AuthCubit(),
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            children: [
+              const SizedBox(height: 80),
+              Center(
+                child: Image.asset("assets/images/fullLogo.png", height: 60),
+              ),
+              const SizedBox(height: 10),
+              BlocBuilder<AuthCubit, AuthState>(
+                builder: (context, state) {
+                  return AuthHeader(
+                    isSignIn: state is AuthSignInState,
+                    onToggle: () => context.read<AuthCubit>().toggleAuth(),
+                  );
+                },
+              ),
+              const SizedBox(height: 20),
+              BlocBuilder<AuthCubit, AuthState>(
+                builder: (context, state) {
+                  return state is AuthSignInState ? SignInForm() : SignUpForm();
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+class AuthHeader extends StatelessWidget {
+  final bool isSignIn;
+  final VoidCallback onToggle;
+
+  const AuthHeader({super.key, required this.isSignIn, required this.onToggle});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        GestureDetector(
+          onTap: isSignIn ? null : onToggle,
+          child: Text(
+            "Sign in",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: isSignIn ? Colors.black : Colors.grey),
+          ),
+        ),
+        const SizedBox(width: 20),
+        GestureDetector(
+          onTap: isSignIn ? onToggle : null,
+          child: Text(
+            "Sign up",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: isSignIn ? Colors.grey : Colors.black),
+          ),
+        ),
+      ],
+    );
+  }
+}
