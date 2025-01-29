@@ -70,9 +70,9 @@ class HomepageView extends StatelessWidget {
                     ),
                     SizedBox(height: deviceInfo.localHeight * 0.02),
                     ListView.builder(
-                      shrinkWrap: true, 
-                      physics: const NeverScrollableScrollPhysics(), 
-                      itemCount: 5, 
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: 5,
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: EdgeInsets.only(bottom: deviceInfo.localHeight * 0.02),

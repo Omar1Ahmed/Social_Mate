@@ -15,7 +15,7 @@ class CreatePostWidget extends StatelessWidget {
       height: deviceInfo.localHeight * 0.33,
       decoration: BoxDecoration(
         // ignore: deprecated_member_use
-        color: ColorsManager.primaryColor.withOpacity(0.2),
+        color: ColorsManager.primaryColor.withOpacity(0.1),
         // ignore: deprecated_member_use
         border: Border.all(color: ColorsManager.primaryColor.withOpacity(1)),
         borderRadius: BorderRadius.circular(10),
