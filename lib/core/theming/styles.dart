@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:social_media/theming/colors.dart';
+
+import 'colors.dart';
 
 class TextStyles {
   static const inter18Bold = TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'Inter');

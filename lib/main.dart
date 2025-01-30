@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:social_media/routing/appRouting.dart';
 
-import 'routing/routs.dart';
+import 'core/routing/appRouting.dart';
+
 
 void main() {
   runApp(MyApp(
