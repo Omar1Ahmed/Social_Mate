@@ -9,7 +9,7 @@ class AppRouts {
     switch (settings.name) {
       case Routes.splashScreen:
         return MaterialPageRoute(builder: (context) => SplashScreen());
-
+          
       case Routes.onBordingScreen:
         return MaterialPageRoute(builder: (context) => OnboardingScreen());
       case Routes.loginScreen:
