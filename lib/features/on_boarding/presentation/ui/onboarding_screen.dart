@@ -57,6 +57,7 @@ class OnboardingScreen extends StatelessWidget {
               ),
             ),
             child: Column(
+
               children: [
                 Expanded(
                   flex: 3,
@@ -79,9 +80,10 @@ class OnboardingScreen extends StatelessWidget {
                     return PageIndicator(currentPage: currentPage, pageCount: pages.length);
                   },
                 ),
-                const SizedBox(height: 30),
+                 SizedBox(height: info.screenHeight * 0.03),
                 BottomButtons(onNext: () => _nextPage(context)),
-                const SizedBox(height: 40),
+                 SizedBox(height: info.screenHeight * 0.03),
+                
               ],
             ),
           ),

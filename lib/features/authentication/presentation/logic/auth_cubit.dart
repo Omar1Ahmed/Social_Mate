@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
-  AuthCubit() : super(AuthSignInState());
+  AuthCubit() : super(AuthSignUpState());
 
   void toggleAuth() {
     if (state is AuthSignInState) {

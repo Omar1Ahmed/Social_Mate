@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
 
 import 'widgets/on_board_model.dart';
 
@@ -9,30 +10,29 @@ class OnboardContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
+    return InfoWidget(builder: (context, info) {
+      return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(page.image, height: 250),
-          const SizedBox(height: 20),
+          Image.asset(page.image, height: info.screenHeight * 0.4),
+
           Text(
             page.title,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 22,
+            style: TextStyle(
+              fontSize: info.screenWidth * 0.05,
               fontWeight: FontWeight.bold,
               color: Colors.black,
             ),
           ),
-          const SizedBox(height: 10),
+
           Text(
             page.description,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
+            style: TextStyle(fontSize: info.screenWidth * 0.04, color: Colors.grey.shade600),
           ),
         ],
-      ),
-    );
+      );
+    });
   }
 }
