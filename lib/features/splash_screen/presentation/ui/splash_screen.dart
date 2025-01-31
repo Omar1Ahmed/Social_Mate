@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
-import '../../../../../core/routing/routs.dart';
+import '../../../../core/routing/routs.dart';
 
 class SplashScreen extends StatelessWidget {
   @override

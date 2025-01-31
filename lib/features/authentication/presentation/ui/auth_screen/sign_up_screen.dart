@@ -3,8 +3,8 @@ import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
 import 'package:social_media/core/helper/extantions.dart';
 import 'package:social_media/core/routing/routs.dart';
 import 'package:social_media/core/theming/colors.dart';
-import 'widgets/customButton.dart';
-import 'widgets/customTextField.dart';
+import '../widgets/customButton.dart';
+import '../widgets/customTextField.dart';
 
 class SignUpForm extends StatelessWidget {
   @override

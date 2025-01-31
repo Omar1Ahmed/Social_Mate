@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_media/features/authentication/presentation/example_screen/logic/password_visiblity_bloc.dart';
+import 'package:social_media/features/authentication/presentation/logic/password_visiblity_bloc.dart';
 
 class CustomTextField extends StatelessWidget {
   final String label;

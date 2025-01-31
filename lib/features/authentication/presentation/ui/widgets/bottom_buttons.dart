@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social_media/core/theming/colors.dart';
-import 'package:social_media/features/authentication/presentation/example_screen/ui/auth_screen.dart';
-
+import 'package:social_media/features/authentication/presentation/ui/auth_screen/auth_screen.dart';
 class BottomButtons extends StatelessWidget {
   final VoidCallback onNext;
 

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_media/features/authentication/presentation/example_screen/logic/auth_cubit.dart';
-import 'package:social_media/features/authentication/presentation/example_screen/logic/auth_state.dart';
-import 'package:social_media/features/authentication/presentation/example_screen/ui/sign_in_screen.dart';
-import 'package:social_media/features/authentication/presentation/example_screen/ui/sign_up_screen.dart';
+import 'package:social_media/features/authentication/presentation/logic/auth_cubit.dart';
+import 'package:social_media/features/authentication/presentation/logic/auth_state.dart';
+
+import 'sign_in_screen.dart';
+import 'sign_up_screen.dart';
 
 
 class AuthScreen extends StatelessWidget {
