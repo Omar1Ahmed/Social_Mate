@@ -20,7 +20,7 @@ class CreatePostWidget extends StatelessWidget {
         color: ColorsManager.primaryColor.withOpacity(0.1),
         // ignore: deprecated_member_use
         border: Border.all(color: ColorsManager.primaryColor.withOpacity(1)),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(deviceInfo.localWidth * 0.05),
       ),
       child: Padding(
         padding: EdgeInsets.all(deviceInfo.localWidth * 0.05),
