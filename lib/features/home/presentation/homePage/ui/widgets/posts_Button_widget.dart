@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social_media/core/Responsive/Models/device_info.dart';
 
-
 class PostsButtonWidget extends StatelessWidget {
   const PostsButtonWidget({super.key, required this.buttonColor, required this.text, required this.deviceInfo, required this.onPressed});
   final Color buttonColor;

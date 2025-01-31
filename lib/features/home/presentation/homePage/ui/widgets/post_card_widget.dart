@@ -13,7 +13,7 @@ class PostCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: deviceInfo.localWidth * 0.9,
-      height: deviceInfo.localHeight * 0.4,
+      height: deviceInfo.localHeight * 0.3,
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(color: Colors.black.withOpacity(0.5)),
@@ -45,6 +45,9 @@ class PostCardWidget extends StatelessWidget {
             SizedBox(height: deviceInfo.localHeight * 0.02),
             Text(
               'Loram ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+              softWrap: true,
               style: TextStyles.inter18Regular.copyWith(fontSize: deviceInfo.screenWidth * 0.04),
             ),
             const Spacer(),

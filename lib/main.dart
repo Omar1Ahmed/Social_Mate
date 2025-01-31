@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:social_media/core/routing/routs.dart';
 
 import 'core/routing/appRouting.dart';
-import 'core/routing/routs.dart';
 
 void main() {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp(
     appRouter: AppRouts(),
   ));

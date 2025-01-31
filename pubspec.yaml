@@ -43,20 +43,6 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^5.0.0
 
-flutter_native_splash:
-  color: "#ffffff"
-  background_image: assets/images/splash_screen.png
-  image: assets/images/Title_img.png
-  branding: assets/images/Logo.png
-  android: true
-  ios: true
-  web: false
-  android_12:
-    image: assets/images/Title_img.png
-    icon_background_color: "#ffffff"
-    branding: assets/images/Logo.png
-    web: false
-
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
