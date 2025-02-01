@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/routing/routs.dart';
 
 import 'core/routing/appRouting.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MyApp(
-    appRouter: AppRouts(),
+  runApp(MultiBlocProvider(
+    providers: getBlocProviders(),
+    child: MyApp(
+      appRouter: AppRouts(),
+    ),
   ));
 }
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
 import 'package:social_media/core/theming/styles.dart';
 import 'package:social_media/features/filtering/presentation/widgets/filtering_tile.dart';
-import 'package:social_media/features/home/presentation/homePage/ui/widgets/post_card_widget.dart';
+import 'package:social_media/features/posts/presentation/homePage/ui/widgets/post_card_widget.dart';
 
 class FilteringScreen extends StatefulWidget {
   const FilteringScreen({super.key});

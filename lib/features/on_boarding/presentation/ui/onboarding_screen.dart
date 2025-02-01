@@ -29,6 +29,8 @@ class OnboardingScreen extends StatelessWidget {
     ),
   ];
 
+  OnboardingScreen({super.key});
+
   void _nextPage(BuildContext context) {
     final currentIndex = context.read<OnboardingCubit>().state;
     if (currentIndex < pages.length - 1) {

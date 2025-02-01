@@ -12,6 +12,8 @@ import 'sign_up_screen.dart';
 
 
 class AuthScreen extends StatelessWidget {
+  const AuthScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -54,7 +56,7 @@ class AuthScreen extends StatelessWidget {
                   ),
 
 
-                  Container(
+                  SizedBox(
                     width: info.screenWidth * 0.6,
                     child: CustomButton(
                         text: "Join Now",

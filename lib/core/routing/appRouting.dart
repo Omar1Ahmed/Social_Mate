@@ -5,7 +5,7 @@ import 'package:social_media/features/filtering/presentation/pages/filtering_scr
 import 'package:social_media/features/on_boarding/presentation/ui/onboarding_screen.dart';
 import 'package:social_media/features/splash_screen/presentation/ui/splash_screen.dart';
 
-import '../../features/home/presentation/homePage/ui/homePage_view.dart';
+import '../../features/posts/presentation/homePage/ui/homePage_view.dart';
 
 class AppRouts {
   Route? generateRoute(RouteSettings settings) {
