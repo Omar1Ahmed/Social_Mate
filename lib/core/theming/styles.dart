@@ -8,6 +8,25 @@ class TextStyles {
   static const inter14RegularBlue = TextStyle(fontSize: 14, fontWeight: FontWeight.normal, fontFamily: 'Inter', color: ColorsManager.primaryColor);
   static const inter18Regular = TextStyle(fontSize: 18, fontWeight: FontWeight.normal, fontFamily: 'Inter', color: Colors.black);
   static const inter18BoldBlack = TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'Inter', color: Colors.black);
+  // created by Marwan
+  // static const inter18BoldBlack = TextStyle(
+  //   fontSize: 18,
+  //   fontWeight: FontWeight.w900,
+  //   fontFamily: 'Inter',
+  //   color: Colors.black,
+  // );
+  static const inter16RegularBlack = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+    fontFamily: 'Inter',
+    color: Colors.black,
+  );
+  static const inter18MediumBlack = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.w500,
+    fontFamily: 'Inter',
+    color: Colors.black,
+  );
 }
 
 class TextFieldStyles {
@@ -44,5 +63,52 @@ class TextFieldStyles {
       borderSide: BorderSide(color: ColorsManager.primaryColor.withOpacity(0.5)),
       borderRadius: BorderRadius.circular(100),
     ),
+  );
+}
+
+// created by Marwan for filtering
+InputDecoration formInputStyle(
+    {required String label, required String hintText}) {
+  return InputDecoration(
+    isDense: true,
+    hintText: hintText,
+    hintStyle: TextStyles.inter16RegularBlack.copyWith(color: Colors.grey),
+    contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+    floatingLabelAlignment: FloatingLabelAlignment.start,
+    floatingLabelBehavior: FloatingLabelBehavior.always,
+    alignLabelWithHint: false,
+    label: Text(
+      label,
+      style: TextStyles.inter18MediumBlack,
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8),
+      borderSide: BorderSide(
+        color: ColorsManager.primaryColor,
+        width: 1,
+      ),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8),
+      borderSide: BorderSide(
+        color: const Color.fromARGB(255, 1, 14, 27),
+        width: 1,
+      ),
+    ),
+    errorBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8),
+      borderSide: BorderSide(
+        color: Colors.red,
+        width: 1,
+      ),
+    ),
+    focusedErrorBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8),
+      borderSide: BorderSide(
+        color: Colors.red,
+        width: 1,
+      ),
+    ),
+    errorStyle: TextStyle(height: 1),
   );
 }

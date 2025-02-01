@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:social_media/core/routing/routs.dart';
 
 import '../../../../../core/Responsive/ui_component/info_widget.dart';
 import '../../../../../core/theming/styles.dart';
@@ -40,7 +41,7 @@ class HomepageView extends StatelessWidget {
                           SizedBox(height: deviceInfo.localHeight * 0.02),
                           CreatePostWidget(deviceInfo: deviceInfo),
                           SizedBox(height: deviceInfo.localHeight * 0.02),
-                          _buildFeedHeader(deviceInfo),
+                          _buildFeedHeader(deviceInfo , context),
                           SizedBox(height: deviceInfo.localHeight * 0.02),
                         ],
                       ),
@@ -86,7 +87,7 @@ class HomepageView extends StatelessWidget {
     );
   }
 
-  Widget _buildFeedHeader(deviceInfo) {
+  Widget _buildFeedHeader(deviceInfo , context) {
     return Row(
       children: [
         Text(
@@ -100,7 +101,7 @@ class HomepageView extends StatelessWidget {
             width: deviceInfo.localWidth * 0.09,
             height: deviceInfo.localWidth * 0.09,
           ),
-          onPressed: () {},
+          onPressed: ()=> Navigator.pushNamed(context, Routes.filteringScreen),
         )
       ],
     );
