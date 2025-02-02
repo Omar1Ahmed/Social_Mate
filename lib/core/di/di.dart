@@ -30,15 +30,13 @@ Future<void> initDependencies() async {
   getIt.registerFactory<PostRepository>(
     () => PostRepositoryImpl(remoteDataSource: getIt<PostRemoteDataSource>()),
   );
+  // -------------------------- Cubits ------------------------------
   getIt.registerFactory<HomeCubit>(
     () => HomeCubit(getIt<PostRepository>()),
   );
-  // -------------------------- Cubits ------------------------------
-  // getIt.registerFactory<HomeCubitCubit>(
-  // () => HomeCubitCubit(getIt<PostRepository>()),
-  //);
-}
+  
 
+}
 List<BlocProvider> getBlocProviders() => [
       BlocProvider<HomeCubit>(create: (_) => getIt<HomeCubit>()),
     ];

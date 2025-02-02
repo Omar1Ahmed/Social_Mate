@@ -14,6 +14,7 @@ class HomepageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     context.read<HomeCubit>().getPosts();
+
     return InfoWidget(
       builder: (context, deviceInfo) {
         return SafeArea(
@@ -39,6 +40,7 @@ class HomepageView extends StatelessWidget {
                             'What’s on your head?',
                             style: TextStyles.inter18Bold.copyWith(
                               fontSize: deviceInfo.screenWidth * 0.06,
+                              
                             ),
                           ),
                           SizedBox(height: deviceInfo.localHeight * 0.02),
