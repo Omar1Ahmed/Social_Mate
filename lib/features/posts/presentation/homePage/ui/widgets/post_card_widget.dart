@@ -18,7 +18,7 @@ class PostCardWidget extends StatefulWidget {
 }
 
 class _PostCardWidgetState extends State<PostCardWidget> {
-  bool _isExpanded = true; // Track whether the text is expanded or not
+  bool _isExpanded = true; 
 
   @override
   Widget build(BuildContext context) {
