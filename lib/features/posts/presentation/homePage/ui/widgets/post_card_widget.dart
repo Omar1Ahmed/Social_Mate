@@ -32,10 +32,18 @@ class PostCardWidget extends StatelessWidget {
           return InkWell(
             child: Container(
               width: deviceInfo.localWidth * 0.9,
-              height: isExpanded ? deviceInfo.localHeight * 0.31 : deviceInfo.localHeight * 0.37,
+              height: isExpanded ? deviceInfo.localHeight * 0.29 : deviceInfo.localHeight * 0.37,
               decoration: BoxDecoration(
                 color: Colors.white,
-                border: Border.all(color: Colors.black.withOpacity(0.5)),
+                // border: Border.all(color: Colors.black.withOpacity(0.5),width: deviceInfo.screenWidth * 0.0015),
+                boxShadow: <BoxShadow>[
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: deviceInfo.localWidth * 0.01,
+                    blurRadius: deviceInfo.localWidth * 0.02,
+                    offset: const Offset(0, 3), // changes position of shadow
+                  ),
+                ],
                 borderRadius: BorderRadius.circular(deviceInfo.localWidth * 0.03),
               ),
               child: Padding(
@@ -47,7 +55,8 @@ class PostCardWidget extends StatelessWidget {
                       title,
                       style: TextStyles.inter18Bold.copyWith(fontSize: deviceInfo.screenWidth * 0.06),
                     ),
-                    Divider(color: Colors.black, thickness: 1.5),
+                    Divider(color: Colors.black, thickness: deviceInfo.screenWidth * 0.002,height: deviceInfo.localHeight * 0.015,endIndent: deviceInfo.screenWidth * 0.4,),
+
                     Row(
                       children: [
                         Image.asset(
@@ -79,7 +88,7 @@ class PostCardWidget extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(height: deviceInfo.localHeight * 0.01),
+                    SizedBox(height: deviceInfo.localHeight * 0.001),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
