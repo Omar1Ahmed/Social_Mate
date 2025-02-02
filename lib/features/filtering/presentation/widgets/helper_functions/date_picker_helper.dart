@@ -8,11 +8,12 @@
 import 'package:flutter/material.dart';
 
 void showFromDatePicker({
+  required Function(DateTime) onDateSelected,
   required BuildContext context,
   required TextEditingController controller,
   required DateTime firstDate,
   required DateTime lastDate,
-  required DateTime selectedFromDate,
+
 }) {
   showDatePicker(
     context: context,
@@ -22,7 +23,7 @@ void showFromDatePicker({
     builder: (context, child) {
       return Theme(
         data: ThemeData.light().copyWith(
-          colorScheme: ColorScheme.light(primary: Colors.blue), 
+          colorScheme: ColorScheme.light(primary: Colors.blue),
           buttonTheme: ButtonThemeData(
             textTheme: ButtonTextTheme.primary,
           ),
@@ -32,18 +33,19 @@ void showFromDatePicker({
     },
   ).then((value) {
     if (value != null) {
-      controller.text = "${value.toLocal()}".split(' ')[0]; // this handles the controller value in the UI
-      selectedFromDate = value; 
+      controller.text = "${value.toLocal()}"
+          .split(' ')[0]; // this handles the controller value in the UI
+      //selectedFromDate = value;
     }
   });
 }
 
 void showToDatePicker({
+  required Function(DateTime) onDateSelected,
   required BuildContext context,
   required TextEditingController controller,
   required DateTime firstDate,
   required DateTime lastDate,
-  required DateTime selectedToDate,
 }) {
   showDatePicker(
     context: context,
@@ -53,7 +55,7 @@ void showToDatePicker({
     builder: (context, child) {
       return Theme(
         data: ThemeData.light().copyWith(
-          colorScheme: ColorScheme.light(primary: Colors.blue), 
+          colorScheme: ColorScheme.light(primary: Colors.blue),
           buttonTheme: ButtonThemeData(
             textTheme: ButtonTextTheme.primary,
           ),
@@ -64,7 +66,7 @@ void showToDatePicker({
   ).then((value) {
     if (value != null) {
       controller.text = "${value.toLocal()}".split(' ')[0];
-      selectedToDate = value;
+      onDateSelected(value);
     }
   });
 }

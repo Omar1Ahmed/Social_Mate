@@ -2,18 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:social_media/core/theming/colors.dart';
 import 'package:social_media/core/theming/styles.dart';
 
-
-class SortedByMenu extends StatelessWidget {
+class DropMenu extends StatelessWidget {
+  final void Function(String?)? onSelected;
+  final String menuLabel;
+  final List<DropdownMenuEntry<String>> sortedByEntries;
+  final String initialSelection;
   final double screenWidth;
   final double screenHeight;
   final FocusNode sortedByNode;
-  final TextEditingController sortedByItemController;
-  const SortedByMenu({
+  final TextEditingController menuItemController;
+  const DropMenu({
     super.key,
     required this.sortedByNode,
-    required this.sortedByItemController,
+    required this.menuItemController,
     required this.screenWidth,
     required this.screenHeight,
+    required this.sortedByEntries,
+    required this.initialSelection,
+    required this.menuLabel,
+    this.onSelected,
   });
 
   @override
@@ -21,7 +28,8 @@ class SortedByMenu extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: DropdownMenu(
-          initialSelection: 'Latest',
+          onSelected: onSelected,
+          initialSelection: initialSelection,
           requestFocusOnTap: true,
           focusNode: sortedByNode,
           inputDecorationTheme: InputDecorationTheme(
@@ -42,12 +50,12 @@ class SortedByMenu extends StatelessWidget {
               ),
             ),
           ),
-          controller: sortedByItemController,
+          controller: menuItemController,
           alignmentOffset: Offset(-12, 30),
           hintText: 'Select sorting type',
           textStyle: TextStyles.inter16RegularBlack,
           label: Text(
-            'Sorted By',
+            menuLabel,
             style: TextStyles.inter18MediumBlack,
           ),
           width: screenWidth * 0.9,
@@ -58,10 +66,6 @@ class SortedByMenu extends StatelessWidget {
             elevation: WidgetStatePropertyAll(3),
             alignment: Alignment.centerLeft,
             minimumSize: WidgetStatePropertyAll(Size(
-              screenWidth * 0.3,
-              screenHeight * 0.2,
-            )),
-            fixedSize: WidgetStatePropertyAll(Size(
               screenWidth * 0.3,
               screenHeight * 0.2,
             )),
@@ -77,20 +81,7 @@ class SortedByMenu extends StatelessWidget {
               ),
             ),
           ),
-          dropdownMenuEntries: <DropdownMenuEntry<String>>[
-            DropdownMenuEntry(
-              value: 'Latest',
-              label: 'Latest',
-            ),
-            DropdownMenuEntry(
-              value: 'A to Z',
-              label: 'A to Z',
-            ),
-            DropdownMenuEntry(
-              value: 'Z to A',
-              label: 'Z to A',
-            ),
-          ]),
+          dropdownMenuEntries: sortedByEntries),
     );
   }
 }

@@ -8,6 +8,7 @@ void onPressed({
   required TextEditingController createdFromController,
   required TextEditingController createdToController,
   required TextEditingController sortedByItemController,
+  required TextEditingController orderedByItemController,
 }) {
   if (formKey.currentState!.validate()) {
     print('Form is valid');
@@ -16,7 +17,14 @@ void onPressed({
     print('Created From: ${createdFromController.text}');
     print('Created To: ${createdToController.text}');
     print('Sorted By: ${sortedByItemController.text}');
+    print('Sorted By: ${orderedByItemController.text}');
   } else {
     print('Form is invalid');
+    print('Title: ${titleController.text}');
+    print('Post Owner: ${postOwnerController.text}');
+    print('Created From: ${createdFromController.text}');
+    print('Created To: ${createdToController.text}');
+    print('Sorted By: ${sortedByItemController.text}');
+    print('Sorted By: ${orderedByItemController.text}');
   }
 }
