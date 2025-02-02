@@ -7,7 +7,7 @@ import '../../features/posts/data/data_source/post_remote_data_source_impl.dart'
 import '../../features/posts/data/repository/post_repository_impl.dart';
 import '../../features/posts/domain/repository/post_remote_data_source.dart';
 import '../../features/posts/domain/repository/post_repository.dart';
-import '../../features/posts/presentation/homePage/logic/cubit/post_cubit_cubit.dart';
+import '../../features/posts/presentation/homePage/logic/cubit/home_cubit_cubit.dart';
 
 final getIt = GetIt.instance;
 
@@ -30,13 +30,15 @@ Future<void> initDependencies() async {
   getIt.registerFactory<PostRepository>(
     () => PostRepositoryImpl(remoteDataSource: getIt<PostRemoteDataSource>()),
   );
-
-  // -------------------------- Cubits ------------------------------
-  getIt.registerFactory<PostCubitCubit>(
-    () => PostCubitCubit(getIt<PostRepository>()),
+  getIt.registerFactory<HomeCubit>(
+    () => HomeCubit(getIt<PostRepository>()),
   );
+  // -------------------------- Cubits ------------------------------
+  // getIt.registerFactory<HomeCubitCubit>(
+  // () => HomeCubitCubit(getIt<PostRepository>()),
+  //);
 }
 
 List<BlocProvider> getBlocProviders() => [
-      BlocProvider<PostCubitCubit>(create: (_) => getIt<PostCubitCubit>()),
+      BlocProvider<HomeCubit>(create: (_) => getIt<HomeCubit>()),
     ];

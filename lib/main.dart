@@ -5,8 +5,10 @@ import 'package:social_media/core/routing/routs.dart';
 
 import 'core/routing/appRouting.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+    await initDependencies();  // Initialize GetIt services
+
   runApp(MultiBlocProvider(
     providers: getBlocProviders(),
     child: MyApp(
