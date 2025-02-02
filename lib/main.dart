@@ -9,12 +9,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
     await initDependencies();  // Initialize GetIt services
 
-  runApp(MultiBlocProvider(
-    providers: getBlocProviders(),
-    child: MyApp(
-      appRouter: AppRouts(),
-    ),
-  ));
+  runApp( MyApp(appRouter: AppRouts()));
 }
 
 class MyApp extends StatelessWidget {

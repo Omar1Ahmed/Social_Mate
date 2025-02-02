@@ -2,6 +2,7 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_media/core/helper/SharedPref/sharedPrefHelper.dart';
 
 import '../../features/posts/data/data_source/post_remote_data_source_impl.dart';
 import '../../features/posts/data/repository/post_repository_impl.dart';
@@ -21,22 +22,36 @@ Future<void> initDependencies() async {
     )),
   );
 
-  // ------------------------- Data Sources --------------------------
+  // |------------------------------------------------------------------\
+  // |-------------------------- Data Sources ------------------------------\
+  // |------------------------------------------------------------------\
+
   getIt.registerFactory<PostRemoteDataSource>(
     () => PostRemoteDataSourceImpl(dio: getIt<Dio>()),
   );
 
-  // ------------------------ Repositories --------------------------
+  // |------------------------------------------------------------------\
+  // |-------------------------- Repositories ------------------------------\
+  // |------------------------------------------------------------------\
+
   getIt.registerFactory<PostRepository>(
     () => PostRepositoryImpl(remoteDataSource: getIt<PostRemoteDataSource>()),
   );
-  // -------------------------- Cubits ------------------------------
+
+  // |------------------------------------------------------------------\
+  // |-------------------------- Cubits ------------------------------\
+  // |------------------------------------------------------------------\
   getIt.registerFactory<HomeCubit>(
     () => HomeCubit(getIt<PostRepository>()),
   );
-  
+
+  // |------------------------------------------------------------------\
+  // |-------------------------- Services ------------------------------\
+  // |------------------------------------------------------------------\
+
+  final sharedPrefHelper = SharedPrefHelper();
+  await sharedPrefHelper.init();
+  getIt.registerSingleton<SharedPrefHelper>(sharedPrefHelper);
 
 }
-List<BlocProvider> getBlocProviders() => [
-      BlocProvider<HomeCubit>(create: (_) => getIt<HomeCubit>()),
-    ];
+
