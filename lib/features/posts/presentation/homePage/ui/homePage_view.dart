@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_media/core/helper/extantions.dart';
 import 'package:social_media/core/routing/routs.dart';
 
 import '../../../../../core/Responsive/ui_component/info_widget.dart';
@@ -34,7 +35,7 @@ class HomepageView extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _buildHeader(deviceInfo),
+                          _buildHeader(deviceInfo, context),
                           SizedBox(height: deviceInfo.localHeight * 0.04),
                           Text(
                             'What’s on your head?',
@@ -95,7 +96,7 @@ class HomepageView extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(deviceInfo) {
+  Widget _buildHeader(deviceInfo,BuildContext context) {
     return Row(
       children: [
         Image.asset(
@@ -105,8 +106,10 @@ class HomepageView extends StatelessWidget {
         ),
         const Spacer(),
         IconButton(
-          icon: Icon(Icons.menu, size: deviceInfo.localWidth * 0.09),
-          onPressed: () {},
+          icon: Icon(Icons.search, size: deviceInfo.localWidth * 0.09),
+          onPressed: () {
+            context.pushNamed(Routes.filteringScreen);
+          },
         ),
       ],
     );
@@ -121,14 +124,14 @@ class HomepageView extends StatelessWidget {
               .copyWith(fontSize: deviceInfo.screenWidth * 0.06),
         ),
         const Spacer(),
-        IconButton(
-          icon: Image.asset(
-            'assets/images/Filters_icon.png',
-            width: deviceInfo.localWidth * 0.09,
-            height: deviceInfo.localWidth * 0.09,
-          ),
-          onPressed: () => Navigator.pushNamed(context, Routes.filteringScreen),
-        )
+        // IconButton(
+        //   icon: Image.asset(
+        //     'assets/images/Filters_icon.png',
+        //     width: deviceInfo.localWidth * 0.09,
+        //     height: deviceInfo.localWidth * 0.09,
+        //   ),
+        //   onPressed: () => ,
+        // )
       ],
     );
   }
