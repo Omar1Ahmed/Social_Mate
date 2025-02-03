@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_media/core/helper/extantions.dart';
-import 'package:social_media/core/routing/routs.dart';
-import '../../../../../../core/Responsive/Models/device_info.dart';
-import '../../../../../../core/theming/colors.dart';
-import '../../../../../../core/theming/styles.dart';
+import 'package:social_media/core/Responsive/Models/device_info.dart';
+import 'package:social_media/core/theming/colors.dart';
+import 'package:social_media/core/theming/styles.dart';
 import '../../logic/cubit/post_card_cubit.dart';
+import 'show_report_dialog_widget.dart';
 
 class PostCardWidget extends StatelessWidget {
   const PostCardWidget({
@@ -35,13 +34,12 @@ class PostCardWidget extends StatelessWidget {
               height: isExpanded ? deviceInfo.localHeight * 0.34 : deviceInfo.localHeight * 0.38,
               decoration: BoxDecoration(
                 color: Colors.white,
-                // border: Border.all(color: Colors.black.withOpacity(0.5),width: deviceInfo.screenWidth * 0.0015),
                 boxShadow: <BoxShadow>[
                   BoxShadow(
                     color: Colors.grey.withOpacity(0.5),
                     spreadRadius: deviceInfo.localWidth * 0.01,
                     blurRadius: deviceInfo.localWidth * 0.02,
-                    offset: const Offset(0, 3), // changes position of shadow
+                    offset: const Offset(0, 3),
                   ),
                 ],
                 borderRadius: BorderRadius.circular(deviceInfo.localWidth * 0.03),
@@ -96,7 +94,16 @@ class PostCardWidget extends StatelessWidget {
                         ),
                         const Spacer(),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return ShowReportDialogWidget(
+                                  deviceInfo: deviceInfo,
+                                );
+                              },
+                            );
+                          },
                           child: Text(
                             'Report',
                             style: TextStyle(color: ColorsManager.redColor, fontSize: deviceInfo.screenWidth * 0.036),
@@ -150,9 +157,7 @@ class PostCardWidget extends StatelessWidget {
                 ),
               ),
             ),
-            onTap: () {
-              context.pushNamed(Routes.postDetailsScreen);
-            },
+            onTap: () {},
           );
         },
       ),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/helper/extantions.dart';
 import 'package:social_media/core/routing/routs.dart';
-
 import '../../../../../core/Responsive/ui_component/info_widget.dart';
 import '../../../../../core/theming/styles.dart';
 import '../logic/cubit/home_cubit_cubit.dart';
