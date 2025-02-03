@@ -4,7 +4,6 @@ import 'package:social_media/core/theming/colors.dart';
 import 'package:social_media/features/filtering/presentation/widgets/filtering_button.dart';
 import 'package:social_media/features/filtering/presentation/widgets/form_text_input.dart';
 import 'package:social_media/features/filtering/presentation/widgets/helper_functions/date_picker_helper.dart';
-import 'package:social_media/features/filtering/presentation/widgets/helper_functions/filtering_button_function.dart';
 import 'package:social_media/features/filtering/presentation/widgets/helper_functions/form_field_validator.dart';
 import 'package:social_media/features/filtering/presentation/widgets/drop_menu.dart';
 
@@ -31,8 +30,10 @@ class _FilteringTileState extends State<FilteringTile> {
   final FocusNode noNode = FocusNode();
   final DateTime firstDate = DateTime(2021, 1, 1);
   final DateTime lastDate = DateTime(2026, 1, 1);
-  late DateTime selectedFromDate = DateTime.now();
-  late DateTime selectedToDate = DateTime.now();
+  DateTime? selectedFromDate = DateTime.now();
+  DateTime? selectedToDate = DateTime.now();
+  String? sortedByValue = 'TITLE';
+  String? orderedByValue = 'ASC';
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -53,11 +54,14 @@ class _FilteringTileState extends State<FilteringTile> {
 
   void Function() sortedByOnSelected(String? value) {
     FocusScope.of(context).requestFocus(orderedByNode);
+    sortedByValue = value ?? 'TITLE';
     return () {};
   }
 
   void Function() orderedByOnSelected(String? value) {
     FocusScope.of(context).unfocus();
+    orderedByValue = value ?? 'ASC';
+
     return () {};
   }
 
@@ -110,7 +114,6 @@ class _FilteringTileState extends State<FilteringTile> {
                     hintText: 'Enter post title',
                     focusNode: titleNode,
                     controller: titleController,
-                    validator: validateTextInput,
                   ),
                 ),
               ),
@@ -121,7 +124,6 @@ class _FilteringTileState extends State<FilteringTile> {
                   focusNode: postOwnerNode,
                   label: 'Post Owner',
                   hintText: 'Enter post owner',
-                  validator: validateTextInput,
                 ),
               ),
               SizedBox(
@@ -133,7 +135,9 @@ class _FilteringTileState extends State<FilteringTile> {
                     Expanded(
                       child: FormTextInput(
                         label: 'Created From',
-                        hintText: selectedFromDate.toString(),
+                        hintText: selectedFromDate != null
+                            ? selectedFromDate.toString().split(' ')[0]
+                            : 'Select a date',
                         focusNode: createdFromNode,
                         nextNode: createdToNode,
                         controller: createdFromController,
@@ -161,7 +165,9 @@ class _FilteringTileState extends State<FilteringTile> {
                     Expanded(
                       child: FormTextInput(
                         label: 'Created To',
-                        hintText: selectedToDate.toString(),
+                        hintText: selectedToDate != null
+                            ? selectedToDate.toString().split(' ')[0]
+                            : 'Select a date',
                         focusNode: createdToNode,
                         nextNode: sortedByNode,
                         controller: createdToController,
@@ -217,15 +223,23 @@ class _FilteringTileState extends State<FilteringTile> {
               FilteringButton(
                 onPressed: () {
                   FocusScope.of(context).unfocus();
-                  onPressed(
-                      formKey: _formKey,
-                      context: context,
-                      titleController: titleController,
-                      postOwnerController: postOwnerController,
-                      createdFromController: createdFromController,
-                      createdToController: createdToController,
-                      sortedByItemController: sortedByItemController,
-                      orderedByItemController: orderedByItemController);
+                  if (_formKey.currentState!.validate()) {
+                    print('Form is valid');
+                    print('Title: ${titleController.text}');
+                    print('Post Owner: ${postOwnerController.text}');
+                    print('Created From: ${createdFromController.text}');
+                    print('Created To: ${createdToController.text}');
+                    print('Sorted By: $sortedByValue');
+                    print('Ordered By: $orderedByValue');
+                  } else {
+                    print('Form is invalid');
+                    print('Title: ${titleController.text}');
+                    print('Post Owner: ${postOwnerController.text}');
+                    print('Created From: ${createdFromController.text}');
+                    print('Created To: ${createdToController.text}');
+                    print('Sorted By: $sortedByValue');
+                    print('Ordered By: $orderedByValue');
+                  }
                 },
                 screenWidth: deviceInfo.screenWidth,
                 screenHeight: deviceInfo.screenHeight,

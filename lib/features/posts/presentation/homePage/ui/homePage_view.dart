@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:social_media/core/routing/routs.dart';
 
@@ -41,7 +40,7 @@ class HomepageView extends StatelessWidget {
                           SizedBox(height: deviceInfo.localHeight * 0.02),
                           CreatePostWidget(deviceInfo: deviceInfo),
                           SizedBox(height: deviceInfo.localHeight * 0.02),
-                          _buildFeedHeader(deviceInfo , context),
+                          _buildFeedHeader(deviceInfo, context),
                           SizedBox(height: deviceInfo.localHeight * 0.02),
                         ],
                       ),
@@ -87,12 +86,13 @@ class HomepageView extends StatelessWidget {
     );
   }
 
-  Widget _buildFeedHeader(deviceInfo , context) {
+  Widget _buildFeedHeader(deviceInfo, context) {
     return Row(
       children: [
         Text(
           'Feed',
-          style: TextStyles.inter18Bold.copyWith(fontSize: deviceInfo.screenWidth * 0.06),
+          style: TextStyles.inter18Bold
+              .copyWith(fontSize: deviceInfo.screenWidth * 0.06),
         ),
         const Spacer(),
         IconButton(
@@ -101,7 +101,7 @@ class HomepageView extends StatelessWidget {
             width: deviceInfo.localWidth * 0.09,
             height: deviceInfo.localWidth * 0.09,
           ),
-          onPressed: ()=> Navigator.pushNamed(context, Routes.filteringScreen),
+          onPressed: () => Navigator.pushNamed(context, Routes.filteringScreen),
         )
       ],
     );

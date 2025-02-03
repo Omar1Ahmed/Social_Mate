@@ -8,21 +8,27 @@ String? validateTextInput(String? value) {
   return null;
 }
 
-String? validateDateRange(DateTime fromDate, DateTime toDate,
+String? validateDateRange(DateTime? fromDate, DateTime? toDate,
     TextEditingController fromController, TextEditingController toController) {
   DateFormat format = DateFormat('yyyy-MM-dd');
+
+  // Allow users to select only one date without error
+  if (fromDate == null || toDate == null) {
+    return null; // No validation needed if one of them is not selected
+  }
+
   String fromDateFormatted = format.format(fromDate);
   String toDateFormatted = format.format(toDate);
 
-  if (fromController.text.isEmpty || toController.text.isEmpty) {
-    return 'Please select a date';
-  }
-  if (fromDateFormatted == toDateFormatted) {
-    return 'cannot be the same';
+  if (fromDateFormatted == toDateFormatted &&
+      fromController.text.isNotEmpty &&
+      toController.text.isNotEmpty) {
+    return 'Cannot be the same';
   }
 
   if (toDate.isBefore(fromDate)) {
-    return 'wrong date range';
+    return 'Wrong date range';
   }
+
   return null; // Return null if the validation passes
 }

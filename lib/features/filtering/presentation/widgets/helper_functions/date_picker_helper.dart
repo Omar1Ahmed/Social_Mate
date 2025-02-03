@@ -13,11 +13,11 @@ void showFromDatePicker({
   required TextEditingController controller,
   required DateTime firstDate,
   required DateTime lastDate,
-
+  DateTime? selectedFromDate,
 }) {
   showDatePicker(
+    initialDate: selectedFromDate ?? DateTime.now(),
     context: context,
-    initialDate: DateTime.now(),
     firstDate: firstDate,
     lastDate: lastDate,
     builder: (context, child) {
@@ -33,9 +33,8 @@ void showFromDatePicker({
     },
   ).then((value) {
     if (value != null) {
-      controller.text = "${value.toLocal()}"
-          .split(' ')[0]; // this handles the controller value in the UI
-      //selectedFromDate = value;
+      controller.text = value.toLocal().toString().split(' ')[0];
+      onDateSelected(value);
     }
   });
 }
@@ -46,10 +45,11 @@ void showToDatePicker({
   required TextEditingController controller,
   required DateTime firstDate,
   required DateTime lastDate,
+  DateTime? selectedToDate,
 }) {
   showDatePicker(
+    initialDate: selectedToDate ?? DateTime.now(),
     context: context,
-    initialDate: DateTime.now(),
     firstDate: firstDate,
     lastDate: lastDate,
     builder: (context, child) {
@@ -65,7 +65,7 @@ void showToDatePicker({
     },
   ).then((value) {
     if (value != null) {
-      controller.text = "${value.toLocal()}".split(' ')[0];
+      controller.text = value.toLocal().toString().split(' ')[0];
       onDateSelected(value);
     }
   });
