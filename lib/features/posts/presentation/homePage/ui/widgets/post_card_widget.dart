@@ -31,7 +31,7 @@ class PostCardWidget extends StatelessWidget {
           return InkWell(
             child: Container(
               width: deviceInfo.localWidth * 0.9,
-              height: isExpanded ? deviceInfo.localHeight * 0.34 : deviceInfo.localHeight * 0.38,
+              height: isExpanded ? deviceInfo.localHeight * 0.34 : deviceInfo.localHeight * 0.385,
               decoration: BoxDecoration(
                 color: Colors.white,
                 boxShadow: <BoxShadow>[
