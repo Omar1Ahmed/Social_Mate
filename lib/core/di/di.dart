@@ -2,16 +2,14 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_media/features/filtering/data/datasources/filtered_posts_remote_source.dart';
-import 'package:social_media/features/filtering/presentation/cubit/filtering_cubit.dart';
-// import 'package:social_media/features/filtering/data/repositories/filtered_post_repo_impl.dart';
+import 'package:social_media/core/helper/SharedPref/sharedPrefHelper.dart';
 
 // import '../../features/filtering/domain/repositories/filtered_post_repo.dart';
 import '../../features/posts/data/data_source/post_remote_data_source_impl.dart';
 import '../../features/posts/data/repository/post_repository_impl.dart';
 import '../../features/posts/domain/repository/post_remote_data_source.dart';
 import '../../features/posts/domain/repository/post_repository.dart';
-import '../../features/posts/presentation/homePage/logic/cubit/post_cubit_cubit.dart';
+import '../../features/posts/presentation/homePage/logic/cubit/home_cubit_cubit.dart';
 
 final getIt = GetIt.instance;
 
@@ -25,32 +23,36 @@ Future<void> initDependencies() async {
     )),
   );
 
-  // ------------------------- Data Sources --------------------------
+  // |------------------------------------------------------------------\
+  // |-------------------------- Data Sources ------------------------------\
+  // |------------------------------------------------------------------\
+
   getIt.registerFactory<PostRemoteDataSource>(
     () => PostRemoteDataSourceImpl(dio: getIt<Dio>()),
   );
 
-  getIt.registerLazySingleton<FilteredPostsRemoteSource>(getIt());
+  // |------------------------------------------------------------------\
+  // |-------------------------- Repositories ------------------------------\
+  // |------------------------------------------------------------------\
 
-  // ------------------------ Repositories --------------------------
   getIt.registerFactory<PostRepository>(
     () => PostRepositoryImpl(remoteDataSource: getIt<PostRemoteDataSource>()),
   );
 
-  // getIt.registerFactory<FilteredPostRepo>(
-  //   () => FilteredPostRepoImpl(
-  //     filteredPostsRemoteSource: getIt<FilteredPostsRemoteSource>(),
-  //     networkInfo: getIt(), // Ensure NetworkInfo is registered
-  //   ),
-  // );
-  // -------------------------- Cubits ------------------------------
-  getIt.registerFactory<PostCubitCubit>(
-    () => PostCubitCubit(getIt<PostRepository>()),
+  // |------------------------------------------------------------------\
+  // |-------------------------- Cubits ------------------------------\
+  // |------------------------------------------------------------------\
+  getIt.registerFactory<HomeCubit>(
+    () => HomeCubit(getIt<PostRepository>()),
   );
 
-  getIt.registerFactory(() => FilteringCubit(getIt()));
+  // |------------------------------------------------------------------\
+  // |-------------------------- Services ------------------------------\
+  // |------------------------------------------------------------------\
+
+  final sharedPrefHelper = SharedPrefHelper();
+  await sharedPrefHelper.init();
+  getIt.registerSingleton<SharedPrefHelper>(sharedPrefHelper);
+
 }
 
-List<BlocProvider> getBlocProviders() => [
-      BlocProvider<PostCubitCubit>(create: (_) => getIt<PostCubitCubit>()),
-    ];

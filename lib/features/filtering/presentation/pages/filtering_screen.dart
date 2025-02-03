@@ -33,9 +33,9 @@ class _FilteringScreenState extends State<FilteringScreen> {
               children: [
                 FilteringTile(),
                 SizedBox(height: 16),
-                PostCardWidget(deviceInfo: deviceInfo),
-                PostCardWidget(deviceInfo: deviceInfo),
-                PostCardWidget(deviceInfo: deviceInfo),
+                //PostCardWidget(deviceInfo: deviceInfo),
+                //PostCardWidget(deviceInfo: deviceInfo),
+                //PostCardWidget(deviceInfo: deviceInfo),
               ],
             ),
           ),

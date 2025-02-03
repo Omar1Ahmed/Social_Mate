@@ -5,14 +5,11 @@ import 'package:social_media/core/routing/routs.dart';
 
 import 'core/routing/appRouting.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MultiBlocProvider(
-    providers: getBlocProviders(),
-    child: MyApp(
-      appRouter: AppRouts(),
-    ),
-  ));
+    await initDependencies();  // Initialize GetIt services
+
+  runApp( MyApp(appRouter: AppRouts()));
 }
 
 class MyApp extends StatelessWidget {

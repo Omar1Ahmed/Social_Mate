@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
+import 'package:social_media/core/di/di.dart';
+import 'package:social_media/core/helper/SharedPref/SharedPrefKeys.dart';
 import 'package:social_media/core/helper/extantions.dart';
+import 'package:social_media/core/helper/SharedPref/sharedPrefHelper.dart';
 import 'package:social_media/core/routing/routs.dart';
 import 'package:social_media/features/authentication/presentation/logic/auth_cubit.dart';
 import 'package:social_media/features/authentication/presentation/logic/auth_state.dart';
@@ -60,7 +63,10 @@ class AuthScreen extends StatelessWidget {
                     width: info.screenWidth * 0.6,
                     child: CustomButton(
                         text: "Join Now",
-                        onPressed: () {
+                        onPressed: () async {
+                          final SharedPrefHelper _sharedPrefHelper = getIt<SharedPrefHelper>();
+                          await _sharedPrefHelper.saveString(SharedPrefKeys.testKey, 'Cached Data');
+
                           context.pushNamed(Routes.homePage);
                         }),
                   )

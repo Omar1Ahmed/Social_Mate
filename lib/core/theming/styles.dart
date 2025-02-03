@@ -8,6 +8,7 @@ class TextStyles {
   static const inter14RegularBlue = TextStyle(fontSize: 14, fontWeight: FontWeight.normal, fontFamily: 'Inter', color: ColorsManager.primaryColor);
   static const inter18Regular = TextStyle(fontSize: 18, fontWeight: FontWeight.normal, fontFamily: 'Inter', color: Colors.black);
   static const inter18BoldBlack = TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'Inter', color: Colors.black);
+  static const inter18Regularblack = TextStyle(fontSize: 18, fontWeight: FontWeight.normal, fontFamily: 'Inter', color: Colors.black);
   // created by Marwan
   // static const inter18BoldBlack = TextStyle(
   //   fontSize: 18,
@@ -67,8 +68,7 @@ class TextFieldStyles {
 }
 
 // created by Marwan for filtering
-InputDecoration formInputStyle(
-    {required String label, required String hintText}) {
+InputDecoration formInputStyle({required String label, required String hintText}) {
   return InputDecoration(
     isDense: true,
     hintText: hintText,
