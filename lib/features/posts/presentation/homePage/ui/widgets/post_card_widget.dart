@@ -32,7 +32,7 @@ class PostCardWidget extends StatelessWidget {
           return InkWell(
             child: Container(
               width: deviceInfo.localWidth * 0.9,
-              height: isExpanded ? deviceInfo.localHeight * 0.29 : deviceInfo.localHeight * 0.37,
+              height: isExpanded ? deviceInfo.localHeight * 0.34 : deviceInfo.localHeight * 0.38,
               decoration: BoxDecoration(
                 color: Colors.white,
                 // border: Border.all(color: Colors.black.withOpacity(0.5),width: deviceInfo.screenWidth * 0.0015),
@@ -51,12 +51,28 @@ class PostCardWidget extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      title,
-                      style: TextStyles.inter18Bold.copyWith(fontSize: deviceInfo.screenWidth * 0.06),
+                    Row(
+                      children: [
+                        Text(
+                          title,
+                          style: TextStyles.inter18BoldBlack.copyWith(fontSize: deviceInfo.screenWidth * 0.05),
+                        ),
+                        const Spacer(),
+                        IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.delete,
+                            color: ColorsManager.redColor.withOpacity(0.7),
+                            size: deviceInfo.screenWidth * 0.08,
+                          ),
+                        ),
+                      ],
                     ),
-                    Divider(color: Colors.black, thickness: deviceInfo.screenWidth * 0.002,height: deviceInfo.localHeight * 0.015,endIndent: deviceInfo.screenWidth * 0.4,),
-
+                    Divider(
+                      color: Colors.black,
+                      thickness: deviceInfo.screenWidth * 0.002,
+                      height: deviceInfo.localHeight * 0.015,
+                    ),
                     Row(
                       children: [
                         Image.asset(
@@ -95,7 +111,7 @@ class PostCardWidget extends StatelessWidget {
                         children: [
                           Text(
                             content,
-                            maxLines: isExpanded ? null : 3,
+                            maxLines: isExpanded ? 2 : 4,
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.justify,
                             softWrap: true,
