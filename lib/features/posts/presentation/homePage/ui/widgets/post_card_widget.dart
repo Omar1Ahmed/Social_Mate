@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/Responsive/Models/device_info.dart';
 import 'package:social_media/core/theming/colors.dart';
 import 'package:social_media/core/theming/styles.dart';
+import 'package:social_media/features/posts/presentation/homePage/ui/widgets/show_report_post_dialog_widget.dart';
 import '../../logic/cubit/post_card_cubit.dart';
-import 'show_report_dialog_widget.dart';
 
 class PostCardWidget extends StatelessWidget {
   const PostCardWidget({
@@ -97,10 +97,8 @@ class PostCardWidget extends StatelessWidget {
                           onPressed: () {
                             showDialog(
                               context: context,
-                              builder: (context) {
-                                return ShowReportDialogWidget(
-                                  deviceInfo: deviceInfo,
-                                );
+                              builder: (BuildContext context) {
+                                return ShowReportPostDialogWidget(deviceInfo: deviceInfo);
                               },
                             );
                           },

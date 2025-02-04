@@ -6,9 +6,9 @@ import 'core/routing/appRouting.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-    await initDependencies();  
-  runApp( MyApp(appRouter: AppRouts()));
+
+  await initDependencies();
+  runApp(MyApp(appRouter: AppRouts()));
 }
 
 class MyApp extends StatelessWidget {

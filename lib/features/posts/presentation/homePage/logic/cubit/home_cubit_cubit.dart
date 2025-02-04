@@ -10,7 +10,7 @@ class HomeCubit extends Cubit<HomeState> {
   HomeCubit(this.postRepository) : super(HomeCubitInitial());
   final PostRepository postRepository;
   Future<void> getPosts() async {
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(Duration(seconds: 2));
     emit(PostLoading());
     final response = await postRepository.getPosts();
 

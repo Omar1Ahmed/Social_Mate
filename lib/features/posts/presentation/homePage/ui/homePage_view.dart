@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/helper/extantions.dart';
 import 'package:social_media/core/routing/routs.dart';
+import 'package:social_media/core/theming/colors.dart';
+import '../../../../../core/Responsive/Models/device_info.dart';
 import '../../../../../core/Responsive/ui_component/info_widget.dart';
 import '../../../../../core/theming/styles.dart';
 import '../logic/cubit/home_cubit_cubit.dart';
 import 'widgets/create_post_widget.dart';
 import 'widgets/post_card_widget.dart';
+import 'widgets/show_create_post_dialog_widget.dart';
 
 class HomepageView extends StatelessWidget {
   const HomepageView({super.key});
@@ -35,14 +38,6 @@ class HomepageView extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           _buildHeader(deviceInfo, context),
-                          SizedBox(height: deviceInfo.localHeight * 0.04),
-                          Text(
-                            'What’s on your head?',
-                            style: TextStyles.inter18Bold.copyWith(
-                              fontSize: deviceInfo.screenWidth * 0.06,
-                              
-                            ),
-                          ),
                           SizedBox(height: deviceInfo.localHeight * 0.02),
                           CreatePostWidget(deviceInfo: deviceInfo),
                           SizedBox(height: deviceInfo.localHeight * 0.02),
@@ -66,7 +61,13 @@ class HomepageView extends StatelessWidget {
                                 deviceInfo.screenWidth * 0.05,
                                 deviceInfo.localHeight * 0.02,
                               ),
-                              child: PostCardWidget(deviceInfo: deviceInfo, title: posts[index].title, content: posts[index].content, author: posts[index].createdBy.fullName, timeAgo: posts[index].createdOn.toString()),
+                              child: PostCardWidget(
+                                deviceInfo: deviceInfo,
+                                title: posts[index].title,
+                                content: posts[index].content,
+                                author: posts[index].createdBy.fullName,
+                                timeAgo: posts[index].createdOn.toString(),
+                              ),
                             ),
                             childCount: totalPosts,
                           ),
@@ -77,16 +78,40 @@ class HomepageView extends StatelessWidget {
                             child: CircularProgressIndicator(),
                           ),
                         );
-                      } else {
+                      } else if (state is PostError) {
                         return SliverFillRemaining(
                           child: Center(
                             child: Text('no data found'),
                           ),
                         );
                       }
+                      return SliverFillRemaining(
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
                     },
                   ),
+                  SliverToBoxAdapter(
+                    child: SizedBox(height: deviceInfo.localHeight * 0.1),
+                  ),
                 ],
+              ),
+            ),
+            floatingActionButton: FloatingActionButton(
+              backgroundColor: Colors.white,
+              foregroundColor: ColorsManager.primaryColor,
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return ShowCreatePostDialogWidget(deviceInfo: deviceInfo);
+                  },
+                );
+              },
+              child: Icon(
+                Icons.edit_outlined,
+                color: ColorsManager.primaryColor,
               ),
             ),
           ),
@@ -95,43 +120,75 @@ class HomepageView extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(deviceInfo,BuildContext context) {
-    return Row(
-      children: [
-        Image.asset(
-          'assets/images/Title_img.png',
-          width: deviceInfo.localWidth * 0.5,
-          height: deviceInfo.localHeight * 0.04,
-        ),
-        const Spacer(),
-        IconButton(
-          icon: Icon(Icons.search, size: deviceInfo.localWidth * 0.09),
-          onPressed: () {
-            context.pushNamed(Routes.filteringScreen);
-          },
-        ),
-      ],
+  Widget _buildHeader(DeviceInfo deviceInfo, BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: deviceInfo.localWidth * 0.02,
+        vertical: deviceInfo.localHeight * 0.01,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Image.asset(
+            'assets/images/Title_img.png',
+            width: deviceInfo.localWidth * 0.48,
+            height: deviceInfo.localHeight * 0.06,
+            fit: BoxFit.contain,
+          ),
+          Spacer(),
+          IconButton(
+            icon: Icon(
+              Icons.search,
+              size: deviceInfo.localWidth * 0.08,
+              color: ColorsManager.primaryColor,
+            ),
+            onPressed: () {
+              context.pushNamed(Routes.filteringScreen);
+            },
+            style: ElevatedButton.styleFrom(
+              shape: const CircleBorder(),
+              padding: EdgeInsets.all(deviceInfo.localWidth * 0.02),
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              foregroundColor: Theme.of(context).colorScheme.onSurface,
+              shadowColor: Colors.transparent,
+            ).copyWith(elevation: ButtonStyleButton.allOrNull(0)),
+          ),
+          SizedBox(width: deviceInfo.localWidth * 0.02),
+          IconButton(
+            icon: Icon(
+              Icons.menu,
+              size: deviceInfo.localWidth * 0.08,
+              color: ColorsManager.primaryColor,
+            ),
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+              shape: const CircleBorder(),
+              padding: EdgeInsets.all(deviceInfo.localWidth * 0.02),
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              foregroundColor: Theme.of(context).colorScheme.onSurface,
+              shadowColor: Colors.transparent,
+            ).copyWith(elevation: ButtonStyleButton.allOrNull(0)),
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _buildFeedHeader(deviceInfo, context) {
-    return Row(
-      children: [
-        Text(
-          'Feed',
-          style: TextStyles.inter18Bold
-              .copyWith(fontSize: deviceInfo.screenWidth * 0.06),
-        ),
-        const Spacer(),
-        // IconButton(
-        //   icon: Image.asset(
-        //     'assets/images/Filters_icon.png',
-        //     width: deviceInfo.localWidth * 0.09,
-        //     height: deviceInfo.localWidth * 0.09,
-        //   ),
-        //   onPressed: () => ,
-        // )
-      ],
+  Widget _buildFeedHeader(DeviceInfo deviceInfo, BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: deviceInfo.localWidth * 0.04,
+        vertical: deviceInfo.localHeight * 0.01,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Feed',
+            style: TextStyles.inter18Regular.copyWith(fontSize: deviceInfo.localWidth * 0.06),
+          ),
+        ],
+      ),
     );
   }
 }
