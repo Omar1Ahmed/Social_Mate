@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_media/core/token/token_cubit.dart';
 
 import '../../../../../../core/Responsive/Models/device_info.dart';
 import '../../../../../../core/theming/colors.dart';
@@ -13,6 +15,9 @@ class ShowReportPostDialogWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    print('Print token in report dialog: ${context.read<TokenCubit>().state.token}');
+
     return CustomDialogWidget(
       deviceInfo: deviceInfo,
       title: "Report the Post",
@@ -76,18 +81,36 @@ class ShowReportPostDialogWidget extends StatelessWidget {
         ),
         SizedBox(height: deviceInfo.localHeight * 0.02),
         TextField(
-          controller: reasonController,
-          maxLines: 3,
-          decoration: InputDecoration(
-            labelText: "Provide a Reason",
-            filled: true,
-            fillColor: ColorsManager.lightGreyColor,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(deviceInfo.localWidth * 0.03),
-              borderSide: BorderSide.none,
+            controller: reasonController,
+            maxLines: 3,
+            decoration: InputDecoration(
+              labelText: "Provide a Reason",
+              filled: true,
+              fillColor: ColorsManager.lightGreyColor,
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(deviceInfo.localWidth * 0.03),
+                borderSide: BorderSide(
+                  color: ColorsManager.greyColor,
+                width: deviceInfo.localWidth * 0.0015
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(deviceInfo.localWidth * 0.03),
+                borderSide: BorderSide(
+                    color: ColorsManager.primaryColor,
+                    width: deviceInfo.localWidth * 0.002
+                ),
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(deviceInfo.localWidth * 0.03),
+                borderSide: BorderSide(
+                    color: ColorsManager.greyColor,
+                    width: deviceInfo.localWidth * 0.0015
+                ),
+              ),
             ),
           ),
-        ),
+
       ],
       actions: [
         TextButton(

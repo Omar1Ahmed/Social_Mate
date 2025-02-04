@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/routing/routs.dart';
+import 'package:social_media/core/token/token_cubit.dart';
 
 import 'core/routing/appRouting.dart';
 
@@ -16,10 +18,12 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key, required this.appRouter});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      initialRoute: Routes.splashScreen,
-      onGenerateRoute: appRouter.generateRoute,
-    );
+    return BlocProvider(
+        create: (_) => getIt<TokenCubit>(),
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          initialRoute: Routes.splashScreen,
+          onGenerateRoute: appRouter.generateRoute,
+        ));
   }
 }

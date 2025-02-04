@@ -25,12 +25,12 @@ class CreatePostWidget extends StatelessWidget {
         width: deviceInfo.localWidth * 0.9,
         height: deviceInfo.localHeight * 0.1,
         decoration: BoxDecoration(
-          color: ColorsManager.lightGreyColor,
+          color: Colors.white,
           borderRadius: BorderRadius.circular(deviceInfo.localWidth * 0.04),
           boxShadow: [
             BoxShadow(
-              color: ColorsManager.blackColor.withOpacity(0.15),
-              blurRadius: 8,
+              color: ColorsManager.blackColor.withOpacity(0.35),
+              blurRadius: deviceInfo.screenWidth * 0.05,
               offset: const Offset(0, 4),
             ),
           ],

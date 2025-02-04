@@ -6,6 +6,7 @@ import 'package:social_media/core/helper/SharedPref/SharedPrefKeys.dart';
 import 'package:social_media/core/helper/extantions.dart';
 import 'package:social_media/core/helper/SharedPref/sharedPrefHelper.dart';
 import 'package:social_media/core/routing/routs.dart';
+import 'package:social_media/core/token/token_cubit.dart';
 import 'package:social_media/features/authentication/presentation/logic/auth_cubit.dart';
 import 'package:social_media/features/authentication/presentation/logic/auth_state.dart';
 import 'package:social_media/features/authentication/presentation/ui/widgets/customButton.dart';
@@ -66,6 +67,9 @@ class AuthScreen extends StatelessWidget {
                         onPressed: () async {
                           final SharedPrefHelper _sharedPrefHelper = getIt<SharedPrefHelper>();
                           await _sharedPrefHelper.saveString(SharedPrefKeys.testKey, 'Cached Data');
+
+                          print('assign Token in Sign up ');
+                          context.read<TokenCubit>().setToken('token Test ');
 
                           context.pushNamed(Routes.homePage);
                         }),

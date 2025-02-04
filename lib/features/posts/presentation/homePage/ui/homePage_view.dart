@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/helper/extantions.dart';
 import 'package:social_media/core/routing/routs.dart';
 import 'package:social_media/core/theming/colors.dart';
+import 'package:social_media/core/token/token_cubit.dart';
 import '../../../../../core/Responsive/Models/device_info.dart';
 import '../../../../../core/Responsive/ui_component/info_widget.dart';
 import '../../../../../core/theming/styles.dart';
@@ -18,10 +19,12 @@ class HomepageView extends StatelessWidget {
   Widget build(BuildContext context) {
     context.read<HomeCubit>().getPosts();
 
+    print('Print token in Home Page: ${context.read<TokenCubit>().state.token}');
     return InfoWidget(
       builder: (context, deviceInfo) {
         return SafeArea(
           child: Scaffold(
+            backgroundColor: Colors.white,
             body: GestureDetector(
               onTap: () => FocusScope.of(context).unfocus(),
               child: CustomScrollView(
@@ -41,6 +44,10 @@ class HomepageView extends StatelessWidget {
                           SizedBox(height: deviceInfo.localHeight * 0.02),
                           CreatePostWidget(deviceInfo: deviceInfo),
                           SizedBox(height: deviceInfo.localHeight * 0.02),
+                          Divider(
+                            height: deviceInfo.localHeight * 0.02,
+                            thickness: deviceInfo.screenWidth * 0.001,
+                            color: ColorsManager.greyColor,),
                           _buildFeedHeader(deviceInfo, context),
                           SizedBox(height: deviceInfo.localHeight * 0.02),
                         ],
@@ -148,7 +155,7 @@ class HomepageView extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               shape: const CircleBorder(),
               padding: EdgeInsets.all(deviceInfo.localWidth * 0.02),
-              backgroundColor: Theme.of(context).colorScheme.surface,
+              backgroundColor: ColorsManager.lightGreyColor,
               foregroundColor: Theme.of(context).colorScheme.onSurface,
               shadowColor: Colors.transparent,
             ).copyWith(elevation: ButtonStyleButton.allOrNull(0)),

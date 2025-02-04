@@ -19,12 +19,14 @@ class CustomDialogWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
+      backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(deviceInfo.localWidth * 0.03),
       ),
       elevation: 8.0,
       child: SingleChildScrollView(
         child: Container(
+
           width: deviceInfo.localWidth * 0.8,
           padding: EdgeInsets.all(deviceInfo.localWidth * 0.05),
           child: Column(
