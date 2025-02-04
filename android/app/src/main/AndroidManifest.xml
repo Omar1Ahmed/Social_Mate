@@ -3,8 +3,9 @@
         android:label="social_media"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
-        android:theme="@style/NormalTheme">
-
+        android:usesCleartextTraffic="true"
+        android:theme="@style/LaunchTheme">
+        
         <activity
             android:name=".MainActivity"
             android:exported="true"
