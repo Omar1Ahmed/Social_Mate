@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:social_media/core/Responsive/Models/device_info.dart';
 import 'package:social_media/core/theming/colors.dart';
 import 'package:social_media/core/theming/styles.dart';
-import 'custom_dialog_widget.dart';
 import 'show_create_post_dialog_widget.dart';
 
 class CreatePostWidget extends StatelessWidget {

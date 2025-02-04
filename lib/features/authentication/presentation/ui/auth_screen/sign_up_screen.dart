@@ -9,7 +9,7 @@ class SignUpForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return InfoWidget(builder: (context, info) {
       return Column(
-        spacing: info.screenHeight * 0.022,
+        spacing: info.screenHeight * 0.011,
         children: [
           CustomTextField(label: "Your Full Name", hintText: "Your name"),
           CustomTextField(label: "Email", hintText: "Type your email"),

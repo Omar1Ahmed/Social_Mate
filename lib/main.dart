@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/routing/routs.dart';
@@ -8,9 +9,14 @@ import 'core/routing/appRouting.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await dotenv.load();
   await initDependencies();
-  runApp(MyApp(appRouter: AppRouts()));
+
+  runApp(
+    MyApp(
+      appRouter: AppRouts(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

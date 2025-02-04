@@ -2,8 +2,9 @@
 
 import 'package:social_media/features/filtering/could_be_shared/network_info/network_info.dart';
 import 'package:social_media/features/filtering/data/datasources/filtered_posts_remote_source.dart';
-import 'package:social_media/features/filtering/domain/entities/post_entity.dart';
 import 'package:social_media/features/filtering/domain/repositories/filtered_post_repo.dart';
+
+import '../../../../core/entities/post_entity.dart';
 
 class FilteredPostRepoImp implements FilteredPostRepo {
   final FilteredPostsRemoteSource filteredPostsRemoteSource;

@@ -1,7 +1,8 @@
 // ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
-import 'package:social_media/features/filtering/domain/entities/post_entity.dart';
 import 'package:social_media/features/filtering/domain/repositories/filtered_post_repo.dart';
+
+import '../../../../core/entities/post_entity.dart';
 
 part 'filtering_state.dart';
 

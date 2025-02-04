@@ -3,4 +3,5 @@ import '../../data/model/post_response.dart';
 
 abstract class PostRemoteDataSource {
   Future<PostResponse> getPosts();
+  Future<void> createPost(CreatePostData post);
 }

@@ -9,13 +9,11 @@ class CustomDialogWidget extends StatelessWidget {
     required this.title,
     required this.fields,
     required this.actions,
-  });
-
+  } );
   final DeviceInfo deviceInfo;
-  final String title; // Title of the dialog (e.g., "Report the Post", "Create Post")
-  final List<Widget> fields; // List of input fields (e.g., TextFields, RadioButtons)
-  final List<Widget> actions; // List of action buttons (e.g., Report, Cancel)
-
+  final String title;
+  final List<Widget> fields; 
+  final List<Widget> actions; 
   @override
   Widget build(BuildContext context) {
     return Dialog(

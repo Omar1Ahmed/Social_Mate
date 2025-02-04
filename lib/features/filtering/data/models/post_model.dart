@@ -1,7 +1,8 @@
 // 505 default value indicates an error
 // Note that all default values are with the factory from json cause it is the retrived from api
 
-import 'package:social_media/features/filtering/domain/entities/post_entity.dart';
+
+import '../../../../core/entities/post_entity.dart';
 
 class PostModel {
   final List<PostItem> data;
@@ -36,7 +37,7 @@ class PostItem {
   final String title;
   final String content;
   final CreatedByModel createdBy;
-  final String createdOn;
+  final DateTime createdOn;
 
   PostItem({
     required this.id,
@@ -98,8 +99,8 @@ class CreatedByModel {
     };
   }
 
-  CreatedBy toEntity() {
-    return CreatedBy(
+  UserEntity toEntity() {
+    return UserEntity(
       id: id,
       fullName: fullName,
     );

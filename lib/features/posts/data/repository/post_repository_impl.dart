@@ -1,7 +1,11 @@
+// PostRepository interface
+import 'package:social_media/core/entities/post_entity.dart';
+import 'package:social_media/features/posts/data/model/post_response.dart';
+import 'package:social_media/features/posts/domain/repository/post_remote_data_source.dart';
 
-import '../../domain/entity/post_entity.dart';
 import '../../domain/repository/post_repository.dart';
-import '../../domain/repository/post_remote_data_source.dart';
+
+
 
 class PostRepositoryImpl implements PostRepository {
   final PostRemoteDataSource remoteDataSource;
@@ -13,4 +17,12 @@ class PostRepositoryImpl implements PostRepository {
     final response = await remoteDataSource.getPosts();
     return (response.toEntities(), response.total);
   }
+  
+  @override
+  Future<void> createPost(CreatePostData post) async {
+   final response = await remoteDataSource.createPost(post);
+    return response;
+  }
+
+
 }

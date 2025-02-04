@@ -56,6 +56,9 @@ class HomepageView extends StatelessWidget {
                   ),
                   BlocBuilder<HomeCubit, HomeState>(
                     builder: (context, state) {
+                      if (state is PostCreated) {
+                        print('Post Created');
+                      }
                       if (state is PostLoaded) {
                         final posts = state.posts;
                         final totalPosts = state.totalPosts;

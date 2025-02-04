@@ -1,3 +1,4 @@
+
 class PostEntity {
   final int id;
   final String title;
@@ -12,6 +13,13 @@ class PostEntity {
     required this.createdBy,
     required this.createdOn,
   });
+}
+
+class CreatedBy {
+  final int id;
+  final String fullName;
+
+  CreatedBy({required this.id, required this.fullName});
 }
 
 class UserEntity {

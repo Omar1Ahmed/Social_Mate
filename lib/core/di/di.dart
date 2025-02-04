@@ -11,13 +11,13 @@ import 'package:social_media/features/filtering/data/datasources/filtered_posts_
 import 'package:social_media/features/filtering/data/repositories/filtered_post_repo_imp.dart';
 import 'package:social_media/features/filtering/domain/repositories/filtered_post_repo.dart';
 import 'package:social_media/features/filtering/presentation/cubit/filtering_cubit.dart';
-
-// import '../../features/filtering/domain/repositories/filtered_post_repo.dart';
 import '../../features/posts/data/data_source/post_remote_data_source_impl.dart';
-import '../../features/posts/data/repository/post_repository_impl.dart';
+import '../../features/posts/data/repository/post_repository_impl.dart' as impl;
 import '../../features/posts/domain/repository/post_remote_data_source.dart';
+import '../../features/posts/domain/repository/post_repository.dart' as repo;
 import '../../features/posts/domain/repository/post_repository.dart';
 import '../../features/posts/presentation/homePage/logic/cubit/home_cubit_cubit.dart';
+import '../network/dio_client.dart';
 
 final getIt = GetIt.instance;
 
@@ -30,6 +30,7 @@ Future<void> initDependencies() async {
       receiveTimeout: const Duration(seconds: 30),
     )),
   );
+  getIt.registerLazySingleton<DioClient>(() => DioClient(dio: getIt<Dio>()));
 
   getIt.registerLazySingleton<DioNetworkClient>(() => FakeDioNetworkClient());
   // |------------------------------------------------------------------\
@@ -37,28 +38,25 @@ Future<void> initDependencies() async {
   // |------------------------------------------------------------------\
 
   getIt.registerFactory<PostRemoteDataSource>(
-    () => PostRemoteDataSourceImpl(dio: getIt<Dio>()),
+    () => PostRemoteDataSourceImpl(dio: getIt<DioClient>()),
   );
   getIt.registerLazySingleton<NetworkInfo>(
     () => NetworkInfoConnection(connectionChecker: getIt()),
   );
   getIt.registerLazySingleton(() => InternetConnectionChecker());
-  getIt.registerLazySingleton(
-      () => NetworkInfoConnection(connectionChecker: getIt()));
-  getIt.registerLazySingleton<FilteredPostsRemoteSource>(
-      () => FilteredPostsRemoteSourceImpl(
-            dioNetworkClient: getIt<DioNetworkClient>(),
-          ));
+  getIt.registerLazySingleton(() => NetworkInfoConnection(connectionChecker: getIt()));
+  getIt.registerLazySingleton<FilteredPostsRemoteSource>(() => FilteredPostsRemoteSourceImpl(
+        dioNetworkClient: getIt<DioNetworkClient>(),
+      ));
   // |------------------------------------------------------------------\
   // |-------------------------- Repositories ------------------------------\
   // |------------------------------------------------------------------\
 
   getIt.registerFactory<PostRepository>(
-    () => PostRepositoryImpl(remoteDataSource: getIt<PostRemoteDataSource>()),
+    () => impl.PostRepositoryImpl(remoteDataSource: getIt<PostRemoteDataSource>()),
   );
 
-  getIt.registerLazySingleton<FilteredPostRepo>(() => FilteredPostRepoImp(
-      networkInfo: getIt(), filteredPostsRemoteSource: getIt()));
+  getIt.registerLazySingleton<FilteredPostRepo>(() => FilteredPostRepoImp(networkInfo: getIt(), filteredPostsRemoteSource: getIt()));
   // |------------------------------------------------------------------\
   // |-------------------------- Cubits ------------------------------\
   // |------------------------------------------------------------------\
@@ -69,7 +67,7 @@ Future<void> initDependencies() async {
   );
   // home Cubit
   getIt.registerFactory<HomeCubit>(
-    () => HomeCubit(getIt<PostRepository>()),
+    () => HomeCubit(getIt<repo.PostRepository>()),
   );
 
   getIt.registerFactory(() => FilteringCubit(getIt()));
