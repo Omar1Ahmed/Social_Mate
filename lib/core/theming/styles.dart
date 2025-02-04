@@ -54,7 +54,7 @@ class TextStyles {
   // );
   static const inter16RegularBlack = TextStyle(
     fontSize: 16,
-    fontWeight: FontWeight.w400,
+    fontWeight: FontWeight.normal,
     fontFamily: 'Inter',
     color: Colors.black,
   );

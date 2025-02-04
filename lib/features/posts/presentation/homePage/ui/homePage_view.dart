@@ -154,21 +154,6 @@ class HomepageView extends StatelessWidget {
             ).copyWith(elevation: ButtonStyleButton.allOrNull(0)),
           ),
           SizedBox(width: deviceInfo.localWidth * 0.02),
-          IconButton(
-            icon: Icon(
-              Icons.menu,
-              size: deviceInfo.localWidth * 0.08,
-              color: ColorsManager.primaryColor,
-            ),
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              shape: const CircleBorder(),
-              padding: EdgeInsets.all(deviceInfo.localWidth * 0.02),
-              backgroundColor: Theme.of(context).colorScheme.surface,
-              foregroundColor: Theme.of(context).colorScheme.onSurface,
-              shadowColor: Colors.transparent,
-            ).copyWith(elevation: ButtonStyleButton.allOrNull(0)),
-          ),
         ],
       ),
     );
@@ -186,6 +171,30 @@ class HomepageView extends StatelessWidget {
           Text(
             'Feed',
             style: TextStyles.inter18Regular.copyWith(fontSize: deviceInfo.localWidth * 0.06),
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.home,
+              size: deviceInfo.localWidth * 0.08,
+              color: ColorsManager.primaryColor,
+            ),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.person,
+              size: deviceInfo.localWidth * 0.08,
+              color: ColorsManager.primaryColor,
+            ),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.settings,
+              size: deviceInfo.localWidth * 0.08,
+              color: ColorsManager.primaryColor,
+            ),
+            onPressed: () {},
           ),
         ],
       ),
