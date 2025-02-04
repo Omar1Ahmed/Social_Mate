@@ -30,6 +30,7 @@ class PostCreated extends HomeState {}
 class PostDeleted extends HomeState {}
 class CreatePostFailed extends HomeState {}
 class PostUpdated extends HomeState {}
+class PostLoadingMore extends HomeState {}
 class PostError extends HomeState {
   final String message;
 

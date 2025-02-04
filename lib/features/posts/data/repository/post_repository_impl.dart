@@ -13,8 +13,8 @@ class PostRepositoryImpl implements PostRepository {
   PostRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<(List<PostEntity>, int)> getPosts() async {
-    final response = await remoteDataSource.getPosts();
+  Future<(List<PostEntity>, int)> getPosts( int pageOffset, int pageSize) async {
+    final response = await remoteDataSource.getPosts( pageOffset, pageSize);
     return (response.toEntities(), response.total);
   }
   
