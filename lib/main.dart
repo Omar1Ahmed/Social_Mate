@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+<<<<<<< Updated upstream
 import 'package:flutter_bloc/flutter_bloc.dart';
+=======
+>>>>>>> Stashed changes
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/routing/routs.dart';
@@ -9,6 +12,7 @@ import 'core/routing/appRouting.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load();
   await dotenv.load();
   await initDependencies();
 
