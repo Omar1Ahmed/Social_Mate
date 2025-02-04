@@ -12,7 +12,7 @@ abstract class FilteredPostsRemoteSource {
 class FilteredPostsRemoteSourceImpl implements FilteredPostsRemoteSource {
   final DioNetworkClient dioNetworkClient;
 
-  FilteredPostsRemoteSourceImpl(this.dioNetworkClient);
+  FilteredPostsRemoteSourceImpl({required this.dioNetworkClient});
   @override
   Future<List<PostModel>> getFilteredPosts(
       {Map<String, dynamic>? queryParameters}) async {

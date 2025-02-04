@@ -10,10 +10,15 @@ class PostModel {
   PostModel({required this.data, required this.total});
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
+    print("Raw JSON Response: $json"); // Debugging
+    final data = json['data'];
+    print(
+        "Raw Data Field: $data"); // Check if 'data' is present and in correct format
     return PostModel(
-      data: (json['data'] as List)
-          .map((item) => PostItem.fromJson(item))
-          .toList() ,
+      data: (json['data'] as List?)
+              ?.map((item) => PostItem.fromJson(item))
+              .toList() ??
+          [],
       total: json['total'] ?? 505,
     );
   }
@@ -31,7 +36,7 @@ class PostItem {
   final String title;
   final String content;
   final CreatedByModel createdBy;
-  final DateTime createdOn;
+  final String createdOn;
 
   PostItem({
     required this.id,
@@ -46,8 +51,8 @@ class PostItem {
       id: json['id'] ?? 505,
       title: json['title'] ?? '505',
       content: json['content'] ?? '505',
-      createdBy: CreatedByModel.fromJson(json['createdBy'] ?? {}) ,
-      createdOn: DateTime.parse(json['createdOn']),
+      createdBy: CreatedByModel.fromJson(json['createdBy'] ?? {}),
+      createdOn: json['createdOn'],
     );
   }
 
@@ -57,16 +62,17 @@ class PostItem {
       'title': title,
       'content': content,
       'createdBy': createdBy.toJson(),
-      'createdOn': createdOn.toIso8601String(),
+      'createdOn': createdOn,
     };
   }
 
   PostEntity toEntity() {
+    print("Converting PostItem ID $id to PostEntity");
     return PostEntity(
       id: id,
       title: title,
       content: content,
-      createdBy: createdBy.toEntity(),
+      createdBy: createdBy.toEntity(), // ✅ Ensure this is not null
       createdOn: createdOn,
     );
   }

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
 import 'package:social_media/core/theming/styles.dart';
+import 'package:social_media/features/filtering/domain/entities/post_entity.dart';
+import 'package:social_media/features/filtering/presentation/cubit/filtering_cubit.dart';
+import 'package:social_media/features/filtering/presentation/widgets/filtered_post_card.dart';
 import 'package:social_media/features/filtering/presentation/widgets/filtering_tile.dart';
-import 'package:social_media/features/posts/presentation/homePage/ui/widgets/post_card_widget.dart';
 
 class FilteringScreen extends StatefulWidget {
   const FilteringScreen({super.key});
@@ -12,8 +15,10 @@ class FilteringScreen extends StatefulWidget {
 }
 
 class _FilteringScreenState extends State<FilteringScreen> {
+  List<PostEntity> posts = [];
   @override
   Widget build(BuildContext context) {
+    final filteringCubit = context.read<FilteringCubit>();
     return InfoWidget(builder: (context, deviceInfo) {
       return Scaffold(
         appBar: AppBar(
@@ -31,11 +36,42 @@ class _FilteringScreenState extends State<FilteringScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                FilteringTile(),
+                FilteringTile(
+                  filteringCubit: filteringCubit,
+                ),
                 SizedBox(height: 16),
-                //PostCardWidget(deviceInfo: deviceInfo),
-                //PostCardWidget(deviceInfo: deviceInfo),
-                //PostCardWidget(deviceInfo: deviceInfo),
+                BlocBuilder<FilteringCubit, FilteringState>(
+                  builder: (context, state) {
+                    if (state is FilteredPostsIsLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (state is FilteredPostsIsLoaded) {
+                      posts = state.filteredPosts;
+                      if (posts.isEmpty) {
+                        print('retrived data is empty ya 3m');
+                      }
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: state.filteredPosts.length,
+                        itemBuilder: (context, index) {
+                          print('Filtering State: $state');
+                          return FilteredPostCard(
+                            title: posts[index].title,
+                            postOwner: posts[index].createdBy.fullName,
+                            date: posts[index].createdOn.toString(),
+                            content: posts[index].content,
+                          );
+                        },
+                      );
+                    } else if (state is FilteredPostsHasError) {
+                      return Text(state.message);
+                    } else {
+                      return Center(
+                        child: Text('No posts'),
+                      );
+                    }
+                  },
+                ),
               ],
             ),
           ),

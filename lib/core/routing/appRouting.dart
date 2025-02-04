@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/routing/routs.dart';
 import 'package:social_media/features/authentication/presentation/ui/auth_screen/sign_in_screen.dart';
+import 'package:social_media/features/filtering/presentation/cubit/filtering_cubit.dart';
 import 'package:social_media/features/filtering/presentation/pages/filtering_screen.dart';
 import 'package:social_media/features/on_boarding/presentation/ui/onboarding_screen.dart';
 import 'package:social_media/features/post_details/presentation/example_screen/ui/postDetailsScreen.dart';
@@ -27,7 +28,11 @@ class AppRouts {
                   child: HomepageView(),
                 ));
       case Routes.filteringScreen:
-        return MaterialPageRoute(builder: (context) => FilteringScreen());
+        return MaterialPageRoute(
+            builder: (context) => BlocProvider(
+                  create: (context) => getIt<FilteringCubit>(),
+                  child: FilteringScreen(),
+                ));
       case Routes.postDetailsScreen:
         return MaterialPageRoute(builder: (context) => post_details_screen());
       default:

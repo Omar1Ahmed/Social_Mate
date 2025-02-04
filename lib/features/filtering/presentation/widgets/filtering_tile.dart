@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
 import 'package:social_media/core/theming/colors.dart';
+import 'package:social_media/features/filtering/presentation/cubit/filtering_cubit.dart';
 import 'package:social_media/features/filtering/presentation/widgets/filtering_button.dart';
 import 'package:social_media/features/filtering/presentation/widgets/form_text_input.dart';
 import 'package:social_media/features/filtering/presentation/widgets/helper_functions/date_picker_helper.dart';
@@ -8,7 +9,8 @@ import 'package:social_media/features/filtering/presentation/widgets/helper_func
 import 'package:social_media/features/filtering/presentation/widgets/drop_menu.dart';
 
 class FilteringTile extends StatefulWidget {
-  const FilteringTile({super.key});
+  final FilteringCubit filteringCubit;
+  const FilteringTile({super.key, required this.filteringCubit});
 
   @override
   State<FilteringTile> createState() => _FilteringTileState();
@@ -32,9 +34,11 @@ class _FilteringTileState extends State<FilteringTile> {
   final DateTime lastDate = DateTime(2026, 1, 1);
   DateTime? selectedFromDate = DateTime.now();
   DateTime? selectedToDate = DateTime.now();
-  String? sortedByValue = 'TITLE';
-  String? orderedByValue = 'ASC';
+  late String sortedByValue = '';
+  late String orderedByValue = '';
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  late Map<String, dynamic> queryParameters;
+  late FilteringCubit filteringCubit;
 
   @override
   void dispose() {
@@ -50,6 +54,12 @@ class _FilteringTileState extends State<FilteringTile> {
     sortedByNode.dispose();
     noNode.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    filteringCubit = widget.filteringCubit;
+    super.initState();
   }
 
   void Function() sortedByOnSelected(String? value) {
@@ -75,6 +85,32 @@ class _FilteringTileState extends State<FilteringTile> {
     setState(() {
       selectedToDate = newDate;
     });
+  }
+
+  void _onFilterButtonPressed() {
+    FocusScope.of(context).unfocus();
+    if (_formKey.currentState!.validate()) {
+      queryParameters = {
+        'title': titleController.text,
+        'orderBy': sortedByValue,
+        'createdOnFrom': createdFromController.text,
+        'createdOnTo': createdToController.text,
+        'orderDir': orderedByValue,
+        'pageOffset': 0,
+        'pageSize': 10,
+      };
+      print('Query Parameters: $queryParameters');
+      filteringCubit.getFilteredPosts(queryParameters: queryParameters);
+      print('Form is valid');
+      print('Title: ${titleController.text}');
+      print('Post Owner: ${postOwnerController.text}');
+      print('Created From: ${createdFromController.text}');
+      print('Created To: ${createdToController.text}');
+      print('Sorted By: $sortedByValue');
+      print('Ordered By: $orderedByValue');
+    } else {
+      print('Form is invalid');
+    }
   }
 
   @override
@@ -195,7 +231,6 @@ class _FilteringTileState extends State<FilteringTile> {
               DropMenu(
                 onSelected: sortedByOnSelected,
                 menuLabel: 'Sorted By',
-                initialSelection: 'TITLE',
                 sortedByNode: sortedByNode,
                 menuItemController: sortedByItemController,
                 screenWidth: deviceInfo.screenWidth,
@@ -210,7 +245,6 @@ class _FilteringTileState extends State<FilteringTile> {
               DropMenu(
                 onSelected: orderedByOnSelected,
                 menuLabel: 'Order Direction',
-                initialSelection: 'ASC',
                 sortedByNode: orderedByNode,
                 menuItemController: orderedByItemController,
                 screenWidth: deviceInfo.screenWidth,
@@ -221,26 +255,7 @@ class _FilteringTileState extends State<FilteringTile> {
                 ],
               ),
               FilteringButton(
-                onPressed: () {
-                  FocusScope.of(context).unfocus();
-                  if (_formKey.currentState!.validate()) {
-                    print('Form is valid');
-                    print('Title: ${titleController.text}');
-                    print('Post Owner: ${postOwnerController.text}');
-                    print('Created From: ${createdFromController.text}');
-                    print('Created To: ${createdToController.text}');
-                    print('Sorted By: $sortedByValue');
-                    print('Ordered By: $orderedByValue');
-                  } else {
-                    print('Form is invalid');
-                    print('Title: ${titleController.text}');
-                    print('Post Owner: ${postOwnerController.text}');
-                    print('Created From: ${createdFromController.text}');
-                    print('Created To: ${createdToController.text}');
-                    print('Sorted By: $sortedByValue');
-                    print('Ordered By: $orderedByValue');
-                  }
-                },
+                onPressed: _onFilterButtonPressed,
                 screenWidth: deviceInfo.screenWidth,
                 screenHeight: deviceInfo.screenHeight,
               ),

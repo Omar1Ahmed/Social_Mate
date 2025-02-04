@@ -6,7 +6,7 @@ class DropMenu extends StatelessWidget {
   final void Function(String?)? onSelected;
   final String menuLabel;
   final List<DropdownMenuEntry<String>> sortedByEntries;
-  final String initialSelection;
+
   final double screenWidth;
   final double screenHeight;
   final FocusNode sortedByNode;
@@ -18,7 +18,6 @@ class DropMenu extends StatelessWidget {
     required this.screenWidth,
     required this.screenHeight,
     required this.sortedByEntries,
-    required this.initialSelection,
     required this.menuLabel,
     this.onSelected,
   });
@@ -29,7 +28,7 @@ class DropMenu extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: DropdownMenu(
           onSelected: onSelected,
-          initialSelection: initialSelection,
+
           requestFocusOnTap: true,
           focusNode: sortedByNode,
           inputDecorationTheme: InputDecorationTheme(

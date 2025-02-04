@@ -4,7 +4,7 @@ class PostEntity {
   final String title;
   final String content;
   final CreatedBy createdBy;
-  final DateTime createdOn;
+  final String createdOn;
 
   PostEntity({
     required this.id,

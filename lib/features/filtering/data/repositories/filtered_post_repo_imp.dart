@@ -9,7 +9,9 @@ class FilteredPostRepoImp implements FilteredPostRepo {
   final FilteredPostsRemoteSource filteredPostsRemoteSource;
   final NetworkInfo networkInfo;
 
-  FilteredPostRepoImp(this.networkInfo, {required this.filteredPostsRemoteSource});
+  FilteredPostRepoImp(
+      {required this.networkInfo, required this.filteredPostsRemoteSource});
+
   @override
   Future<List<PostEntity>> getFilteredPosts(
       {Map<String, dynamic>? queryParameters}) async {
@@ -17,14 +19,23 @@ class FilteredPostRepoImp implements FilteredPostRepo {
       try {
         final postModels = await filteredPostsRemoteSource.getFilteredPosts(
             queryParameters: queryParameters);
-//TODO: this part is new for me , the expand part , but i understand why we get into this shit
-        final postEntites = postModels
+        print("Post Models (Before Mapping): ${postModels.length}");
+
+        // Check if the data is not empty before trying to map
+        if (postModels.isEmpty || postModels[0].data.isEmpty) {
+          print("PostModel data is empty");
+          return []; // Return an empty list if no data is available
+        }
+
+        // Map the PostModel to PostEntity
+        final postEntities = postModels
             .map((postModel) =>
                 postModel.data.map((postItem) => postItem.toEntity()).toList())
-            .expand((element) => element)
+            .expand((element) => element) // Flatten the list
             .toList();
-        return postEntites;
+        return postEntities;
       } catch (e) {
+        print(e);
         throw Exception('Failed to fetch filtered posts: $e');
       }
     } else {

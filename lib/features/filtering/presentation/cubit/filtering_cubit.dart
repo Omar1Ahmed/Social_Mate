@@ -7,16 +7,19 @@ part 'filtering_state.dart';
 
 class FilteringCubit extends Cubit<FilteringState> {
   final FilteredPostRepo filteredPostRepo;
-  static List<PostEntity> filteredPosts = [];
-  FilteringCubit(this.filteredPostRepo) : super(FilteringInitial(List<PostEntity>.empty()));
+
+  FilteringCubit(this.filteredPostRepo) : super(FilteringInitial());
 
   Future<void> getFilteredPosts({Map<String, dynamic>? queryParameters}) async {
-    emit(FilteredPostsIsLoading(filteredPosts));
+    if (state is FilteredPostsIsLoading) return; // Prevent duplicate requests
+    emit(FilteredPostsIsLoading());
     try {
-      filteredPosts = await filteredPostRepo.getFilteredPosts(queryParameters: queryParameters);
+      final filteredPosts = await filteredPostRepo.getFilteredPosts(
+          queryParameters: queryParameters);
+          print("Filtered Posts: ${filteredPosts.length} items"); // Debugging
       emit(FilteredPostsIsLoaded(filteredPosts));
     } catch (e) {
-      emit(FilteredPostsHasError(filteredPosts, e.toString()));
+      emit(FilteredPostsHasError(e.toString()));
     }
   }
 }

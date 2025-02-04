@@ -14,10 +14,11 @@ abstract class DioNetworkClient {
   DioNetworkClient() {
     dio = Dio(
       BaseOptions(
-          baseUrl: FakeEndPoints.baseUrl,
+          baseUrl: FakeEndPoints.FakeBaseUrl,
           connectTimeout: Duration(seconds: 5),
           sendTimeout: Duration(seconds: 5),
-          contentType: 'application/json'),
+          receiveTimeout: Duration(seconds: 5),
+          headers: {'Content-Type': 'application/json'}),
     );
 
     dio.interceptors.add(LogInterceptor(
@@ -104,10 +105,10 @@ abstract class DioNetworkClient {
           }
           break;
         default:
-        if (kDebugMode) {
-          print('Unhandled DioExceptionType: ${error.type}');
-        }
-        break;  
+          if (kDebugMode) {
+            print('Unhandled DioExceptionType: ${error.type}');
+          }
+          break;
       }
     } else {
       if (kDebugMode) {
