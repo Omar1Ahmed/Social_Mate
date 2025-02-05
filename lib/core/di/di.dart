@@ -4,7 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:social_media/core/helper/SharedPref/sharedPrefHelper.dart';
 import 'package:social_media/features/filtering/could_be_shared/network_clients/dio_network_client.dart';
-import 'package:social_media/features/filtering/could_be_shared/network_clients/fake_dio_network_client.dart';
+import 'package:social_media/features/filtering/could_be_shared/network_clients/real_dio_client.dart';
 import 'package:social_media/features/filtering/could_be_shared/network_info/network_info.dart';
 import 'package:social_media/features/filtering/data/datasources/filtered_posts_remote_source.dart';
 import 'package:social_media/features/filtering/data/repositories/filtered_post_repo_imp.dart';
@@ -30,7 +30,7 @@ Future<void> initDependencies() async {
     )),
   );
 
-  getIt.registerLazySingleton<DioNetworkClient>(() => FakeDioNetworkClient());
+  getIt.registerLazySingleton<DioNetworkClient>(() => RealDioNetworkClient());
   // |------------------------------------------------------------------\
   // |-------------------------- Data Sources ------------------------------\
   // |------------------------------------------------------------------\

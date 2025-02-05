@@ -15,3 +15,10 @@ class CacheFailure extends Failures {
 class NetworkFailure extends Failures {
   NetworkFailure({required super.message});
 } 
+class FilteredPostException implements Exception {
+  final String message;
+  FilteredPostException(this.message);
+
+  @override
+  String toString() => "FilteredPostException: $message";
+}

@@ -1,38 +1,48 @@
-// this supposed to be a base configration for dio client (abstracted & could be overrided)
-// the normal class made by omar is also ok , but the abstracted could be for real or mock api
-// i liked the generic type functions
-
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:social_media/features/filtering/could_be_shared/fake_end_points/fake_end_points.dart';
+import 'package:social_media/features/filtering/could_be_shared/fake_end_points/real_end_points.dart';
 
 abstract class DioNetworkClient {
   late Dio dio;
 
-//TODO: i need to do a revision on this constructor
-//TODO: remove kdebug
   DioNetworkClient() {
     dio = Dio(
       BaseOptions(
-          baseUrl: FakeEndPoints.FakeBaseUrl,
-          connectTimeout: Duration(seconds: 5),
-          sendTimeout: Duration(seconds: 5),
-          receiveTimeout: Duration(seconds: 5),
-          headers: {'Content-Type': 'application/json'}),
+        baseUrl: RealEndPoints.realPostsBaseUrl,
+        connectTimeout: Duration(seconds: 5),
+        sendTimeout: Duration(seconds: 5),
+        receiveTimeout: Duration(seconds: 5),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      ),
     );
 
+    // Add logging interceptor for debugging
     dio.interceptors.add(LogInterceptor(
-        request: true,
-        error: true,
-        requestBody: true,
-        requestHeader: true,
-        responseBody: true,
-        responseHeader: true));
+      request: true,
+      error: true,
+      requestBody: true,
+      requestHeader: true,
+      responseBody: true,
+      responseHeader: true,
+    ));
   }
-  Future<Response> get(String path,
-      {Map<String, dynamic>? queryParameters}) async {
+
+  // Generic GET request with token and query parameters
+  Future<Response> get(
+    String path, {
+    required String token, // Add token parameter
+    Map<String, dynamic>? queryParameters,
+  }) async {
     try {
-      final response = await dio.get(path, queryParameters: queryParameters);
+      final response = await dio.get(
+        path,
+        queryParameters: queryParameters,
+        options: Options(headers: {
+          'Authorization': 'Bearer $token'
+        }), // Add token dynamically
+      );
       return response;
     } catch (e) {
       handleError(e);
@@ -40,9 +50,20 @@ abstract class DioNetworkClient {
     }
   }
 
-  Future<Response> post(String path, {Map<String, dynamic>? data}) async {
+  // Generic POST request with token and data
+  Future<Response> post(
+    String path, {
+    required String token, // Add token parameter
+    Map<String, dynamic>? data,
+  }) async {
     try {
-      final response = await dio.post(path, data: data);
+      final response = await dio.post(
+        path,
+        data: data,
+        options: Options(headers: {
+          'Authorization': 'Bearer $token'
+        }), // Add token dynamically
+      );
       return response;
     } catch (e) {
       handleError(e);
@@ -50,9 +71,20 @@ abstract class DioNetworkClient {
     }
   }
 
-  Future<Response> put(String path, {Map<String, dynamic>? data}) async {
+  // Generic PUT request with token and data
+  Future<Response> put(
+    String path, {
+    required String token, // Add token parameter
+    Map<String, dynamic>? data,
+  }) async {
     try {
-      final response = await dio.put(path, data: data);
+      final response = await dio.put(
+        path,
+        data: data,
+        options: Options(headers: {
+          'Authorization': 'Bearer $token'
+        }), // Add token dynamically
+      );
       return response;
     } catch (e) {
       handleError(e);
@@ -60,9 +92,18 @@ abstract class DioNetworkClient {
     }
   }
 
-  Future<Response> delete(String path) async {
+  // Generic DELETE request with token
+  Future<Response> delete(
+    String path, {
+    required String token, // Add token parameter
+  }) async {
     try {
-      final response = await dio.delete(path);
+      final response = await dio.delete(
+        path,
+        options: Options(headers: {
+          'Authorization': 'Bearer $token'
+        }), // Add token dynamically
+      );
       return response;
     } catch (e) {
       handleError(e);
@@ -70,6 +111,7 @@ abstract class DioNetworkClient {
     }
   }
 
+  // Error handling method
   void handleError(Object error) {
     if (error is DioException) {
       switch (error.type) {

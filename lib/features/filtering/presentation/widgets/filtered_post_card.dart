@@ -1,55 +1,3 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter/widgets.dart';
-// import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
-// import 'package:social_media/core/theming/colors.dart';
-// import 'package:social_media/core/theming/styles.dart';
-
-// class FilteredPostCard extends StatelessWidget {
-//   const FilteredPostCard({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return InfoWidget(builder: (context, deviceInfo) {
-//       return Padding(
-//         padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
-//         child: Container(
-//           padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-//           width: deviceInfo.screenWidth,
-//           height: deviceInfo.screenHeight * 0.2,
-//           decoration: BoxDecoration(
-//             color: Colors.white,
-//             borderRadius: BorderRadius.circular(16),
-//             border: Border.all(
-//               color: ColorsManager.primaryColor,
-//               width: 1,
-//             ),
-//           ),
-//           child: Column(
-//             mainAxisAlignment: MainAxisAlignment.start,
-//             crossAxisAlignment: CrossAxisAlignment.center,
-//             children: [
-//               Row(
-//                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                 children: [
-//                   Text(
-//                     'Who ate my dinosour??!',
-//                     style: TextStyles.inter18BoldBlack,
-//                   ),
-//                   IconButton(
-//                       onPressed: () {},
-//                       icon: Icon(
-//                         Icons.delete_forever,
-//                         color: ColorsManager.redColor,
-//                       ))
-//                 ],
-//               ),
-//             ],
-//           ),
-//         ),
-//       );
-//     });
-//   }
-// }
 
 import 'package:flutter/material.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
@@ -57,12 +5,13 @@ import 'package:social_media/core/theming/colors.dart';
 import 'package:social_media/core/theming/styles.dart';
 
 class FilteredPostCard extends StatelessWidget {
+  final int postOwnerId;
   final String title;
   final String postOwner;
   final String date;
   final String content;
 
-  const FilteredPostCard({super.key, required this.title, required this.postOwner, required this.date, required this.content});
+  const FilteredPostCard({super.key, required this.title, required this.postOwner, required this.date, required this.content, required this.postOwnerId});
 
   @override
   Widget build(BuildContext context) {
@@ -93,12 +42,15 @@ class FilteredPostCard extends StatelessWidget {
                   ),
                   Expanded(
                     flex: 1,
-                    child: IconButton(
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.delete_forever,
-                          color: ColorsManager.redColor,
-                        )),
+                    //TODO: icon only shown if postOwnerId = currentUserId , need to pass currentUserId 
+                    child: Visibility(
+                      child: IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.delete_forever,
+                            color: ColorsManager.redColor,
+                          )),
+                    ),
                   )
                 ],
               ),

@@ -9,30 +9,36 @@ class FilteredPostRepoImp implements FilteredPostRepo {
   final FilteredPostsRemoteSource filteredPostsRemoteSource;
   final NetworkInfo networkInfo;
 
-  FilteredPostRepoImp(
-      {required this.networkInfo, required this.filteredPostsRemoteSource});
+  FilteredPostRepoImp({
+    required this.networkInfo,
+    required this.filteredPostsRemoteSource,
+  });
 
   @override
-  Future<List<PostEntity>> getFilteredPosts(
-      {Map<String, dynamic>? queryParameters}) async {
+  Future<List<PostEntity>> getFilteredPosts({
+    Map<String, dynamic>? queryParameters,
+    required String token,
+  }) async {
     if (await networkInfo.isConnected) {
       try {
         final postModels = await filteredPostsRemoteSource.getFilteredPosts(
-            queryParameters: queryParameters);
-        print("Post Models (Before Mapping): ${postModels.length}");
+          queryParameters: queryParameters,
+          token: token,
+        );
 
         // Check if the data is not empty before trying to map
-        if (postModels.isEmpty || postModels[0].data.isEmpty) {
+        if (postModels.isEmpty) {
           print("PostModel data is empty");
           return []; // Return an empty list if no data is available
         }
 
         // Map the PostModel to PostEntity
         final postEntities = postModels
-            .map((postModel) =>
-                postModel.data.map((postItem) => postItem.toEntity()).toList())
+            .map((postModel) => postModel.toEntityList())
             .expand((element) => element) // Flatten the list
             .toList();
+
+        print("Filtered Posts: ${postEntities.length} items"); // Debug log
         return postEntities;
       } catch (e) {
         print(e);

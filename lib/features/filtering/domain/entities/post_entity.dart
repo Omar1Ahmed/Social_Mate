@@ -1,23 +1,17 @@
-// my app only care about this model , this is what will be shown in the UI
 class PostEntity {
   final int id;
   final String title;
   final String content;
-  final CreatedBy createdBy;
   final String createdOn;
+  final String createdBy;
+  final int userId;
 
-  PostEntity({
+  const PostEntity({
+    required this.userId,
     required this.id,
     required this.title,
     required this.content,
-    required this.createdBy,
     required this.createdOn,
+    required this.createdBy,
   });
-}
-
-class CreatedBy {
-  final int id;
-  final String fullName;
-
-  CreatedBy({required this.id, required this.fullName});
 }
