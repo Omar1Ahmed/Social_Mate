@@ -4,7 +4,7 @@ import 'package:social_media/features/filtering/could_be_shared/network_clients/
 
 class RealDioNetworkClient extends DioNetworkClient {
   @override
-  RealDioNetworkClient() : super() {
+  RealDioNetworkClient() : super(RealEndPoints.realPostsBaseUrl) {
     dio.options.baseUrl = RealEndPoints.realPostsBaseUrl; // Replace with your Fake base URL
     dio.interceptors.add(LogInterceptor(
       request: true,

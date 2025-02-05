@@ -2,13 +2,13 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:social_media/features/filtering/could_be_shared/fake_end_points/real_end_points.dart';
 
-abstract class DioNetworkClient {
+ class DioNetworkClient {
   late Dio dio;
 
-  DioNetworkClient() {
+  DioNetworkClient(String baseUrl) {
     dio = Dio(
       BaseOptions(
-        baseUrl: RealEndPoints.realPostsBaseUrl,
+        baseUrl: baseUrl,
         connectTimeout: Duration(seconds: 5),
         sendTimeout: Duration(seconds: 5),
         receiveTimeout: Duration(seconds: 5),
@@ -28,6 +28,11 @@ abstract class DioNetworkClient {
       responseHeader: true,
     ));
   }
+
+  // Factory constructors to create separate instances
+  factory DioNetworkClient.posts() => DioNetworkClient(RealEndPoints.realPostsBaseUrl);
+  factory DioNetworkClient.userMgt() => DioNetworkClient(RealEndPoints.realUserBaseUrl);
+
 
   // Generic GET request with token and query parameters
   Future<Response> get(

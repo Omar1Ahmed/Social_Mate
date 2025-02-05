@@ -10,6 +10,7 @@ import 'package:social_media/features/authentication/data/data_source/authentica
 import 'package:social_media/features/authentication/data/repository/authentication_repository_imp.dart';
 import 'package:social_media/features/authentication/domain/repository/authentication_repository.dart';
 import 'package:social_media/features/authentication/presentation/logic/auth_cubit.dart';
+import 'package:social_media/features/filtering/could_be_shared/fake_end_points/real_end_points.dart';
 import 'package:social_media/features/filtering/could_be_shared/network_clients/dio_network_client.dart';
 import 'package:social_media/features/filtering/could_be_shared/network_clients/real_dio_client.dart';
 import 'package:social_media/features/filtering/could_be_shared/network_info/network_info.dart';
@@ -39,13 +40,20 @@ Future<void> initDependencies() async {
   getIt.registerLazySingleton<DioClient>(() => DioClient(dio: getIt<Dio>()));
 
   getIt.registerLazySingleton<DioNetworkClient>(() => RealDioNetworkClient());
+
+
+
+
+
+
   // |------------------------------------------------------------------\
   // |-------------------------- Data Sources ------------------------------\
   // |------------------------------------------------------------------\
 
   getIt.registerFactory<PostRemoteDataSource>(
-    () => PostRemoteDataSourceImpl(dio: getIt<DioClient>()),
+        () => PostRemoteDataSourceImpl(dio: getIt<DioClient>(), userMainDetails: getIt<userMainDetailsCubit>()),
   );
+
   getIt.registerLazySingleton<NetworkInfo>(
     () => NetworkInfoConnection(connectionChecker: getIt()),
   );
@@ -58,7 +66,7 @@ Future<void> initDependencies() async {
           ));
   getIt.registerLazySingleton<AuthenticationRemoteDataSource>(
       () => AuthenticationRemoteDataSourceImp(
-            dioNetworkClient: getIt<DioNetworkClient>(),
+            dioNetworkClient: DioNetworkClient(RealEndPoints.realUserBaseUrl),
           ));
   // |------------------------------------------------------------------\
   // |-------------------------- Repositories ------------------------------\
@@ -91,8 +99,8 @@ Future<void> initDependencies() async {
   );
 
   // Auth Cubit
-  getIt.registerFactory<AuthCubit>(
-    () => AuthCubit(getIt()),
+  getIt.registerSingleton<AuthCubit>(
+    AuthCubit(getIt()),
   );
 
   // home Cubit

@@ -28,6 +28,7 @@ class CustomTextField extends StatelessWidget {
             BlocBuilder<PasswordVisibilityCubit, bool>(
               builder: (context, isHidden) {
                 return TextField(
+                  controller: controller,
                   obscureText: isPassword ? isHidden : false,
                   decoration: InputDecoration(
                     label: Text(label,
