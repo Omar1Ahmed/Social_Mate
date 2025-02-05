@@ -1,3 +1,6 @@
+import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
+import 'package:social_media/core/userMainDetails/userMainDetails_state.dart';
+
 import '../../../../core/helper/dotenv/dot_env_helper.dart';
 import '../../../../core/network/dio_client.dart';
 import '../../domain/repository/post_remote_data_source.dart';
@@ -5,8 +8,11 @@ import '../model/post_response.dart';
 
 class PostRemoteDataSourceImpl implements PostRemoteDataSource {
   final DioClient dio;
+  final userMainDetailsCubit userMainDetails; // Inject the Cubit
 
-  PostRemoteDataSourceImpl({required this.dio});
+  PostRemoteDataSourceImpl({required this.dio,
+    required this.userMainDetails, // Dependency injection
+  });
 
   final String baseUrl = EnvHelper.getString('posts_Base_url');
 
@@ -14,7 +20,7 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
   Future<PostResponse> getPosts( int pageOffset, int pageSize) async {
     final response = await dio.get("$baseUrl/posts?createdBy=1", queryParameters: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer eyJhbGciOiJIUzM4NCJ9.eyJST0xFU19JRFMiOlsyXSwiVVNFUl9JRCI6Niwic3ViIjoiYXNkYXNkMTIzQGdtYWlsLmNvbSIsImlhdCI6MTczODcwNjIxNSwiZXhwIjoxNzM4NzkyNjE1fQ.Jj7XhDoE86HjpItLG_rRgAx1_aczgoo4lMrsZprN4qBwHGpPMeLvEmp4L0Zh6yDd',
+      'Authorization': 'Bearer ${userMainDetails.state.token}',
       'pageOffset': pageOffset,
       'pageSize': pageSize
     });
@@ -29,7 +35,7 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
       postData,
       queryParameters: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer eyJhbGciOiJIUzM4NCJ9.eyJST0xFU19JRFMiOlsyXSwiVVNFUl9JRCI6Niwic3ViIjoiYXNkYXNkMTIzQGdtYWlsLmNvbSIsImlhdCI6MTczODcwNjIxNSwiZXhwIjoxNzM4NzkyNjE1fQ.Jj7XhDoE86HjpItLG_rRgAx1_aczgoo4lMrsZprN4qBwHGpPMeLvEmp4L0Zh6yDd'
+        'Authorization': 'Bearer ${userMainDetails.state.token}'
       },
     );
   }
