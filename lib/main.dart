@@ -12,7 +12,7 @@ Future<void> main() async {
   await dotenv.load();
   await dotenv.load();
   await initDependencies();
-
+  
   runApp(
     MyApp(
       appRouter: AppRouts(),

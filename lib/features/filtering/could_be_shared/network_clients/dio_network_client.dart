@@ -9,8 +9,6 @@ import 'package:social_media/features/filtering/could_be_shared/fake_end_points/
 abstract class DioNetworkClient {
   late Dio dio;
 
-//TODO: i need to do a revision on this constructor
-//TODO: remove kdebug
   DioNetworkClient() {
     dio = Dio(
       BaseOptions(

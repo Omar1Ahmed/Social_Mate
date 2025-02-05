@@ -11,6 +11,11 @@ class TextStyles {
     fontFamily: 'Inter',
     color: ColorsManager.primaryColor,
   );
+  static const inter14Regular = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.normal,
+    fontFamily: 'Inter',
+  );
   static const inter18Regular = TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.normal,

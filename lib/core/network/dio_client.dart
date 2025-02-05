@@ -68,7 +68,7 @@ class DioClient implements ApiCalls {
     }
   }
 
-  /// Validates the response data and ensures it is a Map<String, dynamic>
+
   Map<String, dynamic> _validateResponseData(dynamic data) {
     if (data is Map<String, dynamic>) {
       return data;

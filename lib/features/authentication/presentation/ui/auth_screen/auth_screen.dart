@@ -11,49 +11,37 @@ import 'package:social_media/features/authentication/presentation/logic/auth_sta
 import 'package:social_media/features/authentication/presentation/ui/widgets/customButton.dart';
 
 import 'sign_in_screen.dart';
-import 'sign_up_screen.dart';
-
 
 class AuthScreen extends StatelessWidget {
   const AuthScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-
-
     return InfoWidget(builder: (context, info) {
-        return Scaffold(
-          backgroundColor: Colors.white,
-          body: BlocConsumer<AuthCubit, AuthState>(
-            listener: (context, state) {
-
-              print('state : $state');
-
-            },
-            builder: (context, state){ return SingleChildScrollView(
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: BlocConsumer<AuthCubit, AuthState>(
+          listener: (context, state) {
+            print('state : $state');
+          },
+          builder: (context, state) {
+            return SingleChildScrollView(
               child: Padding(
-                padding:  EdgeInsetsDirectional.only(start: info.screenWidth * 0.1, end: info.screenWidth * 0.1, top: info.screenHeight * 0.15),
+                padding: EdgeInsetsDirectional.only(start: info.screenWidth * 0.1, end: info.screenWidth * 0.1, top: info.screenHeight * 0.15),
                 child: Column(
-
                   children: [
-
                     Center(
                       child: Image.asset("assets/images/fullLogo.png", height: info.screenHeight * 0.1),
                     ),
-
-                        AuthHeader(
-                          isSignIn: state is AuthSignInState,
-                          onToggle: () => context.read<AuthCubit>().toggleAuth(),
-                        ),
-
-
+                    AuthHeader(
+                      isSignIn: state is AuthSignInState,
+                      onToggle: () => context.read<AuthCubit>().toggleAuth(),
+                    ),
                     Container(
                       height: info.screenHeight * 0.41,
                       margin: EdgeInsetsDirectional.only(top: info.screenHeight * 0.016),
-                      child: state is AuthSignInState ? SignInForm() : SignUpForm()
+                      child: state is AuthSignInState ? SignInForm() : SignUpForm(),
                     ),
-
-
                     SizedBox(
                       width: info.screenWidth * 0.6,
                       child: CustomButton(
@@ -66,22 +54,19 @@ class AuthScreen extends StatelessWidget {
                             context.read<AuthCubit>().login(context);
                             // dynamic token = context.read<JwtCubit>().decodeToken(""); // Start decoding.
 
-
+                            context.pushNamed(Routes.homePage);
                           }),
                     )
                   ],
                 ),
               ),
             );
-            }
-
-          ),
-        );
-      }
-    );
+          },
+        ),
+      );
+    });
   }
 }
-
 
 class AuthHeader extends StatelessWidget {
   final bool isSignIn;
@@ -94,7 +79,6 @@ class AuthHeader extends StatelessWidget {
     return InfoWidget(builder: (context, info) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
-
         children: [
           GestureDetector(
             onTap: isSignIn ? null : onToggle,
@@ -103,7 +87,7 @@ class AuthHeader extends StatelessWidget {
               style: TextStyle(fontSize: info.screenWidth * 0.04, fontWeight: FontWeight.bold, color: isSignIn ? Colors.black : Colors.grey),
             ),
           ),
-           SizedBox(width: info.screenWidth * 0.05),
+          SizedBox(width: info.screenWidth * 0.05),
           GestureDetector(
             onTap: isSignIn ? onToggle : null,
             child: Text(
