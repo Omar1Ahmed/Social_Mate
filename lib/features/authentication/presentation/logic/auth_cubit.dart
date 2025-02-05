@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/features/authentication/domain/repository/authentication_repository.dart';
 import 'auth_state.dart';
@@ -13,7 +14,6 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthSignInState());
     }
   }
-
   // login function by marwan
   Future<void> logIn(String email, String password) async {
     if (state is AuthSignInState) {
@@ -25,6 +25,8 @@ class AuthCubit extends Cubit<AuthState> {
           print(token); // log the token
           emit(AuthLogInTokenRetrivedState(token: token));
           //TODO: i think the decryption function should be here
+
+          
         } else {
           print('token is not retrived well');
         }
@@ -33,4 +35,12 @@ class AuthCubit extends Cubit<AuthState> {
       }
     }
   }
+
+  // omar lines
+  // context.read<userMainDetailsCubit>().decodeAndAssignToken('eyJhbGciOiJIUzM4NCJ9.eyJST0xFU19JRFMiOlsyXSwiVVNFUl9JRCI6Niwic3ViIjoiYXNkYXNkMTIzQGdtYWlsLmNvbSIsImlhdCI6MTczODcxMzM1NSwiZXhwIjoxNzM4Nzk5NzU1fQ.SuTdrRlZg7ii0c63HvE09JrabxvAemsWFLPBr5IQGL52WmHfkHG9smIVDNdHHWkf'); // Decode And Assign Token
+  //   userMainDetailsState userDetailsState = context.read<userMainDetailsCubit>().state;
+  //   if( userDetailsState is userMainDetailsErrorState){
+  //     // emit with Error state (AuthErrorState)
+  //     // print(userDetailsState.message);
+
 }

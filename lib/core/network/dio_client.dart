@@ -68,33 +68,17 @@ class DioClient implements ApiCalls {
     }
   }
 
-  /// Validates the response data and ensures it is a Map<String, dynamic>
+
   Map<String, dynamic> _validateResponseData(dynamic data) {
     if (data is Map<String, dynamic>) {
       return data;
     } else if (data == null) {
       throw Exception('Response data is null');
-    } else if (data is int) {
+    } else if (data is int || data is String || data is double || data is bool || data is List|| data is Map<String, dynamic>) {
       return {
         'data': data
       };
-    } else if (data is String) {
-      return {
-        'data': data
-      };
-    } else if (data is List) {
-      return {
-        'data': data
-      };
-    } else if (data is double) {
-      return {
-        'data': data
-      };
-    } else if (data is bool) {
-      return {
-        'data': data
-      };
-    } else {
+    }  else {
       throw Exception('Invalid response format: Expected Map<String, dynamic>, but got ${data.runtimeType}');
     }
   }

@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/routing/routs.dart';
 import 'package:social_media/core/token/token_cubit.dart';
+import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 import 'package:social_media/features/authentication/presentation/logic/auth_cubit.dart';
 
 import 'core/routing/appRouting.dart';
@@ -13,7 +14,6 @@ Future<void> main() async {
   await dotenv.load();
   await dotenv.load();
   await initDependencies();
-
   runApp(
     MyApp(
       appRouter: AppRouts(),
@@ -30,13 +30,16 @@ class MyApp extends StatelessWidget {
       BlocProvider<AuthCubit>(
         create: (context) => getIt<AuthCubit>(),
       ),
-      // here is the token cubit made by omar -------------------
-      BlocProvider<TokenCubit>(
-        create: (context) => getIt<TokenCubit>(),
+      BlocProvider<userMainDetailsCubit>(
+        create: (context) => getIt<userMainDetailsCubit>(),
       ),
-    ],
-        
-        child: MaterialApp(
+
+      // here is the token cubit made by omar -------------------
+      // BlocProvider<TokenCubit>(
+      //   create: (context) => getIt<TokenCubit>(),
+      //),
+    ],        
+    child: MaterialApp(
           debugShowCheckedModeBanner: false,
           initialRoute: Routes.splashScreen,
           onGenerateRoute: appRouter.generateRoute,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_media/core/token/token_cubit.dart';
+import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 
 import '../../../../../../core/Responsive/Models/device_info.dart';
 import '../../../../../../core/theming/colors.dart';
@@ -16,7 +16,7 @@ class ShowReportPostDialogWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    print('Print token in report dialog: ${context.read<TokenCubit>().state.token}');
+    print('Print token in report dialog: ${context.read<userMainDetailsCubit>().state.token}');
 
     return CustomDialogWidget(
       deviceInfo: deviceInfo,

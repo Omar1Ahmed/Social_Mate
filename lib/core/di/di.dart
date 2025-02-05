@@ -3,7 +3,9 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:social_media/core/helper/SharedPref/sharedPrefHelper.dart';
-import 'package:social_media/core/token/token_cubit.dart';
+
+import 'package:social_media/core/userMainDetails/jwt_token_decode/data/repository/jwt_token_decode_repository_imp.dart';
+import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 import 'package:social_media/features/authentication/data/data_source/authentication_remote_data_source.dart';
 import 'package:social_media/features/authentication/data/repository/authentication_repository_imp.dart';
 import 'package:social_media/features/authentication/domain/repository/authentication_repository.dart';
@@ -59,6 +61,11 @@ Future<void> initDependencies() async {
   // |-------------------------- Repositories ------------------------------\
   // |------------------------------------------------------------------\
 
+  getIt.registerSingleton<JwtTokenDecodeRepositoryImp>(
+    JwtTokenDecodeRepositoryImp(),
+  );
+
+  // post repository
   getIt.registerFactory<PostRepository>(
     () => impl.PostRepositoryImpl(remoteDataSource: getIt<PostRemoteDataSource>()),
   );
@@ -69,10 +76,19 @@ Future<void> initDependencies() async {
   // |-------------------------- Cubits ------------------------------\
   // |------------------------------------------------------------------\
 
-  // token Cubit
-  getIt.registerSingleton<TokenCubit>(
-    TokenCubit(),
+
+  // token Decoder Cubit
+
+  // main User Details Cubit
+  getIt.registerSingleton<userMainDetailsCubit>(
+    userMainDetailsCubit(getIt<JwtTokenDecodeRepositoryImp>()),
   );
+
+  // Auth Cubit
+  getIt.registerFactory<AuthCubit>(
+    () => AuthCubit(getIt()),
+  );
+
   // home Cubit
   getIt.registerFactory<HomeCubit>(
     () => HomeCubit(getIt<repo.PostRepository>()),

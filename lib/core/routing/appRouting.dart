@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/routing/routs.dart';
-import 'package:social_media/features/authentication/presentation/ui/auth_screen/sign_in_screen.dart';
+import 'package:social_media/features/authentication/presentation/logic/auth_cubit.dart';
+import 'package:social_media/features/authentication/presentation/ui/auth_screen/auth_screen.dart';
 import 'package:social_media/features/filtering/presentation/cubit/filtering_cubit.dart';
 import 'package:social_media/features/filtering/presentation/pages/filtering_screen.dart';
 import 'package:social_media/features/on_boarding/presentation/ui/onboarding_screen.dart';
@@ -19,8 +20,8 @@ class AppRouts {
 
       case Routes.onBordingScreen:
         return MaterialPageRoute(builder: (context) => OnboardingScreen());
-      case Routes.loginScreen:
-        return MaterialPageRoute(builder: (context) => SignInForm());
+      case Routes.AuthScreen:
+        return MaterialPageRoute(builder: (context) => BlocProvider(create: (context) => getIt<AuthCubit>(), child: AuthScreen()));
       case Routes.homePage:
         return MaterialPageRoute(
             builder: (context) => BlocProvider(
