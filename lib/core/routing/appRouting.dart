@@ -21,9 +21,7 @@ class AppRouts {
       case Routes.onBordingScreen:
         return MaterialPageRoute(builder: (context) => OnboardingScreen());
       case Routes.AuthScreen:
-        return MaterialPageRoute(builder: (context) => BlocProvider(
-            create: (context) => getIt<AuthCubit>(),
-            child: AuthScreen()));
+        return MaterialPageRoute(builder: (context) => BlocProvider(create: (context) => getIt<AuthCubit>(), child: AuthScreen()));
       case Routes.homePage:
         return MaterialPageRoute(
             builder: (context) => BlocProvider(

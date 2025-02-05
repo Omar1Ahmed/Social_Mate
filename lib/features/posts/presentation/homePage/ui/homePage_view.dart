@@ -41,7 +41,6 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     context.read<HomeCubit>().getPosts();
-    print('Print token in Home Page: ${context.read<TokenCubit>().state.token}');
     return InfoWidget(
       builder: (context, deviceInfo) {
         return SafeArea(
