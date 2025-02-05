@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:social_media/core/Responsive/Models/device_info.dart';
-
+import 'package:social_media/core/di/di.dart';
 import '../../../../../../core/theming/colors.dart';
+import '../../logic/cubit/home_cubit_cubit.dart';
 import 'custom_dialog_widget.dart';
 
 class ShowCreatePostDialogWidget extends StatelessWidget {
@@ -23,8 +24,25 @@ class ShowCreatePostDialogWidget extends StatelessWidget {
             fillColor: ColorsManager.lightGreyColor,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(deviceInfo.localWidth * 0.03),
-              borderSide: BorderSide.none,
+              borderSide: BorderSide(
+                  color: ColorsManager.greyColor,
+                  width: deviceInfo.localWidth * 0.0015
+              ),
             ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(deviceInfo.localWidth * 0.03),
+              borderSide: BorderSide(
+                  color: ColorsManager.greyColor,
+                  width: deviceInfo.localWidth * 0.0015
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(deviceInfo.localWidth * 0.03),
+              borderSide: BorderSide(
+                  color: ColorsManager.primaryColor,
+                  width: deviceInfo.localWidth * 0.0015
+              ),
+            )
           ),
         ),
         SizedBox(height: deviceInfo.localHeight * 0.02),
@@ -35,10 +53,27 @@ class ShowCreatePostDialogWidget extends StatelessWidget {
             labelText: "Content",
             filled: true,
             fillColor: ColorsManager.lightGreyColor,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(deviceInfo.localWidth * 0.03),
-              borderSide: BorderSide.none,
-            ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(deviceInfo.localWidth * 0.03),
+                borderSide: BorderSide(
+                    color: ColorsManager.greyColor,
+                    width: deviceInfo.localWidth * 0.0015
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(deviceInfo.localWidth * 0.03),
+                borderSide: BorderSide(
+                    color: ColorsManager.greyColor,
+                    width: deviceInfo.localWidth * 0.0015
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(deviceInfo.localWidth * 0.03),
+                borderSide: BorderSide(
+                    color: ColorsManager.primaryColor,
+                    width: deviceInfo.localWidth * 0.0015
+                ),
+              )
           ),
         ),
       ],
@@ -50,7 +85,7 @@ class ShowCreatePostDialogWidget extends StatelessWidget {
             contentController.clear();
           },
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(ColorsManager.greyColor.withOpacity(0.3)),
+            backgroundColor: MaterialStateProperty.all(ColorsManager.greyColor.withOpacity(0.2)),
             shape: MaterialStateProperty.all(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(deviceInfo.localWidth * 0.03),
@@ -77,8 +112,15 @@ class ShowCreatePostDialogWidget extends StatelessWidget {
           onPressed: () {
             if (titleController.text.isNotEmpty && contentController.text.isNotEmpty) {
               Navigator.pop(context);
+              getIt.get<HomeCubit>().createPost(titleController.text, contentController.text);
+              titleController.clear();
+              contentController.clear();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text("Post created successfully!")),
+              );
+            } else if (titleController.text.length < 25) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("Title must be at least 25 characters.")),
               );
             } else {
               ScaffoldMessenger.of(context).showSnackBar(

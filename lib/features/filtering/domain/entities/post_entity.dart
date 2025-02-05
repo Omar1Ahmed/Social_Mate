@@ -1,4 +1,4 @@
-class PostEntity {
+class FilteringPostEntity {
   final int id;
   final String title;
   final String content;
@@ -6,7 +6,7 @@ class PostEntity {
   final String createdBy;
   final int userId;
 
-  const PostEntity({
+  const FilteringPostEntity({
     required this.userId,
     required this.id,
     required this.title,

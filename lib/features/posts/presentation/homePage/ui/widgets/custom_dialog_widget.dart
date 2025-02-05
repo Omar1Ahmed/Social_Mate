@@ -9,22 +9,22 @@ class CustomDialogWidget extends StatelessWidget {
     required this.title,
     required this.fields,
     required this.actions,
-  });
-
+  } );
   final DeviceInfo deviceInfo;
-  final String title; // Title of the dialog (e.g., "Report the Post", "Create Post")
-  final List<Widget> fields; // List of input fields (e.g., TextFields, RadioButtons)
-  final List<Widget> actions; // List of action buttons (e.g., Report, Cancel)
-
+  final String title;
+  final List<Widget> fields; 
+  final List<Widget> actions; 
   @override
   Widget build(BuildContext context) {
     return Dialog(
+      backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(deviceInfo.localWidth * 0.03),
       ),
       elevation: 8.0,
       child: SingleChildScrollView(
         child: Container(
+
           width: deviceInfo.localWidth * 0.8,
           padding: EdgeInsets.all(deviceInfo.localWidth * 0.05),
           child: Column(

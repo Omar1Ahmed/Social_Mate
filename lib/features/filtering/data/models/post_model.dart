@@ -19,7 +19,7 @@ class PostModel {
     );
   }
 
-  List<PostEntity> toEntityList() {
+  List<FilteringPostEntity> toEntityList() {
     return data.map((postItem) => postItem.toEntity()).toList();
   }
 }
@@ -49,8 +49,8 @@ class PostItemModel {
     );
   }
 
-  PostEntity toEntity() {
-    return PostEntity(
+  FilteringPostEntity toEntity() {
+    return FilteringPostEntity(
       id: id,
       title: title,
       content: content,

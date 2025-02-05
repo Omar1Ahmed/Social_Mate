@@ -1,14 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/routing/routs.dart';
+import 'package:social_media/core/token/token_cubit.dart';
+import 'package:social_media/features/authentication/presentation/logic/auth_cubit.dart';
 
 import 'core/routing/appRouting.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await dotenv.load();
+  await dotenv.load();
   await initDependencies();
-  runApp(MyApp(appRouter: AppRouts()));
+
+  runApp(
+    MyApp(
+      appRouter: AppRouts(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -16,10 +26,20 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key, required this.appRouter});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      initialRoute: Routes.splashScreen,
-      onGenerateRoute: appRouter.generateRoute,
-    );
+    return MultiBlocProvider(providers: [
+      BlocProvider<AuthCubit>(
+        create: (context) => getIt<AuthCubit>(),
+      ),
+      // here is the token cubit made by omar -------------------
+      BlocProvider<TokenCubit>(
+        create: (context) => getIt<TokenCubit>(),
+      ),
+    ],
+        
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          initialRoute: Routes.splashScreen,
+          onGenerateRoute: appRouter.generateRoute,
+        ));
   }
 }

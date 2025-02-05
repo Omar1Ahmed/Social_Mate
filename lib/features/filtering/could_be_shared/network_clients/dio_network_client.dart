@@ -53,16 +53,14 @@ abstract class DioNetworkClient {
   // Generic POST request with token and data
   Future<Response> post(
     String path, {
-    required String token, // Add token parameter
+ // Add token parameter
     Map<String, dynamic>? data,
   }) async {
     try {
       final response = await dio.post(
         path,
         data: data,
-        options: Options(headers: {
-          'Authorization': 'Bearer $token'
-        }), // Add token dynamically
+       // Add token dynamically
       );
       return response;
     } catch (e) {

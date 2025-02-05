@@ -4,9 +4,11 @@ import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
 import 'package:social_media/core/theming/styles.dart';
 import 'package:social_media/features/filtering/could_be_shared/fake_end_points/real_end_points.dart';
 import 'package:social_media/features/filtering/domain/entities/post_entity.dart';
+
 import 'package:social_media/features/filtering/presentation/cubit/filtering_cubit.dart';
 import 'package:social_media/features/filtering/presentation/widgets/filtered_post_card.dart';
 import 'package:social_media/features/filtering/presentation/widgets/filtering_tile.dart';
+
 
 class FilteringScreen extends StatefulWidget {
   const FilteringScreen({super.key});
@@ -16,7 +18,7 @@ class FilteringScreen extends StatefulWidget {
 }
 
 class _FilteringScreenState extends State<FilteringScreen> {
-  List<PostEntity> posts = [];
+  List<FilteringPostEntity> posts = [];
   final ScrollController scrollController = ScrollController();
   double scrollPosition = 0;
   @override

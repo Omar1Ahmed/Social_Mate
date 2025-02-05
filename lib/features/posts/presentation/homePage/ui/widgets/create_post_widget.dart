@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:social_media/core/Responsive/Models/device_info.dart';
 import 'package:social_media/core/theming/colors.dart';
 import 'package:social_media/core/theming/styles.dart';
-import 'custom_dialog_widget.dart';
 import 'show_create_post_dialog_widget.dart';
 
 class CreatePostWidget extends StatelessWidget {
@@ -25,12 +24,12 @@ class CreatePostWidget extends StatelessWidget {
         width: deviceInfo.localWidth * 0.9,
         height: deviceInfo.localHeight * 0.1,
         decoration: BoxDecoration(
-          color: ColorsManager.lightGreyColor,
+          color: Colors.white,
           borderRadius: BorderRadius.circular(deviceInfo.localWidth * 0.04),
           boxShadow: [
             BoxShadow(
-              color: ColorsManager.blackColor.withOpacity(0.15),
-              blurRadius: 8,
+              color: ColorsManager.blackColor.withOpacity(0.35),
+              blurRadius: deviceInfo.screenWidth * 0.05,
               offset: const Offset(0, 4),
             ),
           ],

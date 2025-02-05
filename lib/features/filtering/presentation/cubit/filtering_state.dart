@@ -8,12 +8,12 @@ class FilteredPostsIsLoading extends FilteringState {}
 
 class FilteredPostsIsLoaded extends FilteringState {
   final bool hasMore;
-  final List<PostEntity> filteredPosts;
+  final List<FilteringPostEntity> filteredPosts;
   FilteredPostsIsLoaded(this.filteredPosts, this.hasMore);
 }
 
 class FilteredPostsIsEmpty extends FilteringState {
-  final List<PostEntity> filteredPosts;
+  final List<FilteringPostEntity> filteredPosts;
   FilteredPostsIsEmpty(this.filteredPosts);
 }
 
@@ -23,6 +23,6 @@ class FilteredPostsHasError extends FilteringState {
 }
 
 class FilteredPostsIsLoadingMore extends FilteringState {
-  final List<PostEntity> filteredPosts;
+  final List<FilteringPostEntity> filteredPosts;
   FilteredPostsIsLoadingMore(this.filteredPosts);
 }

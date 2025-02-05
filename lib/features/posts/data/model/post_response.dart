@@ -1,6 +1,6 @@
 // data/models/post_response.dart
 import 'package:json_annotation/json_annotation.dart';
-import '../../domain/entity/post_entity.dart';
+import '../../../../core/entities/post_entity.dart';
 
 part 'post_response.g.dart';
 
@@ -11,9 +11,8 @@ class PostResponse {
 
   PostResponse({required this.data, required this.total});
 
-  factory PostResponse.fromJson(Map<String, dynamic> json) =>
-      _$PostResponseFromJson(json);
-      
+  factory PostResponse.fromJson(Map<String, dynamic> json) => _$PostResponseFromJson(json);
+
   Map<String, dynamic> toJson() => _$PostResponseToJson(this);
 
   List<PostEntity> toEntities() => data.map((e) => e.toEntity()).toList();
@@ -35,18 +34,30 @@ class PostData {
     required this.createdOn,
   });
 
-  factory PostData.fromJson(Map<String, dynamic> json) =>
-      _$PostDataFromJson(json);
-      
+  factory PostData.fromJson(Map<String, dynamic> json) => _$PostDataFromJson(json);
+
   Map<String, dynamic> toJson() => _$PostDataToJson(this);
 
   PostEntity toEntity() => PostEntity(
-    id: id,
-    title: title,
-    content: content,
-    createdBy: createdBy.toEntity(),
-    createdOn: createdOn,
-  );
+        id: id,
+        title: title,
+        content: content,
+        createdBy: createdBy.toEntity(),
+        createdOn: createdOn,
+      );
+}
+
+@JsonSerializable()
+class CreatePostData {
+  final String title;
+  final String content;
+
+  CreatePostData({required this.title, required this.content});
+  factory CreatePostData.fromJson(Map<String, dynamic> json) => CreatePostData(title: json['title'], content: json['content']);
+  Map<String, dynamic> toJson() => {
+        'title': title,
+        'content': content
+      };
 }
 
 @JsonSerializable()
@@ -57,7 +68,7 @@ class User {
   User({required this.id, required this.fullName});
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
-  
+
   Map<String, dynamic> toJson() => _$UserToJson(this);
 
   UserEntity toEntity() => UserEntity(id: id, fullName: fullName);

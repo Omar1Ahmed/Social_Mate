@@ -1,58 +1,36 @@
-// data/datasources/post_remote_data_source_impl.dart
-import 'package:dio/dio.dart';
-
+import '../../../../core/helper/dotenv/dot_env_helper.dart';
+import '../../../../core/network/dio_client.dart';
 import '../../domain/repository/post_remote_data_source.dart';
 import '../model/post_response.dart';
 
 class PostRemoteDataSourceImpl implements PostRemoteDataSource {
-  final Dio dio;
+  final DioClient dio;
 
   PostRemoteDataSourceImpl({required this.dio});
 
-  @override
-  @override
-  Future<PostResponse> getPosts() async {
-    final posts = PostResponse(
-      data: [
-        PostData(
-          id: 1,
-          title: 'title 1',
-          content: 'lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
-          createdBy: User(id: 1, fullName: 'user 1'),
-          createdOn: DateTime.now(),
-        ),
-        PostData(
-          id: 2,
-          title: 'title 2',
-          content: 'lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
-          createdBy: User(id: 2, fullName: 'user 2'),
-          createdOn: DateTime.now(),
-        ),
-        PostData(
-          id: 3,
-          title: 'title 3',
-          content: 'lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
-          createdBy: User(id: 3, fullName: 'user 3'),
-          createdOn: DateTime.now(),
-        ),
-        PostData(
-          id: 4,
-          title: 'title 4',
-          content: 'lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
-          createdBy: User(id: 4, fullName: 'user 4'),
-          createdOn: DateTime.now(),
-        ),
-        PostData(
-          id: 5,
-          title: 'title 5',
-          content: 'lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
-          createdBy: User(id: 5, fullName: 'user 5'),
-          createdOn: DateTime.now(),
-        ),
-      ],
-      total: 5,
-    );
+  final String baseUrl = EnvHelper.getString('posts_Base_url');
 
-    return posts;
+  @override
+  Future<PostResponse> getPosts( int pageOffset, int pageSize) async {
+    final response = await dio.get("$baseUrl/posts?createdBy=1", queryParameters: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer eyJhbGciOiJIUzM4NCJ9.eyJST0xFU19JRFMiOlsyXSwiVVNFUl9JRCI6Niwic3ViIjoiYXNkYXNkMTIzQGdtYWlsLmNvbSIsImlhdCI6MTczODcwNjIxNSwiZXhwIjoxNzM4NzkyNjE1fQ.Jj7XhDoE86HjpItLG_rRgAx1_aczgoo4lMrsZprN4qBwHGpPMeLvEmp4L0Zh6yDd',
+      'pageOffset': pageOffset,
+      'pageSize': pageSize
+    });
+    return PostResponse.fromJson(response);
+  }
+
+  @override
+  Future<void> createPost(CreatePostData post) async {
+    final postData = post.toJson();
+    await dio.post(
+      "$baseUrl/posts",
+      postData,
+      queryParameters: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer eyJhbGciOiJIUzM4NCJ9.eyJST0xFU19JRFMiOlsyXSwiVVNFUl9JRCI6Niwic3ViIjoiYXNkYXNkMTIzQGdtYWlsLmNvbSIsImlhdCI6MTczODcwNjIxNSwiZXhwIjoxNzM4NzkyNjE1fQ.Jj7XhDoE86HjpItLG_rRgAx1_aczgoo4lMrsZprN4qBwHGpPMeLvEmp4L0Zh6yDd'
+      },
+    );
   }
 }

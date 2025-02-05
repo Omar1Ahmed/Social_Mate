@@ -5,6 +5,7 @@ import 'package:social_media/features/filtering/data/datasources/filtered_posts_
 import 'package:social_media/features/filtering/domain/entities/post_entity.dart';
 import 'package:social_media/features/filtering/domain/repositories/filtered_post_repo.dart';
 
+
 class FilteredPostRepoImp implements FilteredPostRepo {
   final FilteredPostsRemoteSource filteredPostsRemoteSource;
   final NetworkInfo networkInfo;
@@ -15,7 +16,7 @@ class FilteredPostRepoImp implements FilteredPostRepo {
   });
 
   @override
-  Future<List<PostEntity>> getFilteredPosts({
+  Future<List<FilteringPostEntity>> getFilteredPosts({
     Map<String, dynamic>? queryParameters,
     required String token,
   }) async {
