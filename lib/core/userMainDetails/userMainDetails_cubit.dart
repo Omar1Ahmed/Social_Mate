@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:equatable/equatable.dart';
 import 'package:social_media/core/userMainDetails/jwt_token_decode/data/model/jwtModel.dart';
 import 'package:social_media/core/userMainDetails/jwt_token_decode/data/repository/jwt_token_decode_repository_imp.dart';
 import 'userMainDetails_state.dart';
 
 
+// ignore: camel_case_types
 class userMainDetailsCubit extends Cubit<userMainDetailsState> {
   final JwtTokenDecodeRepositoryImp _repository;
 

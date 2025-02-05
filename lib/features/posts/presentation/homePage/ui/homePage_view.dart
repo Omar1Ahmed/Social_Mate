@@ -87,12 +87,11 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
                         if (state is PostLoaded) {
                           final posts = state.posts;
                           final totalPosts = state.totalPosts;
+
                           return SliverList(
                             delegate: SliverChildBuilderDelegate(
-                              (context, index) => AnimatedOpacity(
-                                opacity: state is PostLoading ? 0.0 : 1.0,
-                                duration: const Duration(milliseconds: 500),
-                                child: Padding(
+                              (context, index) {
+                                return Padding(
                                   padding: EdgeInsets.fromLTRB(
                                     deviceInfo.screenWidth * 0.05,
                                     0,
@@ -100,14 +99,15 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
                                     deviceInfo.localHeight * 0.02,
                                   ),
                                   child: PostCardWidget(
+                                    key: ValueKey(posts[index].id),
                                     deviceInfo: deviceInfo,
                                     title: posts[index].title,
                                     content: posts[index].content,
                                     author: posts[index].createdBy.fullName,
                                     timeAgo: posts[index].createdOn.toString(),
                                   ),
-                                ),
-                              ),
+                                );
+                              },
                               childCount: totalPosts,
                             ),
                           );
