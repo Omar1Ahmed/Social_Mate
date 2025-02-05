@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/helper/extantions.dart';
 import 'package:social_media/core/routing/routs.dart';
 import 'package:social_media/core/theming/colors.dart';
-import 'package:social_media/core/token/token_cubit.dart';
+import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 import '../../../../../core/Responsive/Models/device_info.dart';
 import '../../../../../core/Responsive/ui_component/info_widget.dart';
 import '../../../../../core/theming/styles.dart';
@@ -19,7 +19,7 @@ class HomepageView extends StatelessWidget {
   Widget build(BuildContext context) {
     context.read<HomeCubit>().getPosts();
 
-    print('Print token in Home Page: ${context.read<TokenCubit>().state.token}');
+    print('Print token in Home Page: ${context.read<userMainDetailsCubit>().state.token}');
     return InfoWidget(
       builder: (context, deviceInfo) {
         return SafeArea(

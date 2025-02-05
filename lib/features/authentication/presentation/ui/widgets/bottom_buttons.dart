@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
+import 'package:social_media/core/helper/extantions.dart';
+import 'package:social_media/core/routing/routs.dart';
 import 'package:social_media/core/theming/colors.dart';
 import 'package:social_media/features/authentication/presentation/ui/auth_screen/auth_screen.dart';
 class BottomButtons extends StatelessWidget {
@@ -32,8 +34,7 @@ class BottomButtons extends StatelessWidget {
             TextButton(
               onPressed: () {
                 // Navigate to Login
-                Navigator.push(context, MaterialPageRoute(builder: (context) => AuthScreen()
-                ));
+                context.pushNamed(Routes.AuthScreen);
               },
               child:  Text(
                 "Sign In",

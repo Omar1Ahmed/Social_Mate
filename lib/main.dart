@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/routing/routs.dart';
-import 'package:social_media/core/token/token_cubit.dart';
+import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 
 import 'core/routing/appRouting.dart';
 
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (_) => getIt<TokenCubit>(),
+        create: (_) => getIt<userMainDetailsCubit>(),
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           initialRoute: Routes.splashScreen,

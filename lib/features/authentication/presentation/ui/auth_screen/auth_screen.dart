@@ -5,8 +5,7 @@ import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/helper/SharedPref/SharedPrefKeys.dart';
 import 'package:social_media/core/helper/extantions.dart';
 import 'package:social_media/core/helper/SharedPref/sharedPrefHelper.dart';
-import 'package:social_media/core/routing/routs.dart';
-import 'package:social_media/core/token/token_cubit.dart';
+import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 import 'package:social_media/features/authentication/presentation/logic/auth_cubit.dart';
 import 'package:social_media/features/authentication/presentation/logic/auth_state.dart';
 import 'package:social_media/features/authentication/presentation/ui/widgets/customButton.dart';
@@ -20,66 +19,65 @@ class AuthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => AuthCubit(),
-      child: InfoWidget(builder: (context, info) {
+
+
+    return InfoWidget(builder: (context, info) {
         return Scaffold(
           backgroundColor: Colors.white,
-          body: SingleChildScrollView(
-            child: Padding(
-              padding:  EdgeInsetsDirectional.only(start: info.screenWidth * 0.1, end: info.screenWidth * 0.1, top: info.screenHeight * 0.15),
-              child: Column(
+          body: BlocConsumer<AuthCubit, AuthState>(
+            listener: (context, state) {
 
-                children: [
+              print('state : $state');
 
-                  Center(
-                    child: Image.asset("assets/images/fullLogo.png", height: info.screenHeight * 0.1),
-                  ),
-                  BlocBuilder<AuthCubit, AuthState>(
-                    builder: (context, state) {
-                      return AuthHeader(
-                        isSignIn: state is AuthSignInState,
-                        onToggle: () => context.read<AuthCubit>().toggleAuth(),
-                      );
-                    },
-                  ),
+            },
+            builder: (context, state){ return SingleChildScrollView(
+              child: Padding(
+                padding:  EdgeInsetsDirectional.only(start: info.screenWidth * 0.1, end: info.screenWidth * 0.1, top: info.screenHeight * 0.15),
+                child: Column(
 
-                  Container(
-                    height: info.screenHeight * 0.41,
-                    margin: EdgeInsetsDirectional.only(top: info.screenHeight * 0.016),
-                    child: Column(
-                        children: [
+                  children: [
+
+                    Center(
+                      child: Image.asset("assets/images/fullLogo.png", height: info.screenHeight * 0.1),
+                    ),
+
+                        AuthHeader(
+                          isSignIn: state is AuthSignInState,
+                          onToggle: () => context.read<AuthCubit>().toggleAuth(),
+                        ),
 
 
-                          BlocBuilder<AuthCubit, AuthState>(
-                            builder: (context, state) {
-                              return state is AuthSignInState ? SignInForm() : SignUpForm();
-                            },
-                          ),
-                        ]),
-                  ),
+                    Container(
+                      height: info.screenHeight * 0.41,
+                      margin: EdgeInsetsDirectional.only(top: info.screenHeight * 0.016),
+                      child: state is AuthSignInState ? SignInForm() : SignUpForm()
+                    ),
 
 
-                  SizedBox(
-                    width: info.screenWidth * 0.6,
-                    child: CustomButton(
-                        text: "Join Now",
-                        onPressed: () async {
-                          final SharedPrefHelper _sharedPrefHelper = getIt<SharedPrefHelper>();
-                          await _sharedPrefHelper.saveString(SharedPrefKeys.testKey, 'Cached Data');
+                    SizedBox(
+                      width: info.screenWidth * 0.6,
+                      child: CustomButton(
+                          text: "Join Now",
+                          onPressed: () async {
+                            final SharedPrefHelper _sharedPrefHelper = getIt<SharedPrefHelper>();
+                            await _sharedPrefHelper.saveString(SharedPrefKeys.testKey, 'Cached Data');
 
-                          print('assign Token in Sign up ');
-                          context.read<TokenCubit>().setToken('token Test ');
+                            print('assign Token in Sign up ');
+                            context.read<AuthCubit>().login(context);
+                            // dynamic token = context.read<JwtCubit>().decodeToken(""); // Start decoding.
 
-                          context.pushNamed(Routes.homePage);
-                        }),
-                  )
-                ],
+
+                          }),
+                    )
+                  ],
+                ),
               ),
-            ),
+            );
+            }
+
           ),
         );
-      }),
+      }
     );
   }
 }
