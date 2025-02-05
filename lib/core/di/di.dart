@@ -50,13 +50,16 @@ Future<void> initDependencies() async {
     () => NetworkInfoConnection(connectionChecker: getIt()),
   );
   getIt.registerLazySingleton(() => InternetConnectionChecker());
-  getIt.registerLazySingleton(() => NetworkInfoConnection(connectionChecker: getIt()));
-  getIt.registerLazySingleton<FilteredPostsRemoteSource>(() => FilteredPostsRemoteSourceImpl(
-        dioNetworkClient: getIt<DioNetworkClient>(),
-      ));
-  getIt.registerLazySingleton<AuthenticationRemoteDataSource>(() => AuthenticationRemoteDataSourceImp(
-        dioNetworkClient: getIt<DioNetworkClient>(),
-      ));
+  getIt.registerLazySingleton(
+      () => NetworkInfoConnection(connectionChecker: getIt()));
+  getIt.registerLazySingleton<FilteredPostsRemoteSource>(
+      () => FilteredPostsRemoteSourceImpl(
+            dioNetworkClient: getIt<DioNetworkClient>(),
+          ));
+  getIt.registerLazySingleton<AuthenticationRemoteDataSource>(
+      () => AuthenticationRemoteDataSourceImp(
+            dioNetworkClient: getIt<DioNetworkClient>(),
+          ));
   // |------------------------------------------------------------------\
   // |-------------------------- Repositories ------------------------------\
   // |------------------------------------------------------------------\
@@ -67,15 +70,18 @@ Future<void> initDependencies() async {
 
   // post repository
   getIt.registerFactory<PostRepository>(
-    () => impl.PostRepositoryImpl(remoteDataSource: getIt<PostRemoteDataSource>()),
+    () => impl.PostRepositoryImpl(
+        remoteDataSource: getIt<PostRemoteDataSource>()),
   );
 
-  getIt.registerLazySingleton<AuthenticationRepository>(() => AuthenticationRepositoryImp(networkInfo: getIt(), logInRemoteDataSource: getIt()));
-  getIt.registerLazySingleton<FilteredPostRepo>(() => FilteredPostRepoImp(networkInfo: getIt(), filteredPostsRemoteSource: getIt()));
+  getIt.registerLazySingleton<AuthenticationRepository>(() =>
+      AuthenticationRepositoryImp(
+          networkInfo: getIt(), logInRemoteDataSource: getIt()));
+  getIt.registerLazySingleton<FilteredPostRepo>(() => FilteredPostRepoImp(
+      networkInfo: getIt(), filteredPostsRemoteSource: getIt()));
   // |------------------------------------------------------------------\
   // |-------------------------- Cubits ------------------------------\
   // |------------------------------------------------------------------\
-
 
   // token Decoder Cubit
 
@@ -95,7 +101,7 @@ Future<void> initDependencies() async {
   );
 
   // the auth Cubit is here 👇
-  getIt.registerFactory(() => AuthCubit(getIt()));
+  //getIt.registerFactory(() => AuthCubit(getIt()));
   getIt.registerFactory(() => FilteringCubit(getIt()));
 
   // |------------------------------------------------------------------\
