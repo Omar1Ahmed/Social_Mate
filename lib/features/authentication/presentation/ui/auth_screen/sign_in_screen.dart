@@ -8,9 +8,14 @@ import 'package:social_media/features/authentication/presentation/ui/widgets/cus
 
 import '../widgets/customTextField.dart';
 
-class SignInForm extends StatelessWidget {
+class SignInForm extends StatefulWidget {
   const SignInForm({super.key});
 
+  @override
+  State<SignInForm> createState() => _SignInFormState();
+}
+
+class _SignInFormState extends State<SignInForm> {
   @override
   Widget build(BuildContext context) {
     final TextEditingController emailController = TextEditingController();
@@ -58,16 +63,19 @@ class SignInForm extends StatelessWidget {
                               emailController.text, passwordController.text);
                           Navigator.pushNamed(context, Routes.homePage);
                         } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'Invalid Input , try again',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              backgroundColor: Colors.red,
-                              duration: Duration(seconds: 2),
-                            ),
-                          );
+                          print(emailController.text);
+                          print(passwordController.text);
+                          Navigator.pushNamed(context, Routes.homePage);
+                          // ScaffoldMessenger.of(context).showSnackBar(
+                          //   SnackBar(
+                          //     content: Text(
+                          //       'Invalid Input , try again',
+                          //       style: TextStyle(color: Colors.white),
+                          //     ),
+                          //     backgroundColor: Colors.red,
+                          //     duration: Duration(seconds: 2),
+                          //   ),
+                          // );
                         }
                       }),
                 ),
