@@ -1,7 +1,5 @@
-
 import 'package:flutter/material.dart';
 import 'package:social_media/core/di/di.dart';
-
 import '../../../../../../core/Responsive/Models/device_info.dart';
 import '../../../../../../core/entities/post_entity.dart';
 import '../../../../../../core/theming/colors.dart';
@@ -12,6 +10,7 @@ class PostCardWidget extends StatefulWidget {
   final DeviceInfo deviceInfo;
   final PostEntity post;
   final bool isIdMatch;
+
   const PostCardWidget({
     super.key,
     required this.deviceInfo,
@@ -58,6 +57,46 @@ class _PostCardWidgetState extends State<PostCardWidget> with TickerProviderStat
   void dispose() {
     _animationController.dispose();
     super.dispose();
+  }
+
+  void _showDeleteConfirmationDialog(BuildContext context, int postId) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          'Confirm Delete',
+          style: TextStyles.inter18BoldBlack.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.05),
+        ),
+        content: Text(
+          'Are you sure you want to delete this post?',
+          style: TextStyles.inter18Regularblack.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.04),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context), // Cancel action
+            child: Text(
+              'Cancel',
+              style: TextStyles.inter18Regularblack.copyWith(color: ColorsManager.primaryColor),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // Close the dialog
+              if (postId == 0) {
+                print('Invalid post ID: $postId');
+                return;
+              }
+              print('Deleting post with ID: $postId');
+              getIt.get<HomeCubit>().deletePost(postId);
+            },
+            child: Text(
+              'Delete',
+              style: TextStyles.inter18Regularblack.copyWith(color: ColorsManager.redColor),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -115,11 +154,10 @@ class _PostCardWidgetState extends State<PostCardWidget> with TickerProviderStat
                                 print('Invalid post ID: $postId');
                                 return;
                               }
-                              print('Deleting post with ID: $postId');
-                              getIt.get<HomeCubit>().deletePost(postId);
+                              _showDeleteConfirmationDialog(context, postId);
                             },
                             icon: Icon(
-                              Icons.delete,
+                              Icons.close,
                               color: ColorsManager.redColor.withOpacity(0.7),
                               size: widget.deviceInfo.screenWidth * 0.08,
                             ),
