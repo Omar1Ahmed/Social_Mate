@@ -16,11 +16,11 @@ class TextStyles {
     fontWeight: FontWeight.normal,
     fontFamily: 'Inter',
   );
-  static const inter18Regular = TextStyle(
+  static final inter18RegularWithOpacity = TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.normal,
     fontFamily: 'Inter',
-    color: Colors.black,
+    color: Colors.black.withOpacity(0.8),
   );
   static const inter18BoldBlack = TextStyle(
     fontSize: 18,

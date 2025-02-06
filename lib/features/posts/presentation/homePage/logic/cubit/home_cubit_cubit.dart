@@ -11,68 +11,82 @@ class HomeCubit extends Cubit<HomeState> {
 
   final PostRepository postRepository;
 
-  int _pageOffset = 0;
-  final int _pageSize = 10;
-  bool _hasMorePosts = true;
+  int _currentPage = 1; // Start with page 1
+  final int _pageSize = 4; // Number of posts per page
+  bool hasMorePosts = true; // Indicates if there are more posts to load
+  bool isLoadingMore = false; // Tracks if more posts are currently being loaded
 
-  /// Fetches the initial set of posts
+  // Get initial posts
   Future<void> getPosts() async {
+    if (state is PostLoading || state is PostLoaded) return;
+
+    emit(PostLoading()); // Show loading state initially
+
     try {
-      emit(PostLoading());
       final (
         posts,
         total
-      ) = await postRepository.getPosts(_pageOffset, _pageSize);
-      _hasMorePosts = _pageOffset + _pageSize < total;
-      emit(PostLoaded(posts, total));
+      ) = await postRepository.getPosts(_currentPage, _pageSize);
+
+      hasMorePosts = (_currentPage * _pageSize) < total;
+
+      emit(PostLoaded(posts, total)); // Emit the loaded posts
     } catch (e) {
-      emit(PostError(e.toString()));
+      emit(PostError(e.toString())); // Emit error state if something goes wrong
     }
   }
 
+  // Load more posts
   Future<void> loadMorePosts() async {
-    if (!_hasMorePosts) return;
+    if (isLoadingMore || !(state is PostLoaded) || !hasMorePosts) return;
+    isLoadingMore = true; // Set to true to prevent further calls while loading
+
+    final currentState = state as PostLoaded; // Get the current state
+    emit(PostLoadingMore(currentState.posts, currentState.total)); // Pass the current posts
 
     try {
-      emit(PostLoadingMore());
       final (
         newPosts,
         total
-      ) = await postRepository.getPosts(_pageOffset + _pageSize, _pageSize);
+      ) = await postRepository.getPosts(_currentPage + 1, _pageSize);
+
       if (newPosts.isEmpty) {
-        _hasMorePosts = false;
-        return;
-      }
-      final currentState = state;
-      if (currentState is PostLoaded) {
+        hasMorePosts = false; // No more posts to load
+        print('No more posts to load.');
+      } else {
+        _currentPage++;
         final updatedPosts = List<PostEntity>.from(currentState.posts)..addAll(newPosts);
-        _pageOffset += _pageSize;
-        _hasMorePosts = _pageOffset + _pageSize < total; // Update the hasMorePosts flag
-        emit(PostLoaded(updatedPosts, total));
+        hasMorePosts = (_currentPage * _pageSize) < total; // Update hasMorePosts flag
+        emit(PostLoaded(updatedPosts, total)); // Emit the updated posts
+        print('Fetched ${newPosts.length} new posts. Total: $total');
       }
     } catch (e) {
-      emit(PostError(e.toString()));
+      print('Error loading more posts: $e');
+      emit(PostError(e.toString())); // Emit error state if there's an issue
+    } finally {
+      isLoadingMore = false; // Reset loading flag
+      print('Finished loading more posts.');
     }
   }
 
+  // Handle refresh action
   Future<void> onRefresh() async {
-    _pageOffset = 0;
-    _hasMorePosts = true;
-    await getPosts();
+    _currentPage = 1; // Reset to first page
+    hasMorePosts = true; // Assume there are more posts initially
+    await getPosts(); // Fetch posts again
   }
 
-  /// Creates a new post and updates the list
+  // Create a new post
   Future<void> createPost(String title, String content) async {
     final post = CreatePostData(title: title, content: content);
-    try {
-      emit(PostLoading());
-      await postRepository.createPost(post);
-      emit(PostCreated());
 
-      // Refresh the list after creating a new post
-      await onRefresh();
+    try {
+      emit(PostLoading()); // Show loading state while creating post
+      await postRepository.createPost(post); // Create the post
+      emit(PostCreated()); // Emit success state after creation
+      await onRefresh(); // Refresh the posts
     } catch (e) {
-      emit(PostError(e.toString()));
+      emit(PostError(e.toString())); // Emit error state in case of failure
     }
   }
 }

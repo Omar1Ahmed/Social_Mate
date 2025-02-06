@@ -1,27 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/helper/extantions.dart';
-import 'package:social_media/core/routing/routs.dart';
 import 'package:social_media/core/theming/colors.dart';
-import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 import '../../../../../core/Responsive/Models/device_info.dart';
 import '../../../../../core/Responsive/ui_component/info_widget.dart';
+import '../../../../../core/routing/routs.dart';
 import '../logic/cubit/home_cubit_cubit.dart';
 import 'widgets/build_error_widget.dart';
-import 'widgets/build_modern_navigation_bar.dart';
 import 'widgets/create_post_widget.dart';
 import 'widgets/post_card_widget.dart';
 import 'widgets/show_create_post_dialog_widget.dart';
 
 class HomepageView extends StatefulWidget {
   const HomepageView({super.key});
-
   @override
   State<HomepageView> createState() => _HomepageViewState();
 }
 
 class _HomepageViewState extends State<HomepageView> with TickerProviderStateMixin {
   late final AnimationController _createPostAnimationController;
+  late ScrollController _scrollController;
 
   @override
   void initState() {
@@ -30,17 +28,35 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
       vsync: this,
       duration: const Duration(milliseconds: 1000),
     )..forward();
+
+    _scrollController = ScrollController()..addListener(_onScroll);
+
+    // 🔴 Move getPosts() here to prevent infinite calls
+    context.read<HomeCubit>().getPosts();
   }
 
   @override
   void dispose() {
     _createPostAnimationController.dispose();
+    _scrollController.dispose();
     super.dispose();
+  }
+
+  void _onScroll() {
+    final homeCubit = context.read<HomeCubit>();
+    print('Scroll Position: ${_scrollController.position.pixels}, Max Scroll Extent: ${_scrollController.position.maxScrollExtent}');
+
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 100 && !homeCubit.isLoadingMore && homeCubit.hasMorePosts) {
+      // Check hasMorePosts here
+      print('Triggering loadMorePosts()');
+      homeCubit.loadMorePosts();
+    } else if (!homeCubit.hasMorePosts) {
+      print('No more posts to load. Scrolling stopped.');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    context.read<HomeCubit>().getPosts();
     return InfoWidget(
       builder: (context, deviceInfo) {
         return SafeArea(
@@ -48,92 +64,16 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
             backgroundColor: Colors.white,
             body: RefreshIndicator(
               color: ColorsManager.primaryColor,
-              onRefresh: () {
-                return context.read<HomeCubit>().onRefresh();
-              },
+              onRefresh: () async => await context.read<HomeCubit>().onRefresh(),
               child: GestureDetector(
                 onTap: () => FocusScope.of(context).unfocus(),
                 child: CustomScrollView(
+                  controller: _scrollController,
                   slivers: [
-                    SliverToBoxAdapter(
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(
-                          deviceInfo.screenWidth * 0.05,
-                          deviceInfo.screenHeight * 0.019,
-                          deviceInfo.screenWidth * 0.035,
-                          0,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildHeader(deviceInfo, context),
-                            BuildModernNavigationBar(
-                              deviceInfo: deviceInfo,
-                            ),
-                            Divider(
-                              height: deviceInfo.localHeight * 0.02,
-                              thickness: deviceInfo.screenWidth * 0.001,
-                              color: ColorsManager.greyColor,
-                            ),
-                            SizedBox(height: deviceInfo.localHeight * 0.02),
-                            _buildAnimatedCreatePostWidget(deviceInfo),
-                            SizedBox(height: deviceInfo.localHeight * 0.02),
-                          ],
-                        ),
-                      ),
-                    ),
-                    BlocBuilder<HomeCubit, HomeState>(
-                      builder: (context, state) {
-                        if (state is PostLoaded) {
-                          final posts = state.posts;
-                          final totalPosts = state.totalPosts;
-
-                          return SliverList(
-                            delegate: SliverChildBuilderDelegate(
-                              (context, index) {
-                                return Padding(
-                                  padding: EdgeInsets.fromLTRB(
-                                    deviceInfo.screenWidth * 0.05,
-                                    0,
-                                    deviceInfo.screenWidth * 0.05,
-                                    deviceInfo.localHeight * 0.02,
-                                  ),
-                                  child: PostCardWidget(
-                                    key: ValueKey(posts[index].id),
-                                    deviceInfo: deviceInfo,
-                                    title: posts[index].title,
-                                    content: posts[index].content,
-                                    author: posts[index].createdBy.fullName,
-                                    timeAgo: posts[index].createdOn.toString(),
-                                  ),
-                                );
-                              },
-                              childCount: totalPosts,
-                            ),
-                          );
-                        } else if (state is PostLoading) {
-                          return SliverFillRemaining(
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                color: ColorsManager.primaryColor,
-                              ),
-                            ),
-                          );
-                        } else if (state is PostError) {
-                          return SliverFillRemaining(
-                            child: BuildErrorWidget(deviceInfo: deviceInfo),
-                          );
-                        }
-                        return SliverFillRemaining(
-                          child: Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                        );
-                      },
-                    ),
-                    SliverToBoxAdapter(
-                      child: SizedBox(height: deviceInfo.localHeight * 0.1),
-                    ),
+                    _buildHeaderSection(deviceInfo),
+                    _buildPostList(deviceInfo),
+                    _buildLoadingIndicator(deviceInfo),
+                    SliverToBoxAdapter(child: SizedBox(height: deviceInfo.localHeight * 0.1)),
                   ],
                 ),
               ),
@@ -141,18 +81,8 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
             floatingActionButton: FloatingActionButton(
               backgroundColor: Colors.white,
               foregroundColor: ColorsManager.primaryColor,
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return ShowCreatePostDialogWidget(deviceInfo: deviceInfo);
-                  },
-                );
-              },
-              child: Icon(
-                Icons.edit_outlined,
-                color: ColorsManager.primaryColor,
-              ),
+              onPressed: () => _showCreatePostDialog(deviceInfo),
+              child: Icon(Icons.edit_outlined, color: ColorsManager.primaryColor),
             ),
             floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
           ),
@@ -161,6 +91,34 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
     );
   }
 
+  Widget _buildHeaderSection(DeviceInfo deviceInfo) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(
+          deviceInfo.screenWidth * 0.05,
+          deviceInfo.screenHeight * 0.019,
+          deviceInfo.screenWidth * 0.035,
+          0,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeader(deviceInfo, context),
+            Divider(
+              height: deviceInfo.localHeight * 0.02,
+              thickness: deviceInfo.screenWidth * 0.001,
+              color: ColorsManager.greyColor,
+            ),
+            SizedBox(height: deviceInfo.localHeight * 0.02),
+            _buildAnimatedCreatePostWidget(deviceInfo),
+            SizedBox(height: deviceInfo.localHeight * 0.02),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Builds the animated create post widget.
   Widget _buildAnimatedCreatePostWidget(DeviceInfo deviceInfo) {
     return SlideTransition(
       position: Tween<Offset>(
@@ -176,6 +134,7 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
     );
   }
 
+  /// Builds the header row with the app logo and search button.
   Widget _buildHeader(DeviceInfo deviceInfo, BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -191,27 +150,105 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
             height: deviceInfo.localHeight * 0.06,
             fit: BoxFit.contain,
           ),
-          Spacer(),
           IconButton(
             icon: Icon(
               Icons.search,
               size: deviceInfo.localWidth * 0.08,
               color: ColorsManager.primaryColor,
             ),
-            onPressed: () {
-              context.pushNamed(Routes.filteringScreen);
-            },
+            onPressed: () => context.pushNamed(Routes.filteringScreen),
             style: ElevatedButton.styleFrom(
               shape: const CircleBorder(),
               padding: EdgeInsets.all(deviceInfo.localWidth * 0.02),
               backgroundColor: ColorsManager.lightGreyColor,
-              foregroundColor: Theme.of(context).colorScheme.onSurface,
               shadowColor: Colors.transparent,
             ).copyWith(elevation: ButtonStyleButton.allOrNull(0)),
           ),
-          SizedBox(width: deviceInfo.localWidth * 0.02),
         ],
       ),
+    );
+  }
+
+  /// Builds the list of posts using a BlocBuilder.
+  Widget _buildPostList(DeviceInfo deviceInfo) {
+    return BlocBuilder<HomeCubit, HomeState>(
+      builder: (context, state) {
+        if (state is PostLoading) {
+          return SliverFillRemaining(
+            child: Center(child: CircularProgressIndicator(color: ColorsManager.primaryColor)),
+          );
+        } else if (state is PostLoaded || state is PostLoadingMore) {
+          final posts = state is PostLoaded ? state.posts : (state as PostLoadingMore).posts;
+
+          if (posts.isEmpty) {
+            return SliverFillRemaining(
+              child: Center(child: Text("No posts available")),
+            );
+          }
+
+          return SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                if (index >= posts.length) {
+                  return const SizedBox.shrink();
+                }
+                return Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: deviceInfo.screenWidth * 0.05,
+                    vertical: deviceInfo.localHeight * 0.01,
+                  ),
+                  child: PostCardWidget(
+                    key: ValueKey(posts[index].id),
+                    deviceInfo: deviceInfo,
+                    title: posts[index].title,
+                    content: posts[index].content,
+                    author: posts[index].createdBy.fullName,
+                    timeAgo: posts[index].createdOn.toString(),
+                  ),
+                );
+              },
+              childCount: posts.length,
+            ),
+          );
+        } else if (state is PostError) {
+          return SliverFillRemaining(
+            child: BuildErrorWidget(deviceInfo: deviceInfo),
+          );
+        } else {
+          return SliverFillRemaining(
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }
+      },
+    );
+  }
+
+  /// Builds the loading indicator for infinite scrolling.
+  Widget _buildLoadingIndicator(DeviceInfo deviceInfo) {
+    return BlocBuilder<HomeCubit, HomeState>(
+      builder: (context, state) {
+        if (state is PostLoadingMore) {
+          // Show loading indicator while loading more posts
+          return SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Center(
+                child: CircularProgressIndicator(color: ColorsManager.primaryColor),
+              ),
+            ),
+          );
+        }
+        // Hide the loading indicator otherwise
+        return const SliverToBoxAdapter(child: SizedBox.shrink());
+      },
+    );
+  }
+
+  /// Shows the create post dialog.
+  void _showCreatePostDialog(DeviceInfo deviceInfo) {
+    showDialog(
+      context: context,
+      builder: (context) => ShowCreatePostDialogWidget(deviceInfo: deviceInfo),
     );
   }
 }

@@ -9,12 +9,12 @@ class DioClient implements ApiCalls {
   DioClient({required this.dio});
 
   @override
-  Future<Map<String, dynamic>> get(String url, {Map<String, dynamic>? queryParameters}) async {
+  Future<Map<String, dynamic>> get(String url, {Map<String, dynamic>? header}) async {
     try {
       final response = await dio.get(
         url,
         options: Options(
-          headers: queryParameters,
+          headers: header,
         ),
       );
       return _validateResponseData(response.data);

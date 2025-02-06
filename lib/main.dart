@@ -10,7 +10,8 @@ import 'package:social_media/features/authentication/presentation/logic/auth_cub
 import 'core/routing/appRouting.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+ WidgetsFlutterBinding.ensureInitialized();
+
   await dotenv.load();
   await dotenv.load();
   await initDependencies();

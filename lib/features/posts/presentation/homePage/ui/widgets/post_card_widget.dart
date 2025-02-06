@@ -22,6 +22,7 @@ class PostCardWidget extends StatefulWidget {
   });
 
   @override
+  // ignore: library_private_types_in_public_api
   _PostCardWidgetState createState() => _PostCardWidgetState();
 }
 
@@ -80,7 +81,7 @@ class _PostCardWidgetState extends State<PostCardWidget> with TickerProviderStat
       child: InkWell(
         child: Container(
           width: widget.deviceInfo.localWidth * 0.9,
-          height: widget.deviceInfo.localHeight * 0.28,
+          height: widget.deviceInfo.localHeight * 0.21,
           decoration: BoxDecoration(
             color: Colors.white,
             boxShadow: <BoxShadow>[
@@ -127,51 +128,25 @@ class _PostCardWidgetState extends State<PostCardWidget> with TickerProviderStat
                 ),
                 Row(
                   children: [
-                    Image.asset(
-                      'assets/images/man_profile.png',
-                      width: widget.deviceInfo.localWidth * 0.1,
-                      height: widget.deviceInfo.localHeight * 0.1,
-                    ),
-                    SizedBox(width: widget.deviceInfo.localWidth * 0.02),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.author,
-                          style: TextStyles.inter18BoldBlack.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.04),
-                        ),
-                        Text(
-                          widget.timeAgo.substring(0, 10),
-                          style: TextStyles.inter18Regularblack.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.03),
-                        ),
-                      ],
+                    Text(
+                      widget.author,
+                      style: TextStyles.inter18BoldBlack.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.04),
                     ),
                     const Spacer(),
-                    TextButton(
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return ShowReportPostDialogWidget(deviceInfo: widget.deviceInfo);
-                          },
-                        );
-                      },
-                      child: Text(
-                        'Report',
-                        style: TextStyle(color: ColorsManager.redColor, fontSize: widget.deviceInfo.screenWidth * 0.036),
-                      ),
+                    Text(
+                      widget.timeAgo.substring(0, 16),
+                      style: TextStyles.inter18Regularblack.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.03),
                     ),
                   ],
                 ),
-                SizedBox(height: widget.deviceInfo.localHeight * 0.001),
-                // Content with fixed two lines
+                SizedBox(height: widget.deviceInfo.localHeight * 0.01),
                 Text(
                   widget.content,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.justify,
                   softWrap: true,
-                  style: TextStyles.inter18Regular.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.04),
+                  style: TextStyles.inter18RegularWithOpacity.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.04),
                 ),
               ],
             ),
