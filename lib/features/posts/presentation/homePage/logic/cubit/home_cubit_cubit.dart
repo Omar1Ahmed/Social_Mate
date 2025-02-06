@@ -1,4 +1,6 @@
+
 import 'package:bloc/bloc.dart';
+
 import 'package:equatable/equatable.dart';
 import '../../../../../../core/entities/post_entity.dart';
 import '../../../../data/model/post_response.dart';
@@ -11,16 +13,15 @@ class HomeCubit extends Cubit<HomeState> {
 
   final PostRepository postRepository;
 
-  int _currentPage = 1; // Start with page 1
-  final int _pageSize = 4; // Number of posts per page
-  bool hasMorePosts = true; // Indicates if there are more posts to load
-  bool isLoadingMore = false; // Tracks if more posts are currently being loaded
+  int _currentPage = 1;
+  final int _pageSize = 4;
+  bool hasMorePosts = true;
+  bool isLoadingMore = false;
 
-  // Get initial posts
   Future<void> getPosts() async {
     if (state is PostLoading || state is PostLoaded) return;
 
-    emit(PostLoading()); // Show loading state initially
+    emit(PostLoading());
 
     try {
       final (
@@ -30,19 +31,21 @@ class HomeCubit extends Cubit<HomeState> {
 
       hasMorePosts = (_currentPage * _pageSize) < total;
 
-      emit(PostLoaded(posts, total)); // Emit the loaded posts
+      emit(PostLoaded(posts, total));
     } catch (e) {
-      emit(PostError(e.toString())); // Emit error state if something goes wrong
+      emit(
+        PostError(e.toString()),
+      );
     }
   }
 
   // Load more posts
   Future<void> loadMorePosts() async {
-    if (isLoadingMore || !(state is PostLoaded) || !hasMorePosts) return;
-    isLoadingMore = true; // Set to true to prevent further calls while loading
+    if (isLoadingMore || state is! PostLoaded || !hasMorePosts) return;
+    isLoadingMore = true;
 
-    final currentState = state as PostLoaded; // Get the current state
-    emit(PostLoadingMore(currentState.posts, currentState.total)); // Pass the current posts
+    final currentState = state as PostLoaded;
+    emit(PostLoadingMore(currentState.posts, currentState.total));
 
     try {
       final (
@@ -51,29 +54,26 @@ class HomeCubit extends Cubit<HomeState> {
       ) = await postRepository.getPosts(_currentPage + 1, _pageSize);
 
       if (newPosts.isEmpty) {
-        hasMorePosts = false; // No more posts to load
-        print('No more posts to load.');
+        hasMorePosts = false;
       } else {
         _currentPage++;
         final updatedPosts = List<PostEntity>.from(currentState.posts)..addAll(newPosts);
-        hasMorePosts = (_currentPage * _pageSize) < total; // Update hasMorePosts flag
-        emit(PostLoaded(updatedPosts, total)); // Emit the updated posts
-        print('Fetched ${newPosts.length} new posts. Total: $total');
+        hasMorePosts = (_currentPage * _pageSize) < total;
+        emit(PostLoaded(updatedPosts, total));
       }
     } catch (e) {
-      print('Error loading more posts: $e');
-      emit(PostError(e.toString())); // Emit error state if there's an issue
+      emit(PostError(e.toString()));
     } finally {
-      isLoadingMore = false; // Reset loading flag
-      print('Finished loading more posts.');
+      isLoadingMore = false;
     }
   }
 
   // Handle refresh action
   Future<void> onRefresh() async {
-    _currentPage = 1; // Reset to first page
-    hasMorePosts = true; // Assume there are more posts initially
-    await getPosts(); // Fetch posts again
+    _currentPage = 1;
+    hasMorePosts = true;
+    emit(HomeCubitInitial());
+    await getPosts();
   }
 
   // Create a new post
@@ -81,12 +81,30 @@ class HomeCubit extends Cubit<HomeState> {
     final post = CreatePostData(title: title, content: content);
 
     try {
-      emit(PostLoading()); // Show loading state while creating post
-      await postRepository.createPost(post); // Create the post
-      emit(PostCreated()); // Emit success state after creation
-      await onRefresh(); // Refresh the posts
+      emit(PostLoading());
+      await postRepository.createPost(post);
+      emit(PostCreated());
+      await onRefresh();
     } catch (e) {
-      emit(PostError(e.toString())); // Emit error state in case of failure
+      emit(PostError(e.toString()));
+    }
+  }
+
+  Future<void> deletePost(int postId) async {
+    try {
+      emit(PostDeletedLoading());
+      await postRepository.deletePost(postId);
+      if (state is PostLoaded) {
+        final currentState = state as PostLoaded;
+        final updatedPosts = currentState.posts.where((post) => post.id != postId).toList();
+        emit(PostLoaded(updatedPosts, currentState.total - 1));
+      }
+      emit(PostDeleted());
+    } catch (e) {
+      print('Error deleting post: $e');
+      emit(
+        PostDeleteFailed(e.toString()),
+      );
     }
   }
 }

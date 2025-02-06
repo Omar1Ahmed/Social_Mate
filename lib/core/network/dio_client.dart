@@ -24,12 +24,12 @@ class DioClient implements ApiCalls {
   }
 
   @override
-  Future<Map<String, dynamic>> post(String url, Map<String, dynamic>? body, {Map<String, dynamic>? queryParameters}) async {
+  Future<Map<String, dynamic>> post(String url, Map<String, dynamic>? body, {Map<String, dynamic>? header}) async {
     try {
       final response = await dio.post(
         url,
         data: body,
-        options: Options(headers: queryParameters),
+        options: Options(headers: header),
       );
       return _validateResponseData(response.data);
     } on DioException catch (e) {
@@ -54,12 +54,13 @@ class DioClient implements ApiCalls {
   }
 
   @override
-  Future<Map<String, dynamic>> delete(String url, {Map<String, dynamic>? queryParameters}) async {
+  Future<Map<String, dynamic>> delete(String url, {Map<String, dynamic>? header}) async {
     try {
-      final response = await dio.delete(
+      final response = await dio.request(
         url,
         options: Options(
-          headers: queryParameters,
+          headers: header,
+          method: 'DELETE',
         ),
       );
       return _validateResponseData(response.data);
@@ -68,17 +69,16 @@ class DioClient implements ApiCalls {
     }
   }
 
-
   Map<String, dynamic> _validateResponseData(dynamic data) {
     if (data is Map<String, dynamic>) {
       return data;
     } else if (data == null) {
       throw Exception('Response data is null');
-    } else if (data is int || data is String || data is double || data is bool || data is List|| data is Map<String, dynamic>) {
+    } else if (data is int || data is String || data is double || data is bool || data is List || data is Map<String, dynamic>) {
       return {
         'data': data
       };
-    }  else {
+    } else {
       throw Exception('Invalid response format: Expected Map<String, dynamic>, but got ${data.runtimeType}');
     }
   }

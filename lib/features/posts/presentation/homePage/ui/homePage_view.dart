@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/helper/extantions.dart';
 import 'package:social_media/core/theming/colors.dart';
+import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 import '../../../../../core/Responsive/Models/device_info.dart';
 import '../../../../../core/Responsive/ui_component/info_widget.dart';
 import '../../../../../core/routing/routs.dart';
@@ -13,6 +15,7 @@ import 'widgets/show_create_post_dialog_widget.dart';
 
 class HomepageView extends StatefulWidget {
   const HomepageView({super.key});
+
   @override
   State<HomepageView> createState() => _HomepageViewState();
 }
@@ -28,10 +31,8 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
       vsync: this,
       duration: const Duration(milliseconds: 1000),
     )..forward();
-
     _scrollController = ScrollController()..addListener(_onScroll);
-
-    // 🔴 Move getPosts() here to prevent infinite calls
+    // Fetch posts initially
     context.read<HomeCubit>().getPosts();
   }
 
@@ -44,17 +45,10 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
 
   void _onScroll() {
     final homeCubit = context.read<HomeCubit>();
-    print('Scroll Position: ${_scrollController.position.pixels}, Max Scroll Extent: ${_scrollController.position.maxScrollExtent}');
-
     if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 100 && !homeCubit.isLoadingMore && homeCubit.hasMorePosts) {
-      // Check hasMorePosts here
-      print('Triggering loadMorePosts()');
       homeCubit.loadMorePosts();
-    } else if (!homeCubit.hasMorePosts) {
-      print('No more posts to load. Scrolling stopped.');
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return InfoWidget(
@@ -62,19 +56,27 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
         return SafeArea(
           child: Scaffold(
             backgroundColor: Colors.white,
-            body: RefreshIndicator(
-              color: ColorsManager.primaryColor,
-              onRefresh: () async => await context.read<HomeCubit>().onRefresh(),
-              child: GestureDetector(
-                onTap: () => FocusScope.of(context).unfocus(),
-                child: CustomScrollView(
-                  controller: _scrollController,
-                  slivers: [
-                    _buildHeaderSection(deviceInfo),
-                    _buildPostList(deviceInfo),
-                    _buildLoadingIndicator(deviceInfo),
-                    SliverToBoxAdapter(child: SizedBox(height: deviceInfo.localHeight * 0.1)),
-                  ],
+            body: BlocListener<HomeCubit, HomeState>(
+              listener: (context, state) {
+                if (state is PostDeleted) {
+                  // Refresh the page when a post is deleted
+                  context.read<HomeCubit>().onRefresh();
+                }
+              },
+              child: RefreshIndicator(
+                color: ColorsManager.primaryColor,
+                onRefresh: () async => await context.read<HomeCubit>().onRefresh(),
+                child: GestureDetector(
+                  onTap: () => FocusScope.of(context).unfocus(),
+                  child: CustomScrollView(
+                    controller: _scrollController,
+                    slivers: [
+                      _buildHeaderSection(deviceInfo),
+                      _buildPostList(deviceInfo),
+                      _buildLoadingIndicator(deviceInfo),
+                      SliverToBoxAdapter(child: SizedBox(height: deviceInfo.localHeight * 0.1)),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -179,13 +181,11 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
           );
         } else if (state is PostLoaded || state is PostLoadingMore) {
           final posts = state is PostLoaded ? state.posts : (state as PostLoadingMore).posts;
-
           if (posts.isEmpty) {
             return SliverFillRemaining(
               child: Center(child: Text("No posts available")),
             );
           }
-
           return SliverList(
             delegate: SliverChildBuilderDelegate(
               (context, index) {
@@ -200,10 +200,8 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
                   child: PostCardWidget(
                     key: ValueKey(posts[index].id),
                     deviceInfo: deviceInfo,
-                    title: posts[index].title,
-                    content: posts[index].content,
-                    author: posts[index].createdBy.fullName,
-                    timeAgo: posts[index].createdOn.toString(),
+                    isIdMatch: posts[index].createdBy.id == getIt<userMainDetailsCubit>().state.userId ? false : true,
+                    post: posts[index],
                   ),
                 );
               },
@@ -213,6 +211,10 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
         } else if (state is PostError) {
           return SliverFillRemaining(
             child: BuildErrorWidget(deviceInfo: deviceInfo),
+          );
+        } else if (state is PostDeletedLoading) {
+          return SliverFillRemaining(
+            child: Center(child: CircularProgressIndicator(color: ColorsManager.primaryColor)),
           );
         } else {
           return SliverFillRemaining(

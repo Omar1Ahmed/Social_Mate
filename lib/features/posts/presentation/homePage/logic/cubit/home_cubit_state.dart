@@ -27,8 +27,6 @@ class PostLoaded extends HomeState {
 
 class PostCreated extends HomeState {}
 
-class PostDeleted extends HomeState {}
-
 class CreatePostFailed extends HomeState {}
 
 class PostUpdated extends HomeState {}
@@ -46,6 +44,18 @@ class LoadedMorePosts extends HomeState {
 
   const LoadedMorePosts({required this.posts, required this.totalPosts});
 }
+
+class PostDeleted extends HomeState {}
+
+class PostDeleteFailed extends HomeState {
+  final String message;
+
+  const PostDeleteFailed(this.message);
+}
+class PostDeletedLoading extends HomeState {}
+class PostUpdatedFailed extends HomeState {}
+
+class PostUpdatedSuccessfully extends HomeState {}
 
 class PostError extends HomeState {
   final String message;

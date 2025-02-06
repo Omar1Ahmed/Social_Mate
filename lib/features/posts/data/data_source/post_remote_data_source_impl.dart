@@ -7,11 +7,11 @@ import '../model/post_response.dart';
 
 class PostRemoteDataSourceImpl implements PostRemoteDataSource {
   final DioClient dio;
-  final userMainDetailsCubit userMainDetails; // Inject the Cubit
+  final userMainDetailsCubit userMainDetails;
 
   PostRemoteDataSourceImpl({
     required this.dio,
-    required this.userMainDetails, // Dependency injection
+    required this.userMainDetails,
   });
 
   final String baseUrl = EnvHelper.getString('posts_Base_url');
@@ -37,9 +37,24 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
       await dio.post(
         "$baseUrl/posts",
         postData,
+        header: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${userMainDetails.state.token}',
+        },
       );
     } catch (e) {
       throw Exception("Error creating post: ${e.toString()}");
     }
+  }
+
+  @override
+  Future<void> deletePost(int postId) async {
+    await dio.delete(
+      "$baseUrl/posts/$postId",
+      header: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${userMainDetails.state.token}',
+      },
+    );
   }
 }

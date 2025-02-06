@@ -1,4 +1,5 @@
 // PostRepository interface
+
 import 'package:social_media/core/entities/post_entity.dart';
 import 'package:social_media/features/posts/data/model/post_response.dart';
 import 'package:social_media/features/posts/domain/repository/post_remote_data_source.dart';
@@ -22,6 +23,11 @@ class PostRepositoryImpl implements PostRepository {
   Future<void> createPost(CreatePostData post) async {
    final response = await remoteDataSource.createPost(post);
     return response;
+  }
+  
+  @override
+  Future<void> deletePost(int postId) {
+    return remoteDataSource.deletePost(postId);
   }
 
 

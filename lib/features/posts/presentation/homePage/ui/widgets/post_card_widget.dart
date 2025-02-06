@@ -1,24 +1,22 @@
+
 import 'package:flutter/material.dart';
-import 'package:social_media/features/posts/presentation/homePage/ui/widgets/show_report_post_dialog_widget.dart';
+import 'package:social_media/core/di/di.dart';
 
 import '../../../../../../core/Responsive/Models/device_info.dart';
+import '../../../../../../core/entities/post_entity.dart';
 import '../../../../../../core/theming/colors.dart';
 import '../../../../../../core/theming/styles.dart';
+import '../../logic/cubit/home_cubit_cubit.dart';
 
 class PostCardWidget extends StatefulWidget {
   final DeviceInfo deviceInfo;
-  final String title;
-  final String content;
-  final String author;
-  final String timeAgo;
-
+  final PostEntity post;
+  final bool isIdMatch;
   const PostCardWidget({
     super.key,
     required this.deviceInfo,
-    required this.title,
-    required this.content,
-    required this.author,
-    required this.timeAgo,
+    required this.isIdMatch,
+    required this.post,
   });
 
   @override
@@ -38,14 +36,12 @@ class _PostCardWidgetState extends State<PostCardWidget> with TickerProviderStat
       vsync: this,
       duration: const Duration(milliseconds: 700),
     );
-
     _opacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _animationController,
         curve: Curves.easeInOut,
       ),
     );
-
     _offsetAnimation = Tween<Offset>(
       begin: const Offset(0, 0.5),
       end: Offset.zero,
@@ -55,7 +51,6 @@ class _PostCardWidgetState extends State<PostCardWidget> with TickerProviderStat
         curve: Curves.easeInOut,
       ),
     );
-
     _animationController.forward();
   }
 
@@ -104,21 +99,31 @@ class _PostCardWidgetState extends State<PostCardWidget> with TickerProviderStat
                     SizedBox(
                       width: widget.deviceInfo.localWidth * 0.68,
                       child: Text(
-                        widget.title,
+                        widget.post.title,
                         overflow: TextOverflow.ellipsis,
                         softWrap: true,
                         style: TextStyles.inter18BoldBlack.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.05),
                       ),
                     ),
                     const Spacer(),
-                    IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.delete,
-                        color: ColorsManager.redColor.withOpacity(0.7),
-                        size: widget.deviceInfo.screenWidth * 0.08,
-                      ),
-                    ),
+                    widget.isIdMatch
+                        ? const SizedBox.shrink()
+                        : IconButton(
+                            onPressed: () {
+                              final postId = widget.post.id;
+                              if (postId == 0) {
+                                print('Invalid post ID: $postId');
+                                return;
+                              }
+                              print('Deleting post with ID: $postId');
+                              getIt.get<HomeCubit>().deletePost(postId);
+                            },
+                            icon: Icon(
+                              Icons.delete,
+                              color: ColorsManager.redColor.withOpacity(0.7),
+                              size: widget.deviceInfo.screenWidth * 0.08,
+                            ),
+                          ),
                   ],
                 ),
                 Divider(
@@ -129,19 +134,19 @@ class _PostCardWidgetState extends State<PostCardWidget> with TickerProviderStat
                 Row(
                   children: [
                     Text(
-                      widget.author,
+                      widget.post.createdBy.fullName,
                       style: TextStyles.inter18BoldBlack.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.04),
                     ),
                     const Spacer(),
                     Text(
-                      widget.timeAgo.substring(0, 16),
+                      widget.post.createdOn.toString().substring(0, 16),
                       style: TextStyles.inter18Regularblack.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.03),
                     ),
                   ],
                 ),
                 SizedBox(height: widget.deviceInfo.localHeight * 0.01),
                 Text(
-                  widget.content,
+                  widget.post.content,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.justify,
