@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 
 import '../../../../../../core/Responsive/Models/device_info.dart';
 import '../../../../../../core/theming/colors.dart';
@@ -8,16 +6,13 @@ import 'custom_dialog_widget.dart';
 
 // ignore: must_be_immutable
 class ShowReportPostDialogWidget extends StatelessWidget {
-   ShowReportPostDialogWidget({super.key, required this.deviceInfo});
+  ShowReportPostDialogWidget({super.key, required this.deviceInfo});
   final DeviceInfo deviceInfo;
   int selectedCategory = -1;
-    final TextEditingController reasonController = TextEditingController();
+  final TextEditingController reasonController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-
-    print('Print token in report dialog: ${context.read<userMainDetailsCubit>().state.token}');
-
     return CustomDialogWidget(
       deviceInfo: deviceInfo,
       title: "Report the Post",
@@ -81,36 +76,26 @@ class ShowReportPostDialogWidget extends StatelessWidget {
         ),
         SizedBox(height: deviceInfo.localHeight * 0.02),
         TextField(
-            controller: reasonController,
-            maxLines: 3,
-            decoration: InputDecoration(
-              labelText: "Provide a Reason",
-              filled: true,
-              fillColor: ColorsManager.lightGreyColor,
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(deviceInfo.localWidth * 0.03),
-                borderSide: BorderSide(
-                  color: ColorsManager.greyColor,
-                width: deviceInfo.localWidth * 0.0015
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(deviceInfo.localWidth * 0.03),
-                borderSide: BorderSide(
-                    color: ColorsManager.primaryColor,
-                    width: deviceInfo.localWidth * 0.002
-                ),
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(deviceInfo.localWidth * 0.03),
-                borderSide: BorderSide(
-                    color: ColorsManager.greyColor,
-                    width: deviceInfo.localWidth * 0.0015
-                ),
-              ),
+          controller: reasonController,
+          maxLines: 3,
+          decoration: InputDecoration(
+            labelText: "Provide a Reason",
+            filled: true,
+            fillColor: ColorsManager.lightGreyColor,
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(deviceInfo.localWidth * 0.03),
+              borderSide: BorderSide(color: ColorsManager.greyColor, width: deviceInfo.localWidth * 0.0015),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(deviceInfo.localWidth * 0.03),
+              borderSide: BorderSide(color: ColorsManager.primaryColor, width: deviceInfo.localWidth * 0.002),
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(deviceInfo.localWidth * 0.03),
+              borderSide: BorderSide(color: ColorsManager.greyColor, width: deviceInfo.localWidth * 0.0015),
             ),
           ),
-
+        ),
       ],
       actions: [
         TextButton(

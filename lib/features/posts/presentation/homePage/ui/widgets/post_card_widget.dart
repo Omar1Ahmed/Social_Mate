@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:social_media/core/di/di.dart';
+import 'package:social_media/features/posts/presentation/homePage/ui/widgets/show_report_post_dialog_widget.dart';
 import '../../../../../../core/Responsive/Models/device_info.dart';
 import '../../../../../../core/entities/post_entity.dart';
 import '../../../../../../core/theming/colors.dart';
@@ -168,7 +169,15 @@ class _PostCardWidgetState extends State<PostCardWidget> {
                   ),
                   const Spacer(),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      // Handle report action
+                      // getIt.get<HomeCubit>().reportPost(widget.post.id);
+                      showDialog(
+                          context: context,
+                          builder: (context) => ShowReportPostDialogWidget(
+                                deviceInfo: widget.deviceInfo,
+                              ));
+                    },
                     child: Text(
                       "Report",
                       style: TextStyles.inter18Regularblack.copyWith(color: ColorsManager.redColor),
