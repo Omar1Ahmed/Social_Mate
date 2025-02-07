@@ -3,7 +3,6 @@ import 'package:bloc/bloc.dart';
 import 'package:social_media/features/filtering/domain/entities/post_entity.dart';
 import 'package:social_media/features/filtering/domain/repositories/filtered_post_repo.dart';
 
-
 part 'filtering_state.dart';
 
 class FilteringCubit extends Cubit<FilteringState> {
@@ -17,23 +16,29 @@ class FilteringCubit extends Cubit<FilteringState> {
   Future<void> getFilteredPosts(
       {Map<String, dynamic>? queryParameters, required String token}) async {
     if (state is FilteredPostsIsLoading) return;
+    int pageOffset = 0;
     emit(FilteredPostsIsLoading());
 
     try {
       final filteredPosts = await filteredPostRepo.getFilteredPosts(
         queryParameters: {
           ...?queryParameters,
-          'pageOffset': _pageOffset,
+          'pageOffset': pageOffset,
           'pageSize': _pageSize
         },
         token: token,
       );
+
+      
       print("Filtered Posts: ${filteredPosts.length} items"); // Debug log
       if (filteredPosts.isEmpty) {
         emit(FilteredPostsIsEmpty(filteredPosts));
       } else {
         _hasMore = filteredPosts.length == _pageSize;
-        emit(FilteredPostsIsLoaded(filteredPosts, _hasMore));
+        emit(FilteredPostsIsLoaded(
+          filteredPosts,
+          _hasMore,
+        ));
       }
     } catch (e) {
       emit(FilteredPostsHasError(e.toString()));
@@ -73,36 +78,6 @@ class FilteringCubit extends Cubit<FilteringState> {
         _hasMore =
             newPosts.length == _pageSize; // Check if more posts are available
         emit(FilteredPostsIsLoaded(updatedPosts, _hasMore));
-      }
-    } catch (e) {
-      emit(FilteredPostsHasError(e.toString()));
-    }
-  }
-
-  Future<void> refreshFilteredPosts({
-    Map<String, dynamic>? queryParameters,
-    required String token,
-  }) async {
-    if (state is FilteredPostsIsLoading)
-      return; // i liked this to prevent double loading
-    emit(FilteredPostsIsLoading());
-
-    try {
-      _pageOffset = 0;
-      final filteredPosts = await filteredPostRepo.getFilteredPosts(
-        queryParameters: {
-          ...?queryParameters,
-          'pageOffset': _pageOffset,
-          'pageSize': _pageSize
-        },
-        token: token,
-      );
-
-      if (filteredPosts.isEmpty) {
-        emit(FilteredPostsIsEmpty(filteredPosts));
-      } else {
-        _hasMore = filteredPosts.length == _pageSize;
-        emit(FilteredPostsIsLoaded(filteredPosts, _hasMore));
       }
     } catch (e) {
       emit(FilteredPostsHasError(e.toString()));

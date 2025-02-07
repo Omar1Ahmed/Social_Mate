@@ -1,7 +1,6 @@
-
 import 'package:social_media/features/filtering/domain/entities/post_entity.dart';
 
-
 abstract class FilteredPostRepo {
-  Future<List<FilteringPostEntity>> getFilteredPosts({Map<String, dynamic>? queryParameters, required String token});
+  Future<List<FilteringPostEntity>> getFilteredPosts(
+      {Map<String, dynamic>? queryParameters, required String token});
 }

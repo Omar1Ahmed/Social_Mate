@@ -16,3 +16,18 @@ class RealDioNetworkClient extends DioNetworkClient {
     ));
   }
 }
+
+class UserDioNetworkClient extends DioNetworkClient {
+  @override
+  UserDioNetworkClient() : super(RealEndPoints.realUserBaseUrl) {
+    dio.options.baseUrl = RealEndPoints.realUserBaseUrl; // Replace with your Fake base URL
+    dio.interceptors.add(LogInterceptor(
+      request: true,
+      error: true,
+      requestBody: true,
+      requestHeader: true,
+      responseBody: true,
+      responseHeader: true,
+    ));
+  }
+}

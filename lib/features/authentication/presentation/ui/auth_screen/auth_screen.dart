@@ -12,7 +12,7 @@ import 'package:social_media/features/authentication/presentation/ui/widgets/cus
 
 import '../../../../../core/routing/routs.dart';
 import 'sign_in_screen.dart';
-import 'sign_up_screen.dart';
+
 
 
 class AuthScreen extends StatelessWidget {

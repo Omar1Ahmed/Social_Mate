@@ -5,8 +5,10 @@ class FilteringPostEntity {
   final String createdOn;
   final String createdBy;
   final int userId;
+  final int total;
 
   const FilteringPostEntity({
+    required this.total,
     required this.userId,
     required this.id,
     required this.title,

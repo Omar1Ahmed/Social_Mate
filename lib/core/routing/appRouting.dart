@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/routing/routs.dart';
 import 'package:social_media/features/authentication/presentation/logic/auth_cubit.dart';
 import 'package:social_media/features/authentication/presentation/ui/auth_screen/auth_screen.dart';
+import 'package:social_media/features/filtering/presentation/cubit/filtered_users/filtered_users_cubit.dart';
 import 'package:social_media/features/filtering/presentation/cubit/filtering_cubit.dart';
+import 'package:social_media/features/filtering/presentation/cubit/sharing_data/sharing_data_cubit.dart';
 import 'package:social_media/features/filtering/presentation/pages/filtering_screen.dart';
 import 'package:social_media/features/on_boarding/presentation/ui/onboarding_screen.dart';
 import 'package:social_media/features/post_details/presentation/example_screen/ui/postDetailsScreen.dart';
@@ -21,7 +23,9 @@ class AppRouts {
       case Routes.onBordingScreen:
         return MaterialPageRoute(builder: (context) => OnboardingScreen());
       case Routes.AuthScreen:
-        return MaterialPageRoute(builder: (context) => BlocProvider(create: (context) => getIt<AuthCubit>(), child: AuthScreen()));
+        return MaterialPageRoute(
+            builder: (context) => BlocProvider(
+                create: (context) => getIt<AuthCubit>(), child: AuthScreen()));
       case Routes.homePage:
         return MaterialPageRoute(
             builder: (context) => BlocProvider(
@@ -30,10 +34,17 @@ class AppRouts {
                 ));
       case Routes.filteringScreen:
         return MaterialPageRoute(
-            builder: (context) => BlocProvider(
-                  create: (context) => getIt<FilteringCubit>(),
-                  child: FilteringScreen(),
-                ));
+            builder: (context) => MultiBlocProvider(providers: [
+                  BlocProvider<FilteringCubit>(
+                    create: (context) => getIt<FilteringCubit>(),
+                  ),
+                  BlocProvider<SharingDataCubit>(
+                    create: (context) => SharingDataCubit(),
+                  ),
+                  BlocProvider<FilteredUsersCubit>(
+                    create: (context) => getIt<FilteredUsersCubit>(),
+                  )
+                ], child: FilteringScreen()));
       case Routes.postDetailsScreen:
         return MaterialPageRoute(builder: (context) => post_details_screen());
       default:

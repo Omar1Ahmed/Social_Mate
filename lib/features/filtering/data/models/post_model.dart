@@ -20,7 +20,7 @@ class PostModel {
   }
 
   List<FilteringPostEntity> toEntityList() {
-    return data.map((postItem) => postItem.toEntity()).toList();
+    return data.map((postItem) => postItem.toEntity(total)).toList();
   }
 }
 
@@ -49,14 +49,14 @@ class PostItemModel {
     );
   }
 
-  FilteringPostEntity toEntity() {
+  FilteringPostEntity toEntity(int total) {
     return FilteringPostEntity(
       id: id,
       title: title,
       content: content,
       createdOn: createdOn,
       createdBy: createdBy.fullName,
-      userId: createdBy.id,
+      userId: createdBy.id, total: total,
     );
   }
 }

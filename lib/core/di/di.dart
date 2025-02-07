@@ -15,8 +15,12 @@ import 'package:social_media/features/filtering/could_be_shared/network_clients/
 import 'package:social_media/features/filtering/could_be_shared/network_clients/real_dio_client.dart';
 import 'package:social_media/features/filtering/could_be_shared/network_info/network_info.dart';
 import 'package:social_media/features/filtering/data/datasources/filtered_posts_remote_source.dart';
+import 'package:social_media/features/filtering/data/datasources/users_remote_data_source.dart';
 import 'package:social_media/features/filtering/data/repositories/filtered_post_repo_imp.dart';
+import 'package:social_media/features/filtering/data/repositories/filtered_users_repo_impl.dart';
 import 'package:social_media/features/filtering/domain/repositories/filtered_post_repo.dart';
+import 'package:social_media/features/filtering/domain/repositories/filtered_users_repo.dart';
+import 'package:social_media/features/filtering/presentation/cubit/filtered_users/filtered_users_cubit.dart';
 import 'package:social_media/features/filtering/presentation/cubit/filtering_cubit.dart';
 import '../../features/posts/data/data_source/post_remote_data_source_impl.dart';
 import '../../features/posts/data/repository/post_repository_impl.dart' as impl;
@@ -39,19 +43,23 @@ Future<void> initDependencies() async {
   );
   getIt.registerLazySingleton<DioClient>(() => DioClient(dio: getIt<Dio>()));
 
-  getIt.registerLazySingleton<DioNetworkClient>(() => RealDioNetworkClient());
-
-
-
-
-
+  getIt.registerLazySingleton<RealDioNetworkClient>(
+      () => RealDioNetworkClient());
+  getIt.registerLazySingleton<UserDioNetworkClient>(
+      () => UserDioNetworkClient());
+  getIt.registerLazySingleton<DioNetworkClient>(() => RealDioNetworkClient(),
+      instanceName: 'real');
+  getIt.registerLazySingleton<DioNetworkClient>(() => UserDioNetworkClient(),
+      instanceName: 'user');
 
   // |------------------------------------------------------------------\
   // |-------------------------- Data Sources ------------------------------\
   // |------------------------------------------------------------------\
 
   getIt.registerFactory<PostRemoteDataSource>(
-        () => PostRemoteDataSourceImpl(dio: getIt<DioClient>(), userMainDetails: getIt<userMainDetailsCubit>()),
+    () => PostRemoteDataSourceImpl(
+        dio: getIt<DioClient>(),
+        userMainDetails: getIt<userMainDetailsCubit>()),
   );
 
   getIt.registerLazySingleton<NetworkInfo>(
@@ -60,10 +68,15 @@ Future<void> initDependencies() async {
   getIt.registerLazySingleton(() => InternetConnectionChecker());
   getIt.registerLazySingleton(
       () => NetworkInfoConnection(connectionChecker: getIt()));
+  getIt.registerLazySingleton<UserRemoteDataSource>(
+      () => UserRemoteDataSourceImpl(
+            dioNetworkClient: getIt<DioNetworkClient>(instanceName: 'user'),
+          ));
   getIt.registerLazySingleton<FilteredPostsRemoteSource>(
       () => FilteredPostsRemoteSourceImpl(
-            dioNetworkClient: getIt<DioNetworkClient>(),
+            dioNetworkClient: getIt<DioNetworkClient>(instanceName: 'real'),
           ));
+
   getIt.registerLazySingleton<AuthenticationRemoteDataSource>(
       () => AuthenticationRemoteDataSourceImp(
             dioNetworkClient: DioNetworkClient(RealEndPoints.realUserBaseUrl),
@@ -85,6 +98,9 @@ Future<void> initDependencies() async {
   getIt.registerLazySingleton<AuthenticationRepository>(() =>
       AuthenticationRepositoryImp(
           networkInfo: getIt(), logInRemoteDataSource: getIt()));
+
+  getIt.registerLazySingleton<FilteredUsersRepo>(() => FilteredUsersRepoImpl(
+      networkInfo: getIt(), filteredUsersRemoteSource: getIt()));
   getIt.registerLazySingleton<FilteredPostRepo>(() => FilteredPostRepoImp(
       networkInfo: getIt(), filteredPostsRemoteSource: getIt()));
   // |------------------------------------------------------------------\
@@ -111,6 +127,7 @@ Future<void> initDependencies() async {
   // the auth Cubit is here 👇
   //getIt.registerFactory(() => AuthCubit(getIt()));
   getIt.registerFactory(() => FilteringCubit(getIt()));
+  getIt.registerFactory(() => FilteredUsersCubit(filteredUsersRepo: getIt()));
 
   // |------------------------------------------------------------------\
   // |-------------------------- Services ------------------------------\
