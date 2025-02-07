@@ -24,10 +24,22 @@ class CustomTextField extends StatelessWidget {
       child: InfoWidget(builder: (context, info) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+
           children: [
             BlocBuilder<PasswordVisibilityCubit, bool>(
               builder: (context, isHidden) {
-                return TextField(
+                return Container(
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                      offset: const Offset(0, 4),
+                      color: Colors.black45,
+                      spreadRadius: info.screenWidth * 0.001,
+                      blurRadius: info.screenWidth * 0.03,
+                    ),]
+                  ),
+                    child:
+                TextField(
                   controller: controller,
                   obscureText: isPassword ? isHidden : false,
                   decoration: InputDecoration(
@@ -38,15 +50,17 @@ class CustomTextField extends StatelessWidget {
                             fontWeight: FontWeight.w500)),
                     hintText: hintText,
                     border: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Colors.black54,
-                            width: info.screenWidth * 0.001),
+                        borderSide: BorderSide.none,
+                        // BorderSide(
+                        //     color: Colors.black54,
+                        //     width: info.screenWidth * 0.001),
                         borderRadius:
                             BorderRadius.circular(info.screenWidth * 0.04)),
                     enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Colors.black54,
-                            width: info.screenWidth * 0.001),
+                        borderSide: BorderSide.none,
+                        // BorderSide(
+                        //     color: Colors.black54,
+                        //     width: info.screenWidth * 0.001),
                         borderRadius:
                             BorderRadius.circular(info.screenWidth * 0.04)),
                     focusedBorder: OutlineInputBorder(
@@ -69,6 +83,7 @@ class CustomTextField extends StatelessWidget {
                         : null,
                   ),
                   textInputAction: TextInputAction.next,
+                )
                 );
               },
             ),

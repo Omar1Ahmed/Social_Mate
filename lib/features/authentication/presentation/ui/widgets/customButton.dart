@@ -12,7 +12,11 @@ class CustomButton extends StatelessWidget {
     return InfoWidget(builder: (context, info) {
       return ElevatedButton(
         onPressed: onPressed,
-        style: ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent, minimumSize:  Size(double.infinity, info.screenHeight * 0.057)),
+        style: ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent, minimumSize:  Size(double.infinity, info.screenHeight * 0.057),
+        elevation: info.screenWidth * 0.016,
+
+
+        ),
         child: Text(text, style:  TextStyle(color: Colors.white,fontSize: info.screenWidth * 0.04, fontWeight: FontWeight.bold)),
       );
     });
