@@ -1,4 +1,3 @@
-
 import 'package:bloc/bloc.dart';
 
 import 'package:equatable/equatable.dart';
@@ -92,19 +91,26 @@ class HomeCubit extends Cubit<HomeState> {
 
   Future<void> deletePost(int postId) async {
     try {
+      // Emit loading state for post deletion
       emit(PostDeletedLoading());
+
       await postRepository.deletePost(postId);
+
       if (state is PostLoaded) {
         final currentState = state as PostLoaded;
         final updatedPosts = currentState.posts.where((post) => post.id != postId).toList();
-        emit(PostLoaded(updatedPosts, currentState.total - 1));
+
+        final updatedTotal = currentState.total - 1;
+
+        emit(PostLoaded(updatedPosts, updatedTotal));
       }
+
+      // Emit success state for post deletion
       emit(PostDeleted());
     } catch (e) {
+      // Log the error and emit an error state
       print('Error deleting post: $e');
-      emit(
-        PostDeleteFailed(e.toString()),
-      );
+      emit(PostDeleteFailed(e.toString()));
     }
   }
 }

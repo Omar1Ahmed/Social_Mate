@@ -9,7 +9,6 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
 
     Future.delayed(const Duration(seconds: 3), () {
-      // ignore: use_build_context_synchronously
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) => OnboardingScreen(),

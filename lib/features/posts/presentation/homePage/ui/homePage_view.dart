@@ -49,6 +49,7 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
       homeCubit.loadMorePosts();
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return InfoWidget(
@@ -59,8 +60,13 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
             body: BlocListener<HomeCubit, HomeState>(
               listener: (context, state) {
                 if (state is PostDeleted) {
-                  // Refresh the page when a post is deleted
+                  // Optionally refresh the page after deletion
                   context.read<HomeCubit>().onRefresh();
+                } else if (state is PostError) {
+                  // Show an error message or snack bar
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(state.message)),
+                  );
                 }
               },
               child: RefreshIndicator(
@@ -120,7 +126,6 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
     );
   }
 
-  /// Builds the animated create post widget.
   Widget _buildAnimatedCreatePostWidget(DeviceInfo deviceInfo) {
     return SlideTransition(
       position: Tween<Offset>(
@@ -136,7 +141,6 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
     );
   }
 
-  /// Builds the header row with the app logo and search button.
   Widget _buildHeader(DeviceInfo deviceInfo, BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -171,7 +175,6 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
     );
   }
 
-  /// Builds the list of posts using a BlocBuilder.
   Widget _buildPostList(DeviceInfo deviceInfo) {
     return BlocBuilder<HomeCubit, HomeState>(
       builder: (context, state) {
@@ -200,7 +203,7 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
                   child: PostCardWidget(
                     key: ValueKey(posts[index].id),
                     deviceInfo: deviceInfo,
-                    isIdMatch: posts[index].createdBy.id == getIt<userMainDetailsCubit>().state.userId ? false : true,
+                    idNotMatch: posts[index].createdBy.id == getIt<userMainDetailsCubit>().state.userId ? false : true,
                     post: posts[index],
                   ),
                 );
@@ -225,12 +228,10 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
     );
   }
 
-  /// Builds the loading indicator for infinite scrolling.
   Widget _buildLoadingIndicator(DeviceInfo deviceInfo) {
     return BlocBuilder<HomeCubit, HomeState>(
       builder: (context, state) {
         if (state is PostLoadingMore) {
-          // Show loading indicator while loading more posts
           return SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -240,17 +241,17 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
             ),
           );
         }
-        // Hide the loading indicator otherwise
         return const SliverToBoxAdapter(child: SizedBox.shrink());
       },
     );
   }
 
-  /// Shows the create post dialog.
   void _showCreatePostDialog(DeviceInfo deviceInfo) {
     showDialog(
       context: context,
-      builder: (context) => ShowCreatePostDialogWidget(deviceInfo: deviceInfo),
+      builder: (context) => ShowCreatePostDialogWidget(
+        deviceInfo: deviceInfo,
+      ),
     );
   }
 }
