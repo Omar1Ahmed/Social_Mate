@@ -8,10 +8,16 @@ class AuthSignUpState extends AuthState {}
 
 
 class AuthLoadingState extends AuthState {}
+
 class AuthLogInTokenRetrivedState extends AuthState {
 }
+
+class AuthRegisterSuccessState extends AuthState {}
 
 class AuthLogInErrorState extends AuthState {
   final String message;
   AuthLogInErrorState({required this.message});
 }
+
+class changeGenderState extends AuthState {}
+

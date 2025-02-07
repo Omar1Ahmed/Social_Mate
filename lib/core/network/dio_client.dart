@@ -6,7 +6,14 @@ import 'ApiCalls.dart';
 
 class DioClient implements ApiCalls {
   final Dio dio;
-  DioClient({required this.dio});
+  String baseUrl;
+
+  DioClient({required this.baseUrl}) : dio = Dio(BaseOptions(
+    baseUrl: baseUrl,
+    connectTimeout: const Duration(seconds: 30),
+    receiveTimeout: const Duration(seconds: 30),
+  ));
+
 
   @override
   Future<Map<String, dynamic>> get(String url, {Map<String, dynamic>? header}) async {
@@ -31,8 +38,21 @@ class DioClient implements ApiCalls {
         data: body,
         options: Options(headers: header),
       );
+      print('lololololo ${response.data}');
+      print('lololololo ${response.statusCode}');
+      print('lololololo ${response.statusMessage}');
+
+      if(response.statusCode == 201)
+        return {'statusCode': 201};
+
       return _validateResponseData(response.data);
     } on DioException catch (e) {
+
+      print('lololololo222222222 ${e.error}');
+      print('lololololo2222222 ${e.response!.statusCode}');
+      print('lololololo2222222 ${e.response!.statusMessage}');
+
+      print(e.response!.data);
       throw DioExceptionHandler.handleError(e);
     }
   }

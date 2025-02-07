@@ -1,18 +1,17 @@
 // core/di/di.dart
-import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:social_media/core/di/diInstancesHelper.dart';
 import 'package:social_media/core/helper/SharedPref/sharedPrefHelper.dart';
-
 import 'package:social_media/core/userMainDetails/jwt_token_decode/data/repository/jwt_token_decode_repository_imp.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
+import 'package:social_media/features/authentication/data/data_source/AuthenticaionRemoteDataSource.dart';
 import 'package:social_media/features/authentication/data/data_source/authentication_remote_data_source.dart';
 import 'package:social_media/features/authentication/data/repository/authentication_repository_imp.dart';
 import 'package:social_media/features/authentication/domain/repository/authentication_repository.dart';
 import 'package:social_media/features/authentication/presentation/logic/auth_cubit.dart';
 import 'package:social_media/features/filtering/could_be_shared/fake_end_points/real_end_points.dart';
 import 'package:social_media/features/filtering/could_be_shared/network_clients/dio_network_client.dart';
-import 'package:social_media/features/filtering/could_be_shared/network_clients/real_dio_client.dart';
 import 'package:social_media/features/filtering/could_be_shared/network_info/network_info.dart';
 import 'package:social_media/features/filtering/data/datasources/filtered_posts_remote_source.dart';
 import 'package:social_media/features/filtering/data/repositories/filtered_post_repo_imp.dart';
@@ -29,18 +28,39 @@ import '../network/dio_client.dart';
 final getIt = GetIt.instance;
 
 Future<void> initDependencies() async {
-  // ---------------------------- Dio Setup ----------------------------
-  getIt.registerSingleton<Dio>(
-    Dio(BaseOptions(
-      baseUrl: 'https://your-api-url.com/',
-      connectTimeout: const Duration(seconds: 30),
-      receiveTimeout: const Duration(seconds: 30),
-    )),
+
+
+  // |------------------------------------------------------------------\
+  // |-------------------------- Services ------------------------------\
+  // |------------------------------------------------------------------\
+
+  // shared Preferences
+  final sharedPrefHelper = SharedPrefHelper();
+  await sharedPrefHelper.init();
+  getIt.registerSingleton<SharedPrefHelper>(sharedPrefHelper);
+
+
+  // Network info
+  getIt.registerLazySingleton<NetworkInfo>(
+        () => NetworkInfoConnection(connectionChecker: getIt()),
   );
-  getIt.registerLazySingleton<DioClient>(() => DioClient(dio: getIt<Dio>()));
+  getIt.registerLazySingleton(() => InternetConnectionChecker());
 
-  getIt.registerLazySingleton<DioNetworkClient>(() => RealDioNetworkClient());
+  getIt.registerLazySingleton(
+          () => NetworkInfoConnection(connectionChecker: getIt()));
 
+
+  // ---------------------------- Dio Setup ----------------------------
+
+  // users Management api  client
+  getIt.registerLazySingleton<DioClient>(() => DioClient(baseUrl: RealEndPoints.realUserBaseUrl),
+  instanceName: diInstancesHelper.userDioClient
+  );
+
+ // posts api client
+  getIt.registerLazySingleton<DioClient>(() => DioClient(baseUrl: RealEndPoints.realPostsBaseUrl),
+      instanceName: diInstancesHelper.PostsDioClient
+  );
 
 
 
@@ -51,22 +71,22 @@ Future<void> initDependencies() async {
   // |------------------------------------------------------------------\
 
   getIt.registerFactory<PostRemoteDataSource>(
-        () => PostRemoteDataSourceImpl(dio: getIt<DioClient>(), userMainDetails: getIt<userMainDetailsCubit>()),
+        () => PostRemoteDataSourceImpl(
+            dio: getIt<DioClient>(instanceName: diInstancesHelper.PostsDioClient),
+            userMainDetails: getIt<userMainDetailsCubit>()),
   );
 
-  getIt.registerLazySingleton<NetworkInfo>(
-    () => NetworkInfoConnection(connectionChecker: getIt()),
-  );
-  getIt.registerLazySingleton(() => InternetConnectionChecker());
-  getIt.registerLazySingleton(
-      () => NetworkInfoConnection(connectionChecker: getIt()));
+
   getIt.registerLazySingleton<FilteredPostsRemoteSource>(
       () => FilteredPostsRemoteSourceImpl(
             dioNetworkClient: getIt<DioNetworkClient>(),
           ));
+
   getIt.registerLazySingleton<AuthenticationRemoteDataSource>(
       () => AuthenticationRemoteDataSourceImp(
-            dioNetworkClient: DioNetworkClient(RealEndPoints.realUserBaseUrl),
+            dioNetworkClient: getIt<DioClient>(
+              instanceName: diInstancesHelper.userDioClient,
+            ),
           ));
   // |------------------------------------------------------------------\
   // |-------------------------- Repositories ------------------------------\
@@ -99,8 +119,8 @@ Future<void> initDependencies() async {
   );
 
   // Auth Cubit
-  getIt.registerSingleton<AuthCubit>(
-    AuthCubit(getIt()),
+  getIt.registerFactory<AuthCubit>(
+      () => AuthCubit(getIt()),
   );
 
   // home Cubit
@@ -112,11 +132,5 @@ Future<void> initDependencies() async {
   //getIt.registerFactory(() => AuthCubit(getIt()));
   getIt.registerFactory(() => FilteringCubit(getIt()));
 
-  // |------------------------------------------------------------------\
-  // |-------------------------- Services ------------------------------\
-  // |------------------------------------------------------------------\
 
-  final sharedPrefHelper = SharedPrefHelper();
-  await sharedPrefHelper.init();
-  getIt.registerSingleton<SharedPrefHelper>(sharedPrefHelper);
 }

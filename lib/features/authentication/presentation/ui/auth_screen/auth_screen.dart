@@ -1,3 +1,4 @@
+import 'package:cherry_toast/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
@@ -8,6 +9,7 @@ import 'package:social_media/features/authentication/presentation/logic/auth_cub
 import 'package:social_media/features/authentication/presentation/logic/auth_state.dart';
 import 'package:social_media/features/authentication/presentation/ui/auth_screen/sign_up_screen.dart';
 import 'package:social_media/features/authentication/presentation/ui/widgets/customButton.dart';
+import 'package:cherry_toast/cherry_toast.dart';
 
 import '../../../../../core/routing/routs.dart';
 import 'sign_in_screen.dart';
@@ -20,14 +22,35 @@ class AuthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return InfoWidget(builder: (context, info) {
       return BlocConsumer<AuthCubit, AuthState>(
           listener: (context, state) {
             if(state is AuthLogInTokenRetrivedState){
               Navigator.pushNamed(context, Routes.homePage);
             }
+            if(state is AuthRegisterSuccessState){
+              CherryToast.success(
+                title: Text(
+                  "Success",
+                  style: TextStyle(color: Colors.white),
+                ),
+                toastDuration: Duration(seconds: 3),
+                borderRadius: info.screenWidth * 0.04,
+                backgroundColor: Colors.green,
+                shadowColor: Colors.black45,
+                animationDuration: Duration(milliseconds: 300),
+                animationType: AnimationType.fromTop,
+                autoDismiss: true,
+                description: Text('Successfully Registered', style: TextStyle(color: Colors.white70),),
+
+
+              ).show(context);
+              context.read<AuthCubit>().toggleAuth();
+            }
           },
       builder: (context, state) {
+            print('state: $state');
         return Scaffold(
           backgroundColor: Colors.white,
           body: SingleChildScrollView(
@@ -43,16 +66,16 @@ class AuthScreen extends StatelessWidget {
                         height: info.screenHeight * 0.1),
                   ),
                   AuthHeader(
-                    isSignIn: state is AuthSignInState,
+                    isSignIn: context.read<AuthCubit>().IsSignIn,
                     onToggle: () => context.read<AuthCubit>().toggleAuth(),
                   ),
 
                   Container(
-                    height: info.screenHeight * 0.41,
+                    height: info.screenHeight * 0.47,
                     margin: EdgeInsetsDirectional.only(
                         top: info.screenHeight * 0.016),
                     child: Column(children: [
-                      state is AuthSignInState
+                      context.read<AuthCubit>().IsSignIn
                           ? SignInForm()
                           : SignUpForm(),
 
@@ -64,7 +87,7 @@ class AuthScreen extends StatelessWidget {
                         text: "Join Now",
                         onPressed: () async {
 
-                          if(state is AuthSignInState) {
+                          if(context.read<AuthCubit>().IsSignIn){
                           final SharedPrefHelper _sharedPrefHelper =
                           getIt<SharedPrefHelper>();
                           await _sharedPrefHelper.saveString(
@@ -72,10 +95,13 @@ class AuthScreen extends StatelessWidget {
 //  // ignore: use_build_context_synchronously
 //                           context.read<AuthCubit>().login(context);
 //                             // dynamic token = context.read<JwtCubit>().decodeToken(""); // Start decoding.
-                          print('assign Token in Sign up ');
                           //context.read<TokenCubit>().setToken('token Test ');
 
                             context.read<AuthCubit>().logIn(context);
+                          }else{
+                          print('Sign up clicked');
+
+                            context.read<AuthCubit>().signUp(context);
                           }
 
                         }),

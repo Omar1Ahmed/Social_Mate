@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
+import 'package:social_media/features/authentication/presentation/logic/auth_cubit.dart';
 import '../widgets/customTextField.dart';
 
 class SignUpForm extends StatelessWidget {
@@ -8,20 +10,78 @@ class SignUpForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     final TextEditingController fullNameController= TextEditingController();
-  final TextEditingController emailController= TextEditingController();
-  final TextEditingController phoneController= TextEditingController();
-  final TextEditingController passwordController= TextEditingController();
-  final TextEditingController confirmPasswordController= TextEditingController();
+
+
     return InfoWidget(builder: (context, info) {
+
       return Column(
-        spacing: info.screenHeight * 0.011,
+        spacing: info.screenHeight * 0.016,
         children: [
-          CustomTextField(label: "Your Full Name", hintText: "Your name", controller: fullNameController,),
-          CustomTextField(label: "Email", hintText: "Type your email", controller: emailController,),
-          CustomTextField(label: "Phone", hintText: "Type your phone", controller: phoneController,),
-          CustomTextField(label: "Password", hintText: "Type your password", isPassword: true, controller: passwordController,),
-          CustomTextField(label: "Confirm Password", hintText: "Retype your password", isPassword: true, controller: confirmPasswordController,),
+          CustomTextField(label: "First Name", hintText: "Omar", controller: context.read<AuthCubit>().firstNameController,),
+          CustomTextField(label: "Last Name", hintText: "Ahmed", controller: context.read<AuthCubit>().lastNameController,),
+          CustomTextField(label: "Email", hintText: "user123@example.com", controller: context.read<AuthCubit>().emailController,),
+          CustomTextField(label: "Phone", hintText: "01234567898", controller: context.read<AuthCubit>().phoneController,),
+          CustomTextField(label: "Password", hintText: "********", isPassword: true, controller: context.read<AuthCubit>().passController,),
+          Row(
+              children: [
+            Container(
+              width: info.screenWidth * 0.63,
+              child:    CustomTextField(label: "Confirm Password", hintText: "********", isPassword: true, controller: context.read<AuthCubit>().retypePassController,),
+            ) ,
+
+                Container(
+                  margin: EdgeInsetsDirectional.only(start: info.screenWidth * 0.03),
+                  padding: EdgeInsetsDirectional.only(start: info.screenWidth * 0.012),
+                  width: info.screenWidth * 0.14,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(info.screenWidth * 0.03),
+                    boxShadow: [
+                      BoxShadow(
+                        offset: const Offset(0, 4),
+                        color: Colors.black45,
+                        spreadRadius: info.screenWidth * 0.0001,
+                        blurRadius: info.screenWidth * 0.02,
+                      )
+                    ]
+                  ),
+                  child:DropdownButton<String>(
+                    value: context.read<AuthCubit>().selectedGender, // Current selected value
+                    onChanged: (String? newValue) {
+                      context.read<AuthCubit>().selectedGender = newValue!;
+
+                    },
+                    items: context.read<AuthCubit>().genderIcons.entries.map((entry) {
+                      return DropdownMenuItem<String>(
+                        value: entry.key,
+                        child: Row(
+                          children: [
+                            entry.value, // Display gender icon
+                            SizedBox(width: info.screenWidth * 0.01),
+                            Text(entry.key),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+
+                    selectedItemBuilder: (BuildContext context) {
+                      return context.read<AuthCubit>().genderIcons.entries.map((entry) {
+                        return entry.value;
+                      }).toList();
+                    },
+                    borderRadius: BorderRadius.circular(info.screenWidth * 0.03),
+                    dropdownColor: Colors.white,
+                    underline: Container(),
+                    menuWidth: info.screenWidth * 0.34,
+                    padding: EdgeInsets.zero,
+
+                  ),
+
+
+                )
+
+              ],
+          )
         ],
       );
     });
