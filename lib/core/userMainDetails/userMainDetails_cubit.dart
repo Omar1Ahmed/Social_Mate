@@ -51,11 +51,4 @@ class userMainDetailsCubit extends Cubit<userMainDetailsState> {
       emit(userMainDetailsErrorState(message: e.toString()));
     }
   }
-
-  Future<void> saveToken(String token) async {
-    if (token.isNotEmpty) {
-      await _sharedPrefHelper.saveString(SharedPrefKeys.saveKey, token);
-      decodeAndAssignToken(token);
-    }
-  }
 }

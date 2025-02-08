@@ -30,7 +30,6 @@ class PostCardWidget extends StatefulWidget {
 class _PostCardWidgetState extends State<PostCardWidget> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<Offset> _slideAnimation;
-  double _localRating = 0;
 
   @override
   void initState() {
@@ -98,6 +97,7 @@ class _PostCardWidgetState extends State<PostCardWidget> with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) {
+    double _localRating = 0;
     return SlideTransition(
       position: _slideAnimation,
       child: FadeTransition(
