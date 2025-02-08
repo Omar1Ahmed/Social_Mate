@@ -2,6 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_media/core/di/di.dart';
+import 'package:social_media/core/helper/SharedPref/SharedPrefKeys.dart';
+import 'package:social_media/core/helper/SharedPref/sharedPrefHelper.dart';
 import 'package:social_media/core/theming/styles.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 import 'package:social_media/features/filtering/presentation/cubit/filtered_users/filtered_users_cubit.dart';
@@ -36,6 +39,8 @@ class _PostOwnerDialogState extends State<PostOwnerDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final _sharedPrefHelper = getIt<SharedPrefHelper>();
+    final tokenFromCache = _sharedPrefHelper.getString(SharedPrefKeys.saveKey);
     return BlocProvider.value(
       value: widget.filteredUsersCubit,
       child: Container(
@@ -58,7 +63,7 @@ class _PostOwnerDialogState extends State<PostOwnerDialog> {
                   widget.dialogController.text = value;
                   widget.filteredUsersCubit.loadFilteredUsers(
                       queryParameters: {'fullName': value},
-                      token: context.read<userMainDetailsCubit>().state.token!);
+                      token: context.read<userMainDetailsCubit>().state.token ?? tokenFromCache!);
                 });
               },
             ),

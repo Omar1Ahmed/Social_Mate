@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
+import 'package:social_media/core/di/di.dart';
+import 'package:social_media/core/helper/SharedPref/SharedPrefKeys.dart';
+import 'package:social_media/core/helper/SharedPref/sharedPrefHelper.dart';
 import 'package:social_media/core/theming/colors.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 import 'package:social_media/features/filtering/presentation/cubit/filtered_users/filtered_users_cubit.dart';
@@ -101,7 +104,10 @@ class _FilteringTileState extends State<FilteringTile> {
 
   void _onFilterButtonPressed() {
     FocusScope.of(context).unfocus();
-    final token = context.read<userMainDetailsCubit>().state.token;
+    final _sharedPrefHelper = getIt<SharedPrefHelper>();
+    final tokenFromCache = _sharedPrefHelper.getString(SharedPrefKeys.saveKey);
+    final token =
+        context.read<userMainDetailsCubit>().state.token ?? tokenFromCache;
     print(token);
     if (_formKey.currentState!.validate()) {
       queryParameters = {

@@ -12,6 +12,7 @@ import 'package:social_media/features/authentication/domain/repository/authentic
 import 'package:social_media/features/authentication/presentation/logic/auth_cubit.dart';
 import 'package:social_media/features/filtering/could_be_shared/fake_end_points/real_end_points.dart';
 import 'package:social_media/features/filtering/could_be_shared/network_clients/dio_network_client.dart';
+import 'package:social_media/features/filtering/could_be_shared/network_clients/real_dio_client.dart';
 import 'package:social_media/features/filtering/could_be_shared/network_info/network_info.dart';
 import 'package:social_media/features/filtering/data/datasources/filtered_posts_remote_source.dart';
 import 'package:social_media/features/filtering/data/datasources/users_remote_data_source.dart';
@@ -35,19 +36,24 @@ Future<void> initDependencies() async {
   // |------------------------------------------------------------------\
   // |-------------------------- Services ------------------------------\
   // |------------------------------------------------------------------\
+  
+  // this is too important
+  getIt.registerSingletonAsync<InternetConnectionChecker>(
+    () async => InternetConnectionChecker.createInstance(),
+  );
 
   // shared Preferences
   final sharedPrefHelper = SharedPrefHelper();
   await sharedPrefHelper.init();
   getIt.registerSingleton<SharedPrefHelper>(sharedPrefHelper);
 
-  // Network info
+  //Network info
   getIt.registerLazySingleton<NetworkInfo>(
     () => NetworkInfoConnection(connectionChecker: getIt()),
   );
-  getIt.registerLazySingleton(() => InternetConnectionChecker);
 
-  getIt.registerLazySingleton(() => NetworkInfoConnection(connectionChecker: getIt()));
+  // getIt.registerLazySingleton(
+  //     () => NetworkInfoConnection(connectionChecker: getIt()));
 
   // ---------------------------- Dio Setup ----------------------------
   // getIt.registerSingleton<Dio>(
@@ -59,10 +65,14 @@ Future<void> initDependencies() async {
   // );
   //getIt.registerLazySingleton<DioClient>(() => DioClient(dio: getIt<Dio>()));
   // users Management api  client
-  getIt.registerLazySingleton<DioClient>(() => DioClient(baseUrl: RealEndPoints.realUserBaseUrl), instanceName: diInstancesHelper.userDioClient);
+  getIt.registerLazySingleton<DioClient>(
+      () => DioClient(baseUrl: RealEndPoints.realUserBaseUrl),
+      instanceName: diInstancesHelper.userDioClient);
 
   // posts api client
-  getIt.registerLazySingleton<DioClient>(() => DioClient(baseUrl: RealEndPoints.realPostsBaseUrl), instanceName: diInstancesHelper.PostsDioClient);
+  getIt.registerLazySingleton<DioClient>(
+      () => DioClient(baseUrl: RealEndPoints.realPostsBaseUrl),
+      instanceName: diInstancesHelper.PostsDioClient);
 
   getIt.registerLazySingleton<RealDioNetworkClient>(
       () => RealDioNetworkClient());
@@ -73,11 +83,6 @@ Future<void> initDependencies() async {
   getIt.registerLazySingleton<DioNetworkClient>(() => UserDioNetworkClient(),
       instanceName: 'user');
 
-
-
-
-
-
   // |------------------------------------------------------------------\
   // |-------------------------- Data Sources ------------------------------\
   // |------------------------------------------------------------------\
@@ -86,13 +91,15 @@ Future<void> initDependencies() async {
   //       () => PostRemoteDataSourceImpl(dio: getIt<DioClient>(), userMainDetails: getIt<userMainDetailsCubit>()),
   // );
   getIt.registerFactory<PostRemoteDataSource>(
-    () => PostRemoteDataSourceImpl(dio: getIt<DioClient>(instanceName: diInstancesHelper.PostsDioClient), userMainDetails: getIt<userMainDetailsCubit>()),
+    () => PostRemoteDataSourceImpl(
+        dio: getIt<DioClient>(instanceName: diInstancesHelper.PostsDioClient),
+        userMainDetails: getIt<userMainDetailsCubit>()),
   );
 
   // getIt.registerLazySingleton<NetworkInfo>(
   //   () => NetworkInfoConnection(connectionChecker: getIt()),
   // );
-  // getIt.registerLazySingleton(() => InternetConnectionChecker());
+  //getIt.registerLazySingleton(() => InternetConnectionChecker);
   // getIt.registerLazySingleton(
   //     () => NetworkInfoConnection(connectionChecker: getIt()));
   // getIt.registerLazySingleton<FilteredPostsRemoteSource>(
@@ -112,11 +119,12 @@ Future<void> initDependencies() async {
   //     () => AuthenticationRemoteDataSourceImp(
   //           dioNetworkClient: DioNetworkClient(RealEndPoints.realUserBaseUrl),
   //         ));
-  getIt.registerLazySingleton<AuthenticationRemoteDataSource>(() => AuthenticationRemoteDataSourceImp(
-        dioNetworkClient: getIt<DioClient>(
-          instanceName: diInstancesHelper.userDioClient,
-        ),
-      ));
+  getIt.registerLazySingleton<AuthenticationRemoteDataSource>(
+      () => AuthenticationRemoteDataSourceImp(
+            dioNetworkClient: getIt<DioClient>(
+              instanceName: diInstancesHelper.userDioClient,
+            ),
+          ));
   // |------------------------------------------------------------------\
   // |-------------------------- Repositories ------------------------------\
   // |------------------------------------------------------------------\
@@ -127,7 +135,8 @@ Future<void> initDependencies() async {
 
   // post repository
   getIt.registerFactory<PostRepository>(
-    () => impl.PostRepositoryImpl(remoteDataSource: getIt<PostRemoteDataSource>()),
+    () => impl.PostRepositoryImpl(
+        remoteDataSource: getIt<PostRemoteDataSource>()),
   );
 
   getIt.registerLazySingleton<AuthenticationRepository>(() =>
@@ -136,7 +145,7 @@ Future<void> initDependencies() async {
   getIt.registerLazySingleton<FilteredPostRepo>(() => FilteredPostRepoImp(
       networkInfo: getIt(), filteredPostsRemoteSource: getIt()));
   getIt.registerLazySingleton<FilteredUsersRepo>(() => FilteredUsersRepoImpl(
-      networkInfo: getIt(), filteredUsersRemoteSource: getIt()));    
+      networkInfo: getIt(), filteredUsersRemoteSource: getIt()));
   // |------------------------------------------------------------------\
   // |-------------------------- Cubits ------------------------------\
   // |------------------------------------------------------------------\
@@ -162,7 +171,6 @@ Future<void> initDependencies() async {
   //getIt.registerFactory(() => AuthCubit(getIt()));
   getIt.registerFactory(() => FilteringCubit(getIt()));
   getIt.registerFactory(() => FilteredUsersCubit(filteredUsersRepo: getIt()));
-
 
   // |------------------------------------------------------------------\
   // |-------------------------- Services ------------------------------\

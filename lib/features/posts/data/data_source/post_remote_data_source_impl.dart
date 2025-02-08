@@ -1,3 +1,6 @@
+import 'package:social_media/core/di/di.dart';
+import 'package:social_media/core/helper/SharedPref/SharedPrefKeys.dart';
+import 'package:social_media/core/helper/SharedPref/sharedPrefHelper.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 
 import '../../../../core/helper/dotenv/dot_env_helper.dart';
@@ -18,11 +21,17 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
 
   @override
   Future<PostResponse> getPosts(int pageOffset, int pageSize) async {
+    // 2 lines by marwan
+    final SharedPrefHelper _sharedPrefHelper = getIt<SharedPrefHelper>();
+    final token = _sharedPrefHelper.getString(SharedPrefKeys.saveKey);
+
     try {
-      final response = await dio.get("$baseUrl/posts?pageOffset=$pageOffset&pageSize=$pageSize", header: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${userMainDetails.state.token}',
-      });
+      final response = await dio.get(
+          "$baseUrl/posts?pageOffset=$pageOffset&pageSize=$pageSize",
+          header: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ${userMainDetails.state.token ?? token}',
+          });
 
       return PostResponse.fromJson(response);
     } catch (e) {
@@ -32,6 +41,8 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
 
   @override
   Future<void> createPost(CreatePostData post) async {
+    final SharedPrefHelper _sharedPrefHelper = getIt<SharedPrefHelper>();
+    final token = _sharedPrefHelper.getString(SharedPrefKeys.saveKey);
     final postData = post.toJson();
     try {
       await dio.post(
@@ -39,7 +50,7 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
         postData,
         header: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${userMainDetails.state.token}',
+          'Authorization': 'Bearer ${userMainDetails.state.token ?? token}',
         },
       );
     } catch (e) {
@@ -49,11 +60,13 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
 
   @override
   Future<void> deletePost(int postId) async {
+    final SharedPrefHelper _sharedPrefHelper = getIt<SharedPrefHelper>();
+    final token = _sharedPrefHelper.getString(SharedPrefKeys.saveKey);
     await dio.delete(
       "$baseUrl/posts/$postId",
       header: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${userMainDetails.state.token}',
+        'Authorization': 'Bearer ${userMainDetails.state.token ?? token}',
       },
     );
   }

@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
+import 'package:social_media/core/di/di.dart';
+import 'package:social_media/core/helper/SharedPref/SharedPrefKeys.dart';
+import 'package:social_media/core/helper/SharedPref/sharedPrefHelper.dart';
+import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
+import 'package:social_media/features/posts/presentation/homePage/logic/cubit/home_cubit_cubit.dart';
+import 'package:social_media/features/posts/presentation/homePage/ui/homePage_view.dart';
 import '../../../on_boarding/presentation/ui/onboarding_screen.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -7,22 +14,38 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     Future.delayed(const Duration(seconds: 3), () {
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) => OnboardingScreen(),
+          pageBuilder: (context, animation, secondaryAnimation) {
+            final sharedPrefHelper = getIt<SharedPrefHelper>();
+            final token = sharedPrefHelper.getString(SharedPrefKeys.saveKey);
+            print('token in splash screen: $token');
+            final tokenFromCubit =
+                context.read<userMainDetailsCubit>().state.token;
+            print('token from cubit: $tokenFromCubit');
+            if (token != null && token.isNotEmpty) {
+              print('going to homepage');
+              Future.delayed(Duration(seconds: 3));
+              return BlocProvider(
+                create: (context) => getIt<HomeCubit>(),
+                child: HomepageView(),
+              );
+            } else {
+              sharedPrefHelper.remove(SharedPrefKeys.saveKey);
+              return OnboardingScreen();
+            }
+          },
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return FadeTransition(
               opacity: animation, // Fade animation
               child: child,
             );
           },
-          transitionDuration: const Duration(milliseconds: 1000), // Adjust the duration
+          transitionDuration:
+              const Duration(milliseconds: 1000), // Adjust the duration
         ),
       );
-
-
     });
 
     return InfoWidget(builder: (context, deviceInfo) {

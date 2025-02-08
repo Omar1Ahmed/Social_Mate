@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
+import 'package:social_media/core/di/di.dart';
+import 'package:social_media/core/helper/SharedPref/SharedPrefKeys.dart';
+import 'package:social_media/core/helper/SharedPref/sharedPrefHelper.dart';
 import 'package:social_media/core/theming/styles.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 import 'package:social_media/features/filtering/domain/entities/post_entity.dart';
@@ -35,13 +38,15 @@ class _FilteringScreenState extends State<FilteringScreen> {
   }
 
   void _onScroll() {
+    final _sharedPrefHelper = getIt<SharedPrefHelper>();
+    final tokenFromCache = _sharedPrefHelper.getString(SharedPrefKeys.saveKey);
     queryParameters = context.read<SharingDataCubit>().state.queryParams;
     final token = context.read<userMainDetailsCubit>().state.token;
     if (scrollController.position.pixels ==
         scrollController.position.maxScrollExtent) {
       //scrollPosition = scrollController.position.pixels;
       context.read<FilteringCubit>().loadMoreFilteredPosts(
-          queryParameters: queryParameters, token: token!);
+          queryParameters: queryParameters, token: token ?? tokenFromCache!);
     }
   }
 
@@ -91,7 +96,7 @@ class _FilteringScreenState extends State<FilteringScreen> {
                           print('retrived data is empty ya 3m'); // Debug
                         }
                         print(
-                            'this is the filtered ${state.filteredPosts[1].total}');
+                            'this is the filtered ${state.filteredPosts[0].total}');
                         return Column(
                           children: [
                             Padding(
@@ -112,6 +117,7 @@ class _FilteringScreenState extends State<FilteringScreen> {
                                 return Column(
                                   children: [
                                     FilteredPostCard(
+                                      postId: posts[index].id,
                                       postOwnerId: posts[index].userId,
                                       title: posts[index].title,
                                       postOwner: posts[index].createdBy,
