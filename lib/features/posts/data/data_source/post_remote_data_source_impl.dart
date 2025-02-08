@@ -40,7 +40,7 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
   @override
   Future<void> createPost(CreatePostData post) async {
     final SharedPrefHelper _sharedPrefHelper = getIt<SharedPrefHelper>();
-    final token = _sharedPrefHelper.getString(SharedPrefKeys.saveKey);
+    final token = _sharedPrefHelper.getString(SharedPrefKeys.tokenKey);
     final postData = post.toJson();
     try {
       await dio.post(
@@ -59,7 +59,7 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
   @override
   Future<void> deletePost(int postId) async {
     final SharedPrefHelper _sharedPrefHelper = getIt<SharedPrefHelper>();
-    final token = _sharedPrefHelper.getString(SharedPrefKeys.saveKey);
+    final token = _sharedPrefHelper.getString(SharedPrefKeys.tokenKey);
     await dio.delete(
       "$baseUrl/posts/$postId",
       header: {

@@ -40,7 +40,7 @@ class _PostOwnerDialogState extends State<PostOwnerDialog> {
   @override
   Widget build(BuildContext context) {
     final _sharedPrefHelper = getIt<SharedPrefHelper>();
-    final tokenFromCache = _sharedPrefHelper.getString(SharedPrefKeys.saveKey);
+    final tokenFromCache = _sharedPrefHelper.getString(SharedPrefKeys.tokenKey);
     return BlocProvider.value(
       value: widget.filteredUsersCubit,
       child: Container(

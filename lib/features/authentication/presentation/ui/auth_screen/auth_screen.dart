@@ -5,10 +5,8 @@ import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
 import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/helper/SharedPref/SharedPrefKeys.dart';
 import 'package:social_media/core/helper/SharedPref/sharedPrefHelper.dart';
-import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 import 'package:social_media/features/authentication/presentation/logic/auth_cubit.dart';
 import 'package:social_media/features/authentication/presentation/logic/auth_state.dart';
-import 'package:social_media/features/authentication/presentation/logic/remember_me_logic/save_and_remove_functions.dart';
 import 'package:social_media/features/authentication/presentation/ui/auth_screen/sign_up_screen.dart';
 import 'package:social_media/features/authentication/presentation/ui/widgets/customButton.dart';
 import 'package:cherry_toast/cherry_toast.dart';
@@ -35,6 +33,7 @@ class _AuthScreenState extends State<AuthScreen> {
           Navigator.pushNamed(context, Routes.homePage);
         }
         if (state is AuthRegisterSuccessState) {
+
           CherryToast.success(
             title: Text(
               "Success",
@@ -52,6 +51,7 @@ class _AuthScreenState extends State<AuthScreen> {
               style: TextStyle(color: Colors.white70),
             ),
           ).show(context);
+
           context.read<AuthCubit>().toggleAuth();
         }
       }, builder: (context, state) {
@@ -104,53 +104,12 @@ class _AuthScreenState extends State<AuthScreen> {
                         text: "Join Now",
                         onPressed: () async {
                           if (context.read<AuthCubit>().IsSignIn) {
-                            final SharedPrefHelper _sharedPrefHelper =
-                                getIt<SharedPrefHelper>();
-                            await _sharedPrefHelper.saveString(
-                                SharedPrefKeys.testKey, 'Cached Data');
-//  // ignore: use_build_context_synchronously
-//                           context.read<AuthCubit>().login(context);
-//                             // dynamic token = context.read<JwtCubit>().decodeToken(""); // Start decoding.
-                            //context.read<TokenCubit>().setToken('token Test ');
 
-                            //saving token starts from here👇 : sign in or sign up then save
-                            // if (rememberMe) {
-                            //   context.read<AuthCubit>().logIn(context);
-                            //   final token = context
-                            //       .read<userMainDetailsCubit>()
-                            //       .state
-                            //       .token;
-                            //   print(
-                            //       'token before being saved and after sign in: $token');
-                            //
-                            //   Future.delayed(Duration(seconds: 15), () {
-                            //     saveToken(context
-                            //         .read<userMainDetailsCubit>()
-                            //         .state
-                            //         .token!);
-                            //   });
-                            // } else {
+                            context.read<AuthCubit>().isRememberMe = true;
+                              context.read<AuthCubit>().logIn(context,);
 
-                              context.read<AuthCubit>().logIn(context);
-                            // }
                           } else {
-                            //print('Sign up clicked');
-                            // if (rememberMe) {
-                            //   context.read<AuthCubit>().signUp(context);
-                            //   final token = context
-                            //       .read<userMainDetailsCubit>()
-                            //       .state
-                            //       .token;
-                            //   print(
-                            //       'token before being saved and after sign up: $token');
-                            //   Future.delayed(Duration(seconds: 15), () {
-                            //     saveToken(context
-                            //         .read<userMainDetailsCubit>()
-                            //         .state
-                            //         .token!);
-                            //   });
-                            // } else {
-                            // }
+
                               context.read<AuthCubit>().signUp(context);
                           }
                         }),

@@ -15,14 +15,14 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Future.delayed(const Duration(seconds: 3), () {
+
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) {
-             getIt<userMainDetailsCubit>().getToken();
-            final tokenFromCubit =
-                context.read<userMainDetailsCubit>().state.token;
-            print('token from cubit: $tokenFromCubit');
-            if (tokenFromCubit != null) {
+
+
+
+            if (context.read<userMainDetailsCubit>().state.token != null) {
               Future.delayed(Duration(seconds: 3));
               return BlocProvider(
                 create: (context) => getIt<HomeCubit>(),

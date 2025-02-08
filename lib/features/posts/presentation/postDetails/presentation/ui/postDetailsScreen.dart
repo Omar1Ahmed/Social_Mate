@@ -82,11 +82,13 @@ class _post_details_screenState extends State<post_details_screen> {
                                 ),
 
                                 IconButton(onPressed: (){
+
                                   showDialog(
                                       context: context,
                                       builder: (context) => ShowReportPostDialogWidget(
                                         deviceInfo: info,
                                       ));
+
                                 }, icon: Icon(
                                   Icons.flag,
                                   color: ColorsManager.redColor.withOpacity(0.7),
@@ -96,11 +98,7 @@ class _post_details_screenState extends State<post_details_screen> {
                                     ? const SizedBox.shrink()
                                     : IconButton(
                                   onPressed: () {
-                                    final postId = 1;
-                                    if (postId == 0) {
-                                      return;
-                                    }
-                                    // _showDeleteConfirmationDialog(context, postId);
+
 
                                   },
                                   icon: Icon(

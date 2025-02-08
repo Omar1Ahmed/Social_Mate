@@ -23,8 +23,8 @@ class _SignInFormState extends State<SignInForm> {
           children: [
 
             CustomTextField(
-              label: "E-mail/Phone",
-              hintText: "Email/Phone",
+              label: "E-mail",
+              hintText: "Email",
               controller: context.read<AuthCubit>().emailController,
             ),
 

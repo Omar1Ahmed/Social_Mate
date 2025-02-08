@@ -6,7 +6,6 @@ import 'package:social_media/core/routing/routs.dart';
 import 'package:social_media/core/theming/colors.dart';
 import 'package:social_media/core/theming/styles.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
-import 'package:social_media/features/authentication/presentation/logic/remember_me_logic/save_and_remove_functions.dart';
 
 void logOutDialog(BuildContext context, DeviceInfo deviceInfo) {
   showDialog(
@@ -31,7 +30,7 @@ void logOutDialog(BuildContext context, DeviceInfo deviceInfo) {
         TextButton(
           onPressed: () {
             getIt<userMainDetailsCubit>().logOut();
-            context.pushNamedAndRemoveUntil(Routes.splashScreen, predicate: (route) => false);
+            context.pushNamedAndRemoveUntil(Routes.AuthScreen, predicate: (route) => false);
           },
           child: Text(
             'Logout',
