@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
 import 'package:social_media/core/di/di.dart';
@@ -8,6 +9,7 @@ import 'package:social_media/core/theming/colors.dart';
 import 'package:social_media/core/theming/styles.dart';
 import 'package:social_media/core/userMainDetails/jwt_token_decode/data/model/jwtModel.dart';
 import 'package:social_media/core/userMainDetails/jwt_token_decode/data/repository/jwt_token_decode_repository_imp.dart';
+import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 import 'package:social_media/features/filtering/presentation/widgets/helper_functions/delete_dialoge.dart';
 import 'package:social_media/features/filtering/presentation/widgets/report_dialog_marwan.dart';
 
@@ -40,8 +42,8 @@ class _FilteredPostCardState extends State<FilteredPostCard> {
   @override
   void initState() {
     super.initState();
-    decodedTokenFromChache = decodedToken.decodeToken(
-        getIt.get<SharedPrefHelper>().getString(SharedPrefKeys.saveKey)!);
+    // decodedTokenFromChache = decodedToken.decodeToken(
+    //     getIt.get<SharedPrefHelper>().getString(SharedPrefKeys.saveKey)!);
   }
 
   double _localRating = 0.0;
@@ -77,7 +79,7 @@ class _FilteredPostCardState extends State<FilteredPostCard> {
                     //TODO: icon only shown if postOwnerId = currentUserId , need to pass currentUserId
                     child: Visibility(
                       visible:
-                          (decodedTokenFromChache.userId == widget.postOwnerId),
+                          (context.read<userMainDetailsCubit>().state.userId == widget.postOwnerId),
                       child: IconButton(
                           onPressed: () {
                             deleteDialog(
