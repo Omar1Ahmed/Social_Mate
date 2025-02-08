@@ -52,10 +52,11 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
   }
 
   @override
-  @override
   Widget build(BuildContext context) {
     return InfoWidget(
       builder: (context, deviceInfo) {
+        final homeCubit = context.watch<HomeCubit>(); // Get HomeCubit state directly
+
         return SafeArea(
           child: Scaffold(
             backgroundColor: Colors.white,
@@ -63,7 +64,7 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
               listener: (context, state) {
                 if (state is PostDeleted || state is PostCreated) {
                   // Trigger a full refresh when a post is deleted or created
-                  context.read<HomeCubit>().onRefresh();
+                  homeCubit.onRefresh();
                 } else if (state is PostError) {
                   // Show an error message
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -71,27 +72,23 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
                   );
                 }
               },
-              child: BlocBuilder<HomeCubit, HomeState>(
-                builder: (context, state) {
-                  return RefreshIndicator(
-                    color: ColorsManager.primaryColor,
-                    onRefresh: () => context.read<HomeCubit>().onRefresh(),
-                    child: GestureDetector(
-                      onTap: () => FocusScope.of(context).unfocus(),
-                      child: CustomScrollView(
-                        controller: _scrollController,
-                        slivers: [
-                          _buildHeaderSection(deviceInfo),
-                          _buildPostList(deviceInfo, state),
-                          _buildLoadingIndicator(deviceInfo, state),
-                          SliverToBoxAdapter(
-                            child: SizedBox(height: deviceInfo.localHeight * 0.1),
-                          ),
-                        ],
+              child: RefreshIndicator(
+                color: ColorsManager.primaryColor,
+                onRefresh: () => homeCubit.onRefresh(),
+                child: GestureDetector(
+                  onTap: () => FocusScope.of(context).unfocus(),
+                  child: CustomScrollView(
+                    controller: _scrollController,
+                    slivers: [
+                      _buildHeaderSection(deviceInfo),
+                      _buildPostList(deviceInfo, homeCubit.state), // Directly passing state
+                      _buildLoadingIndicator(deviceInfo, homeCubit.state),
+                      SliverToBoxAdapter(
+                        child: SizedBox(height: deviceInfo.localHeight * 0.1),
                       ),
-                    ),
-                  );
-                },
+                    ],
+                  ),
+                ),
               ),
             ),
             floatingActionButton: FloatingActionButton(

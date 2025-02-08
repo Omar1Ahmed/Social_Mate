@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
 import 'package:social_media/core/di/di.dart';
-import 'package:social_media/core/helper/SharedPref/SharedPrefKeys.dart';
-import 'package:social_media/core/helper/SharedPref/sharedPrefHelper.dart';
 import 'package:social_media/core/theming/colors.dart';
 import 'package:social_media/core/theming/styles.dart';
-import 'package:social_media/core/userMainDetails/jwt_token_decode/data/model/jwtModel.dart';
 import 'package:social_media/core/userMainDetails/jwt_token_decode/data/repository/jwt_token_decode_repository_imp.dart';
 import 'package:social_media/features/filtering/presentation/widgets/helper_functions/delete_dialoge.dart';
 import 'package:social_media/features/filtering/presentation/widgets/report_dialog_marwan.dart';
+
+import '../../../../core/userMainDetails/userMainDetails_cubit.dart';
 
 class FilteredPostCard extends StatefulWidget {
   final int postId;
@@ -19,29 +18,20 @@ class FilteredPostCard extends StatefulWidget {
   final String date;
   final String content;
 
-  const FilteredPostCard(
-      {super.key,
-      required this.title,
-      required this.postOwner,
-      required this.date,
-      required this.content,
-      required this.postOwnerId,
-      required this.postId});
+  const FilteredPostCard({super.key, required this.title, required this.postOwner, required this.date, required this.content, required this.postOwnerId, required this.postId});
 
   @override
   State<FilteredPostCard> createState() => _FilteredPostCardState();
 }
 
 class _FilteredPostCardState extends State<FilteredPostCard> {
-  final JwtTokenDecodeRepositoryImp decodedToken =
-      getIt.get<JwtTokenDecodeRepositoryImp>();
-  late final JwtModel decodedTokenFromChache;
+  final JwtTokenDecodeRepositoryImp decodedToken = getIt.get<JwtTokenDecodeRepositoryImp>();
 
   @override
   void initState() {
     super.initState();
-    decodedTokenFromChache = decodedToken.decodeToken(
-        getIt.get<SharedPrefHelper>().getString(SharedPrefKeys.saveKey)!);
+    //decodedTokenFromChache = decodedToken.decodeToken(
+    // getIt.get<SharedPrefHelper>().getString(SharedPrefKeys.saveKey)!);
   }
 
   double _localRating = 0.0;
@@ -76,8 +66,7 @@ class _FilteredPostCardState extends State<FilteredPostCard> {
                     flex: 1,
                     //TODO: icon only shown if postOwnerId = currentUserId , need to pass currentUserId
                     child: Visibility(
-                      visible:
-                          (decodedTokenFromChache.userId == widget.postOwnerId),
+                      visible: (getIt<userMainDetailsCubit>().state.userId == widget.postOwnerId),
                       child: IconButton(
                           onPressed: () {
                             deleteDialog(
@@ -120,11 +109,7 @@ class _FilteredPostCardState extends State<FilteredPostCard> {
 
               const SizedBox(height: 6),
 
-              Text(widget.content,
-                  maxLines: 4,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                      fontSize: 18, color: const Color.fromARGB(255, 7, 7, 7))),
+              Text(widget.content, maxLines: 4, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 18, color: const Color.fromARGB(255, 7, 7, 7))),
 
               const SizedBox(height: 24),
 
