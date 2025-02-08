@@ -1,20 +1,21 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_media/core/di/di.dart';
+import 'package:social_media/core/helper/SharedPref/sharedPrefHelper.dart';
 import 'package:social_media/core/userMainDetails/jwt_token_decode/data/model/jwtModel.dart';
 import 'package:social_media/core/userMainDetails/jwt_token_decode/data/repository/jwt_token_decode_repository_imp.dart';
+import '../helper/SharedPref/SharedPrefKeys.dart';
 import 'userMainDetails_state.dart';
-
 
 // ignore: camel_case_types
 class userMainDetailsCubit extends Cubit<userMainDetailsState> {
   final JwtTokenDecodeRepositoryImp _repository;
+  final SharedPrefHelper _sharedPrefHelper = getIt<SharedPrefHelper>();
 
-  userMainDetailsCubit(this._repository)
-      : super(userMainDetailsState(token: null));
+  userMainDetailsCubit(this._repository) : super(userMainDetailsState(token: null));
 
   Future<void> decodeAndAssignToken(String token) async {
     try {
       final JwtModel jwt = _repository.decodeToken(token);
-
       emit(state.copyWith(
         token: token,
         userId: jwt.userId,
@@ -29,4 +30,25 @@ class userMainDetailsCubit extends Cubit<userMainDetailsState> {
     }
   }
 
+  Future<void> getToken() async {
+    try {
+      final token = _sharedPrefHelper.getString(SharedPrefKeys.saveKey);
+      if (token != null) {
+        decodeAndAssignToken(token);
+      }
+    } catch (e) {
+      print(e);
+      emit(userMainDetailsErrorState(message: e.toString()));
+    }
+  }
+
+  Future<void> logOut() async {
+    try {
+      _sharedPrefHelper.remove(SharedPrefKeys.saveKey);
+      emit(userMainDetailsState(token: null));
+    } catch (e) {
+      print(e);
+      emit(userMainDetailsErrorState(message: e.toString()));
+    }
+  }
 }

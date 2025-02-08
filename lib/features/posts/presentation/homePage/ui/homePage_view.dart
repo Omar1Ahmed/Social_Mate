@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/di/di.dart';
-import 'package:social_media/core/helper/SharedPref/SharedPrefKeys.dart';
-import 'package:social_media/core/helper/SharedPref/sharedPrefHelper.dart';
 import 'package:social_media/core/helper/extantions.dart';
 import 'package:social_media/core/theming/colors.dart';
-import 'package:social_media/core/userMainDetails/jwt_token_decode/data/repository/jwt_token_decode_repository_imp.dart';
+import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 import 'package:social_media/features/posts/presentation/homePage/ui/widgets/log_out_dialog.dart';
 import '../../../../../core/Responsive/Models/device_info.dart';
 import '../../../../../core/Responsive/ui_component/info_widget.dart';
@@ -23,8 +21,7 @@ class HomepageView extends StatefulWidget {
   State<HomepageView> createState() => _HomepageViewState();
 }
 
-class _HomepageViewState extends State<HomepageView>
-    with TickerProviderStateMixin {
+class _HomepageViewState extends State<HomepageView> with TickerProviderStateMixin {
   late final AnimationController _createPostAnimationController;
   late ScrollController _scrollController;
 
@@ -49,14 +46,12 @@ class _HomepageViewState extends State<HomepageView>
 
   void _onScroll() {
     final homeCubit = context.read<HomeCubit>();
-    if (_scrollController.position.pixels >=
-            _scrollController.position.maxScrollExtent - 100 &&
-        !homeCubit.isLoadingMore &&
-        homeCubit.hasMorePosts) {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 100 && !homeCubit.isLoadingMore && homeCubit.hasMorePosts) {
       homeCubit.loadMorePosts();
     }
   }
 
+  @override
   @override
   Widget build(BuildContext context) {
     return InfoWidget(
@@ -66,42 +61,44 @@ class _HomepageViewState extends State<HomepageView>
             backgroundColor: Colors.white,
             body: BlocListener<HomeCubit, HomeState>(
               listener: (context, state) {
-                if (state is PostDeleted) {
-                  // Optionally refresh the page after deletion
+                if (state is PostDeleted || state is PostCreated) {
+                  // Trigger a full refresh when a post is deleted or created
                   context.read<HomeCubit>().onRefresh();
                 } else if (state is PostError) {
-                  // Show an error message or snack bar
+                  // Show an error message
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text(state.message)),
                   );
                 }
               },
-              child: RefreshIndicator(
-                color: ColorsManager.primaryColor,
-                onRefresh: () async =>
-                    await context.read<HomeCubit>().onRefresh(),
-                child: GestureDetector(
-                  onTap: () => FocusScope.of(context).unfocus(),
-                  child: CustomScrollView(
-                    controller: _scrollController,
-                    slivers: [
-                      _buildHeaderSection(deviceInfo),
-                      _buildPostList(deviceInfo),
-                      _buildLoadingIndicator(deviceInfo),
-                      SliverToBoxAdapter(
-                          child:
-                              SizedBox(height: deviceInfo.localHeight * 0.1)),
-                    ],
-                  ),
-                ),
+              child: BlocBuilder<HomeCubit, HomeState>(
+                builder: (context, state) {
+                  return RefreshIndicator(
+                    color: ColorsManager.primaryColor,
+                    onRefresh: () => context.read<HomeCubit>().onRefresh(),
+                    child: GestureDetector(
+                      onTap: () => FocusScope.of(context).unfocus(),
+                      child: CustomScrollView(
+                        controller: _scrollController,
+                        slivers: [
+                          _buildHeaderSection(deviceInfo),
+                          _buildPostList(deviceInfo, state),
+                          _buildLoadingIndicator(deviceInfo, state),
+                          SliverToBoxAdapter(
+                            child: SizedBox(height: deviceInfo.localHeight * 0.1),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
             floatingActionButton: FloatingActionButton(
               backgroundColor: Colors.white,
               foregroundColor: ColorsManager.primaryColor,
               onPressed: () => _showCreatePostDialog(deviceInfo),
-              child:
-                  Icon(Icons.edit_outlined, color: ColorsManager.primaryColor),
+              child: Icon(Icons.edit_outlined, color: ColorsManager.primaryColor),
             ),
             floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
           ),
@@ -198,92 +195,61 @@ class _HomepageViewState extends State<HomepageView>
     );
   }
 
-  Widget _buildPostList(DeviceInfo deviceInfo) {
-    // by marwan
-    final JwtTokenDecodeRepositoryImp decodedToken =
-        getIt.get<JwtTokenDecodeRepositoryImp>();
-    final decodedTokenFromCache = decodedToken.decodeToken(
-        getIt.get<SharedPrefHelper>().getString(SharedPrefKeys.saveKey)!);
+  Widget _buildPostList(DeviceInfo deviceInfo, HomeState state) {
+    if (state is PostLoaded || state is PostLoadingMore) {
+      final posts = state is PostLoaded ? state.posts : (state as PostLoadingMore).posts;
+      return SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) {
+            if (index >= posts.length) return const SizedBox.shrink();
 
-    return BlocBuilder<HomeCubit, HomeState>(
-      builder: (context, state) {
-        if (state is PostLoading) {
-          return SliverFillRemaining(
-            child: Center(
-                child: CircularProgressIndicator(
-                    color: ColorsManager.primaryColor)),
-          );
-        } else if (state is PostLoaded || state is PostLoadingMore) {
-          final posts = state is PostLoaded
-              ? state.posts
-              : (state as PostLoadingMore).posts;
-          if (posts.isEmpty) {
-            return SliverFillRemaining(
-              child: Center(child: Text("No posts available")),
-            );
-          }
-          return SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                if (index >= posts.length) {
-                  return const SizedBox.shrink();
-                }
-                return Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: deviceInfo.screenWidth * 0.05,
-                    vertical: deviceInfo.localHeight * 0.01,
-                  ),
-                  child: PostCardWidget(
-                    key: ValueKey(posts[index].id),
-                    deviceInfo: deviceInfo,
-                    // modifications by marwan
-                    idNotMatch: posts[index].createdBy.id ==
-                            decodedTokenFromCache.userId
-                        ? false
-                        : true,
-                    post: posts[index],
+            return TweenAnimationBuilder<double>(
+              duration: Duration(milliseconds: 400 + (index * 100)), // Staggered animation
+              tween: Tween(begin: 0.0, end: 1.0),
+              builder: (context, value, child) {
+                return Opacity(
+                  opacity: value,
+                  child: Transform.translate(
+                    offset: Offset(0, (1 - value) * 20),
+                    child: child,
                   ),
                 );
               },
-              childCount: posts.length,
-            ),
-          );
-        } else if (state is PostError) {
-          return SliverFillRemaining(
-            child: BuildErrorWidget(deviceInfo: deviceInfo),
-          );
-        } else if (state is PostDeletedLoading) {
-          return SliverFillRemaining(
-            child: Center(
-                child: CircularProgressIndicator(
-                    color: ColorsManager.primaryColor)),
-          );
-        } else {
-          return SliverFillRemaining(
-            child: Center(child: CircularProgressIndicator()),
-          );
-        }
-      },
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: deviceInfo.screenWidth * 0.05,
+                  vertical: deviceInfo.localHeight * 0.01,
+                ),
+                child: PostCardWidget(
+                  key: ValueKey(posts[index].id),
+                  deviceInfo: deviceInfo,
+                  idNotMatch: posts[index].createdBy.id == getIt<userMainDetailsCubit>().state.userId ? false : true,
+                  post: posts[index],
+                ),
+              ),
+            );
+          },
+          childCount: posts.length,
+        ),
+      );
+    }
+    return SliverFillRemaining(
+      child: state is PostError ? BuildErrorWidget(deviceInfo: deviceInfo) : Center(child: CircularProgressIndicator()),
     );
   }
 
-  Widget _buildLoadingIndicator(DeviceInfo deviceInfo) {
-    return BlocBuilder<HomeCubit, HomeState>(
-      builder: (context, state) {
-        if (state is PostLoadingMore) {
-          return SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Center(
-                child: CircularProgressIndicator(
-                    color: ColorsManager.primaryColor),
-              ),
-            ),
-          );
-        }
-        return const SliverToBoxAdapter(child: SizedBox.shrink());
-      },
-    );
+  Widget _buildLoadingIndicator(DeviceInfo deviceInfo, HomeState state) {
+    if (state is PostLoadingMore) {
+      return SliverToBoxAdapter(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Center(
+            child: CircularProgressIndicator(color: ColorsManager.primaryColor),
+          ),
+        ),
+      );
+    }
+    return const SliverToBoxAdapter(child: SizedBox.shrink());
   }
 
   void _showCreatePostDialog(DeviceInfo deviceInfo) {

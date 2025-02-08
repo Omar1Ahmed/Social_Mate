@@ -11,6 +11,8 @@ class HomeCubitInitial extends HomeState {}
 
 class PostLoading extends HomeState {}
 
+class PostCreateLoading extends HomeState {}
+
 class PostLoaded extends HomeState {
   final List<PostEntity> posts;
 
@@ -52,7 +54,9 @@ class PostDeleteFailed extends HomeState {
 
   const PostDeleteFailed(this.message);
 }
+
 class PostDeletedLoading extends HomeState {}
+
 class PostUpdatedFailed extends HomeState {}
 
 class PostUpdatedSuccessfully extends HomeState {}

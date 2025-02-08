@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:social_media/core/Responsive/Models/device_info.dart';
 import 'package:social_media/core/di/di.dart';
+import 'package:social_media/core/helper/extantions.dart';
+import '../../../../../../core/routing/routs.dart';
 import '../../../../../../core/theming/colors.dart';
 import '../../logic/cubit/home_cubit_cubit.dart';
 import 'custom_dialog_widget.dart';
@@ -48,7 +50,7 @@ class ShowCreatePostDialogWidget extends StatelessWidget {
         SizedBox(width: deviceInfo.localWidth * 0.02),
         _buildDialogButton(
           label: "Submit",
-          onPressed: () {
+          onPressed: () async{
             final String title = titleController.text.trim();
             final String content = contentController.text.trim();
 
@@ -66,14 +68,11 @@ class ShowCreatePostDialogWidget extends StatelessWidget {
               return;
             }
 
-            getIt.get<HomeCubit>().createPost(title, content);
-
+           await getIt.get<HomeCubit>().createPost(title, content);
             Navigator.pop(context);
             titleController.clear();
-            getIt.get<HomeCubit>().getPosts();
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Post created successfully!")),
-            );
+            contentController.clear();
+            context.pushReplacementNamed(Routes.homePage);
           },
           backgroundColor: ColorsManager.primaryColor,
           textColor: Colors.white,

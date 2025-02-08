@@ -20,9 +20,9 @@ class PostRepositoryImpl implements PostRepository {
   }
   
   @override
-  Future<void> createPost(CreatePostData post) async {
+  Future<PostEntity> createPost(CreatePostData post) async {
    final response = await remoteDataSource.createPost(post);
-    return response;
+    return response as PostEntity;
   }
   
   @override

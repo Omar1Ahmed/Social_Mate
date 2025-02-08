@@ -12,7 +12,7 @@ class HomeCubit extends Cubit<HomeState> {
 
   final PostRepository postRepository;
 
-  int _currentPage = 1;
+  int _currentPage = 0;
   final int _pageSize = 4;
   bool hasMorePosts = true;
   bool isLoadingMore = false;
@@ -50,7 +50,7 @@ class HomeCubit extends Cubit<HomeState> {
       final (
         newPosts,
         total
-      ) = await postRepository.getPosts(_currentPage + 1, _pageSize);
+      ) = await postRepository.getPosts(_currentPage + 4, _pageSize);
 
       if (newPosts.isEmpty) {
         hasMorePosts = false;
@@ -69,47 +69,31 @@ class HomeCubit extends Cubit<HomeState> {
 
   // Handle refresh action
   Future<void> onRefresh() async {
-    _currentPage = 1;
+    _currentPage = 0;
     hasMorePosts = true;
     emit(HomeCubitInitial());
     await getPosts();
   }
 
   // Create a new post
-  Future<void> createPost(String title, String content) async {
-    final post = CreatePostData(title: title, content: content);
-
-    try {
-      emit(PostLoading());
-      await postRepository.createPost(post);
-      emit(PostCreated());
-      await onRefresh();
-    } catch (e) {
-      emit(PostError(e.toString()));
-    }
+Future<void> createPost(String title, String content) async {
+  final post = CreatePostData(title: title, content: content);
+  try {
+    emit(PostCreateLoading()); // Emit loading state
+    await postRepository.createPost(post);
+    emit(PostCreated()); // Emit success state
+  } catch (e) {
+    emit(PostError(e.toString())); // Emit error state
   }
+}
 
   Future<void> deletePost(int postId) async {
     try {
-      // Emit loading state for post deletion
       emit(PostDeletedLoading());
-
       await postRepository.deletePost(postId);
-
-      if (state is PostLoaded) {
-        final currentState = state as PostLoaded;
-        final updatedPosts = currentState.posts.where((post) => post.id != postId).toList();
-
-        final updatedTotal = currentState.total - 1;
-
-        emit(PostLoaded(updatedPosts, updatedTotal));
-      }
-
-      // Emit success state for post deletion
       emit(PostDeleted());
+      await onRefresh(); // Refreshes the screen after deleting a post
     } catch (e) {
-      // Log the error and emit an error state
-      print('Error deleting post: $e');
       emit(PostDeleteFailed(e.toString()));
     }
   }

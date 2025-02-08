@@ -1,4 +1,3 @@
-
 import 'package:equatable/equatable.dart';
 
 class userMainDetailsState extends Equatable {
@@ -37,7 +36,14 @@ class userMainDetailsState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [token, userId, iat, exp, rolesIds, sub];
+  List<Object?> get props => [
+        token,
+        userId,
+        iat,
+        exp,
+        rolesIds,
+        sub
+      ];
 }
 
 class userMainDetailsErrorState extends userMainDetailsState {

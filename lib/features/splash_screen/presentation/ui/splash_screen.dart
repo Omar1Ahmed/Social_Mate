@@ -18,21 +18,18 @@ class SplashScreen extends StatelessWidget {
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) {
-            final sharedPrefHelper = getIt<SharedPrefHelper>();
-            final token = sharedPrefHelper.getString(SharedPrefKeys.saveKey);
-            print('token in splash screen: $token');
+             getIt<userMainDetailsCubit>().getToken();
             final tokenFromCubit =
                 context.read<userMainDetailsCubit>().state.token;
             print('token from cubit: $tokenFromCubit');
-            if (token != null && token.isNotEmpty) {
-              print('going to homepage');
+            if (tokenFromCubit != null) {
               Future.delayed(Duration(seconds: 3));
               return BlocProvider(
                 create: (context) => getIt<HomeCubit>(),
                 child: HomepageView(),
               );
             } else {
-              sharedPrefHelper.remove(SharedPrefKeys.saveKey);
+              print('going to onboarding');
               return OnboardingScreen();
             }
           },

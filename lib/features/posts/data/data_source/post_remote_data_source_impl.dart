@@ -22,16 +22,14 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
   @override
   Future<PostResponse> getPosts(int pageOffset, int pageSize) async {
     // 2 lines by marwan
-    final SharedPrefHelper _sharedPrefHelper = getIt<SharedPrefHelper>();
-    final token = _sharedPrefHelper.getString(SharedPrefKeys.saveKey);
+
+    final token = getIt<userMainDetailsCubit>().state.token;
 
     try {
-      final response = await dio.get(
-          "$baseUrl/posts?pageOffset=$pageOffset&pageSize=$pageSize",
-          header: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ${userMainDetails.state.token ?? token}',
-          });
+      final response = await dio.get("$baseUrl/posts?pageOffset=$pageOffset&pageSize=$pageSize", header: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${userMainDetails.state.token ?? token}',
+      });
 
       return PostResponse.fromJson(response);
     } catch (e) {
