@@ -8,7 +8,8 @@ import 'package:social_media/features/filtering/presentation/cubit/filtering_cub
 import 'package:social_media/features/filtering/presentation/cubit/sharing_data/sharing_data_cubit.dart';
 import 'package:social_media/features/filtering/presentation/pages/filtering_screen.dart';
 import 'package:social_media/features/on_boarding/presentation/ui/onboarding_screen.dart';
-import 'package:social_media/features/post_details/presentation/example_screen/ui/postDetailsScreen.dart';
+import 'package:social_media/features/posts/presentation/postDetails/presentation/logic/post_details_cubit.dart';
+import 'package:social_media/features/posts/presentation/postDetails/presentation/ui/postDetailsScreen.dart';
 import 'package:social_media/features/splash_screen/presentation/ui/splash_screen.dart';
 import '../../features/posts/presentation/homePage/logic/cubit/home_cubit_cubit.dart';
 import '../../features/posts/presentation/homePage/ui/homePage_view.dart';
@@ -46,7 +47,7 @@ class AppRouts {
                   )
                 ], child: FilteringScreen()));
       case Routes.postDetailsScreen:
-        return MaterialPageRoute(builder: (context) => post_details_screen());
+        return MaterialPageRoute(builder: (context) => BlocProvider(create: (context) => PostDetailsCubit(), child: post_details_screen()));
       default:
         return null;
     }

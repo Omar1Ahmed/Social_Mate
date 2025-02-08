@@ -84,20 +84,20 @@ class _AuthScreenState extends State<AuthScreen> {
                           : SignUpForm(),
                     ]),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Checkbox(
-                        value: rememberMe,
-                        onChanged: (value) {
-                          setState(() {
-                            rememberMe = value!;
-                          });
-                        },
-                      ),
-                      Text('Remember Me'),
-                    ],
-                  ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: [
+                  //     Checkbox(
+                  //       value: rememberMe,
+                  //       onChanged: (value) {
+                  //         setState(() {
+                  //           rememberMe = value!;
+                  //         });
+                  //       },
+                  //     ),
+                  //     Text('Remember Me'),
+                  //   ],
+                  // ),
                   SizedBox(
                     width: info.screenWidth * 0.6,
                     child: CustomButton(
@@ -114,43 +114,44 @@ class _AuthScreenState extends State<AuthScreen> {
                             //context.read<TokenCubit>().setToken('token Test ');
 
                             //saving token starts from here👇 : sign in or sign up then save
-                            if (rememberMe) {
-                              context.read<AuthCubit>().logIn(context);
-                              final token = context
-                                  .read<userMainDetailsCubit>()
-                                  .state
-                                  .token;
-                              print(
-                                  'token before being saved and after sign in: $token');
+                            // if (rememberMe) {
+                            //   context.read<AuthCubit>().logIn(context);
+                            //   final token = context
+                            //       .read<userMainDetailsCubit>()
+                            //       .state
+                            //       .token;
+                            //   print(
+                            //       'token before being saved and after sign in: $token');
+                            //
+                            //   Future.delayed(Duration(seconds: 15), () {
+                            //     saveToken(context
+                            //         .read<userMainDetailsCubit>()
+                            //         .state
+                            //         .token!);
+                            //   });
+                            // } else {
 
-                              Future.delayed(Duration(seconds: 15), () {
-                                saveToken(context
-                                    .read<userMainDetailsCubit>()
-                                    .state
-                                    .token!);
-                              });
-                            } else {
                               context.read<AuthCubit>().logIn(context);
-                            }
+                            // }
                           } else {
                             //print('Sign up clicked');
-                            if (rememberMe) {
+                            // if (rememberMe) {
+                            //   context.read<AuthCubit>().signUp(context);
+                            //   final token = context
+                            //       .read<userMainDetailsCubit>()
+                            //       .state
+                            //       .token;
+                            //   print(
+                            //       'token before being saved and after sign up: $token');
+                            //   Future.delayed(Duration(seconds: 15), () {
+                            //     saveToken(context
+                            //         .read<userMainDetailsCubit>()
+                            //         .state
+                            //         .token!);
+                            //   });
+                            // } else {
+                            // }
                               context.read<AuthCubit>().signUp(context);
-                              final token = context
-                                  .read<userMainDetailsCubit>()
-                                  .state
-                                  .token;
-                              print(
-                                  'token before being saved and after sign up: $token');
-                              Future.delayed(Duration(seconds: 15), () {
-                                saveToken(context
-                                    .read<userMainDetailsCubit>()
-                                    .state
-                                    .token!);
-                              });
-                            } else {
-                              context.read<AuthCubit>().signUp(context);
-                            }
                           }
                         }),
                   ),

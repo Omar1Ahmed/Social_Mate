@@ -106,8 +106,8 @@ class _FilteringTileState extends State<FilteringTile> {
     FocusScope.of(context).unfocus();
     final _sharedPrefHelper = getIt<SharedPrefHelper>();
     final tokenFromCache = _sharedPrefHelper.getString(SharedPrefKeys.saveKey);
-    final token =
-        context.read<userMainDetailsCubit>().state.token ?? tokenFromCache;
+    final token = context.read<userMainDetailsCubit>().state.token;
+        // context.read<userMainDetailsCubit>().state.token ?? tokenFromCache;
     print(token);
     if (_formKey.currentState!.validate()) {
       queryParameters = {

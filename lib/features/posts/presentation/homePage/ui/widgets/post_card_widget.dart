@@ -3,6 +3,7 @@ import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/helper/extantions.dart';
 import 'package:social_media/features/posts/presentation/homePage/ui/widgets/show_report_post_dialog_widget.dart';
+import 'package:social_media/features/posts/presentation/postDetails/presentation/logic/post_details_cubit.dart';
 import '../../../../../../core/Responsive/Models/device_info.dart';
 import '../../../../../../core/entities/post_entity.dart';
 import '../../../../../../core/routing/routs.dart';
@@ -103,7 +104,12 @@ class _PostCardWidgetState extends State<PostCardWidget> with SingleTickerProvid
       child: FadeTransition(
         opacity: _animationController,
         child: InkWell(
-          onTap: () {},
+          onTap: () {
+            PostDetailsCubit().setSelectedPost(widget.post.id);
+            context.pushNamed(
+              Routes.postDetailsScreen,
+            );
+          },
           child: Container(
             width: widget.deviceInfo.localWidth * 0.9,
             decoration: BoxDecoration(
