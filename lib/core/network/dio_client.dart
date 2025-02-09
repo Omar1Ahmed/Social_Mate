@@ -14,6 +14,14 @@ class DioClient implements ApiCalls {
     receiveTimeout: const Duration(seconds: 30),
   ));
 
+  // dio.interceptors.add(LogInterceptor(
+  // request: true,
+  // error: true,
+  // requestBody: true,
+  // requestHeader: true,
+  // responseBody: true,
+  // responseHeader: true,
+  // ));
 
   @override
   Future<Map<String, dynamic>> get(String url, {Map<String, dynamic>? header}) async {

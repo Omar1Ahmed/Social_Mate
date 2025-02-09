@@ -39,7 +39,7 @@ Future<void> initDependencies() async {
   
   // this is too important
   getIt.registerSingletonAsync<InternetConnectionChecker>(
-    () async => InternetConnectionChecker.createInstance(),
+    () async => InternetConnectionChecker.createInstance(checkTimeout: const Duration(milliseconds: 300), checkInterval: const Duration(milliseconds: 300)),
   );
 
   // shared Preferences
@@ -73,6 +73,7 @@ Future<void> initDependencies() async {
   getIt.registerLazySingleton<DioClient>(
       () => DioClient(baseUrl: RealEndPoints.realPostsBaseUrl),
       instanceName: diInstancesHelper.PostsDioClient);
+
 
   getIt.registerLazySingleton<RealDioNetworkClient>(
       () => RealDioNetworkClient());
@@ -154,7 +155,7 @@ Future<void> initDependencies() async {
 
   // main User Details Cubit
   getIt.registerSingleton<userMainDetailsCubit>(
-    userMainDetailsCubit(getIt<JwtTokenDecodeRepositoryImp>()),
+    userMainDetailsCubit(getIt<JwtTokenDecodeRepositoryImp>())..getToken(),
   );
 
   // Auth Cubit

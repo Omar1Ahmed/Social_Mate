@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/error/errorResponseModel.dart';
+import 'package:social_media/core/helper/SharedPref/SharedPrefKeys.dart';
+import 'package:social_media/core/helper/SharedPref/sharedPrefHelper.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_state.dart';
 import 'package:social_media/features/authentication/domain/repository/authentication_repository.dart';
@@ -26,8 +29,15 @@ class AuthCubit extends Cubit<AuthState> {
 
   String _selectedGender = 'Male';
 
+  bool _isRememberMe = false;
   bool _IsSignIn = true;
 
+
+  bool get isRememberMe => _isRememberMe;
+
+  set isRememberMe(bool value) {
+    _isRememberMe = value;
+  }
 
   String get selectedGender => _selectedGender;
 
@@ -87,9 +97,15 @@ class AuthCubit extends Cubit<AuthState> {
       print(token); // log the token
       context.read<userMainDetailsCubit>().decodeAndAssignToken(
           token); // Decode And Assign Token
+
+      if(isRememberMe) {
+        final SharedPrefHelper _sharedPrefHelper = getIt<SharedPrefHelper>();
+        await _sharedPrefHelper.saveString(SharedPrefKeys.tokenKey, token);
+      }
       userMainDetailsState userDetailsState = context
           .read<userMainDetailsCubit>()
           .state;
+
       if (userDetailsState is userMainDetailsErrorState) {
         print(userDetailsState.message);
         emit(AuthLogInErrorState(message: userDetailsState.message));

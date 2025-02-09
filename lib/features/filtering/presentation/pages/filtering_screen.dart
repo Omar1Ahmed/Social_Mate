@@ -39,7 +39,7 @@ class _FilteringScreenState extends State<FilteringScreen> {
 
   void _onScroll() {
     final _sharedPrefHelper = getIt<SharedPrefHelper>();
-    final tokenFromCache = _sharedPrefHelper.getString(SharedPrefKeys.saveKey);
+    final tokenFromCache = _sharedPrefHelper.getString(SharedPrefKeys.tokenKey);
     queryParameters = context.read<SharingDataCubit>().state.queryParams;
     final token = context.read<userMainDetailsCubit>().state.token;
     if (scrollController.position.pixels ==

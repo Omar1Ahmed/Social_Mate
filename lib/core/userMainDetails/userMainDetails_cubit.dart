@@ -32,7 +32,7 @@ class userMainDetailsCubit extends Cubit<userMainDetailsState> {
 
   Future<void> getToken() async {
     try {
-      final token = _sharedPrefHelper.getString(SharedPrefKeys.saveKey);
+      final token = _sharedPrefHelper.getString(SharedPrefKeys.tokenKey);
       if (token != null) {
         decodeAndAssignToken(token);
       }
@@ -44,7 +44,7 @@ class userMainDetailsCubit extends Cubit<userMainDetailsState> {
 
   Future<void> logOut() async {
     try {
-      _sharedPrefHelper.remove(SharedPrefKeys.saveKey);
+      _sharedPrefHelper.remove(SharedPrefKeys.tokenKey);
       emit(userMainDetailsState(token: null));
     } catch (e) {
       print(e);
