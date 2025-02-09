@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
-import 'package:social_media/core/di/di.dart';
-import 'package:social_media/core/helper/SharedPref/SharedPrefKeys.dart';
-import 'package:social_media/core/helper/SharedPref/sharedPrefHelper.dart';
 import 'package:social_media/core/theming/colors.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 import 'package:social_media/features/filtering/presentation/cubit/filtered_users/filtered_users_cubit.dart';
@@ -54,6 +51,7 @@ class _FilteringTileState extends State<FilteringTile> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late Map<String, dynamic> queryParameters;
   late FilteringCubit filteringCubit;
+  late String postOwnerId = '';
 
   @override
   void dispose() {
@@ -75,18 +73,35 @@ class _FilteringTileState extends State<FilteringTile> {
   void initState() {
     filteringCubit = widget.filteringCubit;
     super.initState();
+
+    sortedByItemController.addListener(() {
+      if (sortedByItemController.text.isEmpty) {
+        sortedByValue = '';
+      }
+    });
+
+    orderedByItemController.addListener(() {
+      if (orderedByItemController.text.isEmpty) {
+        orderedByValue = '';
+      }
+    });
+
+    postOwnerController.addListener(() {
+      if (postOwnerController.text.isEmpty) {
+        postOwnerId = '';
+      }
+    });
   }
 
   void Function() sortedByOnSelected(String? value) {
     FocusScope.of(context).requestFocus(orderedByNode);
-    sortedByValue = value ?? 'TITLE';
+    sortedByValue = value ?? '';
     return () {};
   }
 
   void Function() orderedByOnSelected(String? value) {
     FocusScope.of(context).unfocus();
-    orderedByValue = value ?? 'ASC';
-
+    orderedByValue = value ?? '';
     return () {};
   }
 
@@ -104,22 +119,23 @@ class _FilteringTileState extends State<FilteringTile> {
 
   void _onFilterButtonPressed() {
     FocusScope.of(context).unfocus();
-    final _sharedPrefHelper = getIt<SharedPrefHelper>();
-    final tokenFromCache = _sharedPrefHelper.getString(SharedPrefKeys.tokenKey);
+
     final token = context.read<userMainDetailsCubit>().state.token;
-        // context.read<userMainDetailsCubit>().state.token ?? tokenFromCache;
+
     print(token);
     if (_formKey.currentState!.validate()) {
       queryParameters = {
         if (titleController.text.isNotEmpty) 'title': titleController.text,
-        if (postOwnerController.text.isNotEmpty)
-          'createdById': postOwnerController.text,
-        if (sortedByValue.isNotEmpty) 'orderBy': sortedByValue,
+        if (postOwnerId.isNotEmpty) 'createdById': postOwnerId,
+        if (sortedByValue.isNotEmpty || sortedByItemController.text.isNotEmpty)
+          'orderBy': sortedByValue,
         if (createdFromController.text.isNotEmpty)
           'createdOnFrom': createdFromController.text,
         if (createdToController.text.isNotEmpty)
           'createdOnTo': createdToController.text,
-        if (orderedByValue.isNotEmpty) 'orderDir': orderedByValue,
+        if (orderedByValue.isNotEmpty ||
+            orderedByItemController.text.isNotEmpty)
+          'orderDir': orderedByValue,
         // 'pageOffset': 0, // Keep mandatory values
         // 'pageSize': 10, // Keep mandatory values
       };
@@ -182,25 +198,32 @@ class _FilteringTileState extends State<FilteringTile> {
               ),
               Flexible(
                 child: FormTextInput(
-                    controller: postOwnerController,
-                    nextNode: createdFromNode,
-                    focusNode: postOwnerNode,
-                    label: 'Post Owner',
-                    hintText: 'Enter post owner',
-                    onTap: () => showDialog(
-                        context: context,
-                        builder: (context) {
-                          return Dialog(
-                            child: PostOwnerDialog(
-                              context: context,
-                              width: deviceInfo.screenWidth * 0.9,
-                              height: deviceInfo.screenHeight * 0.5,
-                              filteredUsersCubit: widget.filteredUsersCubit,
-                              parentController: postOwnerController,
-                              dialogController: dialogeController,
-                            ),
-                          );
-                        })),
+                  controller: postOwnerController,
+                  nextNode: createdFromNode,
+                  focusNode: postOwnerNode,
+                  label: 'Post Owner',
+                  hintText: 'Click to select post owner',
+                  onTap: () => showDialog(
+                    context: context,
+                    builder: (context) {
+                      return Dialog(
+                        child: PostOwnerDialog(
+                          context: context,
+                          width: deviceInfo.screenWidth * 0.9,
+                          height: deviceInfo.screenHeight * 0.5,
+                          filteredUsersCubit: widget.filteredUsersCubit,
+                          parentController: postOwnerController,
+                          dialogController: dialogeController,
+                          onPostOwnerSelected: (selectedId) {
+                            setState(() {
+                              postOwnerId = selectedId;
+                            });
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                ),
               ),
               SizedBox(
                 height: 80,
@@ -269,6 +292,16 @@ class _FilteringTileState extends State<FilteringTile> {
                 ),
               ),
               DropMenu(
+                validator: (value) {
+                  return validateTextInput(
+                    sortedByValue,
+                    titleController,
+                    postOwnerController,
+                    createdFromController,
+                    createdToController,
+                    orderedByItemController,
+                  );
+                },
                 onSelected: sortedByOnSelected,
                 menuLabel: 'Sorted By',
                 sortedByNode: sortedByNode,

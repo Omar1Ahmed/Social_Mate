@@ -36,10 +36,12 @@ Future<void> initDependencies() async {
   // |------------------------------------------------------------------\
   // |-------------------------- Services ------------------------------\
   // |------------------------------------------------------------------\
-  
+
   // this is too important
   getIt.registerSingletonAsync<InternetConnectionChecker>(
-    () async => InternetConnectionChecker.createInstance(checkTimeout: const Duration(milliseconds: 300), checkInterval: const Duration(milliseconds: 300)),
+    () async => InternetConnectionChecker.createInstance(
+        checkTimeout: const Duration(milliseconds: 500),
+        checkInterval: const Duration(milliseconds: 300)),
   );
 
   // shared Preferences
@@ -73,7 +75,6 @@ Future<void> initDependencies() async {
   getIt.registerLazySingleton<DioClient>(
       () => DioClient(baseUrl: RealEndPoints.realPostsBaseUrl),
       instanceName: diInstancesHelper.PostsDioClient);
-
 
   getIt.registerLazySingleton<RealDioNetworkClient>(
       () => RealDioNetworkClient());

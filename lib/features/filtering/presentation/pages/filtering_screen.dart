@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
-import 'package:social_media/core/di/di.dart';
-import 'package:social_media/core/helper/SharedPref/SharedPrefKeys.dart';
-import 'package:social_media/core/helper/SharedPref/sharedPrefHelper.dart';
 import 'package:social_media/core/theming/styles.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
-import 'package:social_media/features/filtering/domain/entities/post_entity.dart';
+import 'package:social_media/features/filtering/domain/entities/filtering_post_entity.dart';
 import 'package:social_media/features/filtering/presentation/cubit/filtered_users/filtered_users_cubit.dart';
 import 'package:social_media/features/filtering/presentation/cubit/filtering_cubit.dart';
 import 'package:social_media/features/filtering/presentation/cubit/sharing_data/sharing_data_cubit.dart';
@@ -38,16 +35,17 @@ class _FilteringScreenState extends State<FilteringScreen> {
   }
 
   void _onScroll() {
-    final _sharedPrefHelper = getIt<SharedPrefHelper>();
-    final tokenFromCache = _sharedPrefHelper.getString(SharedPrefKeys.tokenKey);
-    queryParameters = context.read<SharingDataCubit>().state.queryParams;
     final token = context.read<userMainDetailsCubit>().state.token;
     if (scrollController.position.pixels ==
         scrollController.position.maxScrollExtent) {
       //scrollPosition = scrollController.position.pixels;
-      context.read<FilteringCubit>().loadMoreFilteredPosts(
-          queryParameters: queryParameters, token: token ?? tokenFromCache!);
+      final queryParams = context.read<SharingDataCubit>().state.queryParams;
+      print('new queryParams: $queryParams');
+      context
+          .read<FilteringCubit>()
+          .loadMoreFilteredPosts(queryParameters: queryParams, token: token!);
     }
+    print('queryParameters after pagination : $queryParameters');
   }
 
   @override
@@ -84,7 +82,9 @@ class _FilteringScreenState extends State<FilteringScreen> {
                   SizedBox(height: 16),
                   BlocBuilder<FilteringCubit, FilteringState>(
                     builder: (context, state) {
-                      if (state is FilteredPostsIsLoaded) {
+                      if (state is FilteredPostsIsLoading) {
+                        return Center(child: CircularProgressIndicator());
+                      } else if (state is FilteredPostsIsLoaded) {
                         if (state.filteredPosts.isNotEmpty) {
                           final newPosts = state.filteredPosts.where((newPost) {
                             return !posts.any((existingPost) =>
