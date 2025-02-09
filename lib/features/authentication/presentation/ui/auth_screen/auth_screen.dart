@@ -10,7 +10,6 @@ import 'package:social_media/features/authentication/presentation/logic/auth_sta
 import 'package:social_media/features/authentication/presentation/ui/auth_screen/sign_up_screen.dart';
 import 'package:social_media/features/authentication/presentation/ui/widgets/customButton.dart';
 import 'package:cherry_toast/cherry_toast.dart';
-
 import '../../../../../core/routing/routs.dart';
 import 'sign_in_screen.dart';
 

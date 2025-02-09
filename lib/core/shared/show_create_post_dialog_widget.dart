@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:social_media/core/Responsive/Models/device_info.dart';
 import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/helper/extantions.dart';
-import '../../../../../../core/routing/routs.dart';
-import '../../../../../../core/theming/colors.dart';
-import '../../logic/cubit/home_cubit_cubit.dart';
+import '../routing/routs.dart';
+import '../theming/colors.dart';
+import '../../features/posts/presentation/homePage/logic/cubit/home_cubit_cubit.dart';
 import 'custom_dialog_widget.dart';
 
 class ShowCreatePostDialogWidget extends StatelessWidget {
@@ -50,7 +50,7 @@ class ShowCreatePostDialogWidget extends StatelessWidget {
         SizedBox(width: deviceInfo.localWidth * 0.02),
         _buildDialogButton(
           label: "Submit",
-          onPressed: () async{
+          onPressed: () async {
             final String title = titleController.text.trim();
             final String content = contentController.text.trim();
 
@@ -68,11 +68,10 @@ class ShowCreatePostDialogWidget extends StatelessWidget {
               return;
             }
 
-           await getIt.get<HomeCubit>().createPost(title, content);
-            Navigator.pop(context);
+            await getIt.get<HomeCubit>().createPost(title, content);
+            context.pushReplacementNamed(Routes.homePage);
             titleController.clear();
             contentController.clear();
-            context.pushReplacementNamed(Routes.homePage);
           },
           backgroundColor: ColorsManager.primaryColor,
           textColor: Colors.white,
