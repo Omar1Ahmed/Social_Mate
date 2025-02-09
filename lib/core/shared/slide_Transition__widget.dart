@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 
 class SlideTransitionWidget extends StatefulWidget {
-  const SlideTransitionWidget({super.key, required this.child });
-final Widget child;
+  const SlideTransitionWidget({super.key, required this.child});
+  final Widget child;
 
   @override
   State<SlideTransitionWidget> createState() => _SlideTransitionWidgetState();
 }
 
+// how to use this widget
+// SlideTransitionWidget(child: yourWidget)
 class _SlideTransitionWidgetState extends State<SlideTransitionWidget> with TickerProviderStateMixin {
-    late AnimationController _animationController;
+  late AnimationController _animationController;
   late Animation<Offset> _slideAnimation;
-@override
+  @override
   void initState() {
     super.initState();
     _animationController = AnimationController(
@@ -29,7 +31,8 @@ class _SlideTransitionWidgetState extends State<SlideTransitionWidget> with Tick
       ),
     );
   }
-    @override
+
+  @override
   void dispose() {
     _animationController.dispose();
     super.dispose();
