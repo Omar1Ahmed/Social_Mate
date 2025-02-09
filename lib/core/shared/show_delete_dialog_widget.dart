@@ -5,18 +5,21 @@ import 'package:social_media/core/helper/extantions.dart';
 import 'package:social_media/core/routing/routs.dart';
 import 'package:social_media/core/theming/colors.dart';
 import 'package:social_media/core/theming/styles.dart';
-import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
+import 'package:social_media/features/posts/presentation/homePage/logic/cubit/home_cubit_cubit.dart';
 
-void logOutDialog(BuildContext context, DeviceInfo deviceInfo) {
-  showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
+class ShowDeleteDialogWidget extends StatelessWidget {
+  const ShowDeleteDialogWidget({super.key, required this.deviceInfo, this.onPressed});
+  final DeviceInfo deviceInfo;
+  final void Function()? onPressed;
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
       title: Text(
-        'Confirm Logout',
+        'Confirm Delete',
         style: TextStyles.inter18BoldBlack.copyWith(fontSize: deviceInfo.screenWidth * 0.05),
       ),
       content: Text(
-        'Are you sure you want to log out?',
+        'Are you sure you want to delete this post?',
         style: TextStyles.inter18Regularblack.copyWith(fontSize: deviceInfo.screenWidth * 0.04),
       ),
       actions: [
@@ -28,16 +31,13 @@ void logOutDialog(BuildContext context, DeviceInfo deviceInfo) {
           ),
         ),
         TextButton(
-          onPressed: () {
-            getIt<userMainDetailsCubit>().logOut();
-            context.pushNamedAndRemoveUntil(Routes.splashScreen, predicate: (route) => false);
-          },
+          onPressed: onPressed,
           child: Text(
-            'Logout',
+            'Delete',
             style: TextStyles.inter18Regularblack.copyWith(color: ColorsManager.redColor),
           ),
         ),
       ],
-    ),
-  );
+    );
+  }
 }

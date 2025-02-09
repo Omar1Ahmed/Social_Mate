@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/helper/extantions.dart';
-import 'package:social_media/features/posts/presentation/homePage/ui/widgets/show_report_post_dialog_widget.dart';
+import 'package:social_media/core/shared/show_report_post_dialog_widget.dart';
 import 'package:social_media/features/posts/presentation/postDetails/presentation/logic/post_details_cubit.dart';
 import '../../../../../../core/Responsive/Models/device_info.dart';
 import '../../../../../../core/entities/post_entity.dart';
 import '../../../../../../core/routing/routs.dart';
+import '../../../../../../core/shared/show_delete_dialog_widget.dart';
 import '../../../../../../core/theming/colors.dart';
 import '../../../../../../core/theming/styles.dart';
 import '../../logic/cubit/home_cubit_cubit.dart';
@@ -51,45 +51,6 @@ class _PostCardWidgetState extends State<PostCardWidget> with SingleTickerProvid
     );
   }
 
-  void _showDeleteConfirmationDialog(BuildContext context, int postId) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(
-          'Confirm Delete',
-          style: TextStyles.inter18BoldBlack.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.05),
-        ),
-        content: Text(
-          'Are you sure you want to delete this post?',
-          style: TextStyles.inter18Regularblack.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.04),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context), // Cancel action
-            child: Text(
-              'Cancel',
-              style: TextStyles.inter18Regularblack.copyWith(color: ColorsManager.primaryColor),
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context); // Close the dialog
-              if (postId == 0) {
-                return;
-              }
-              context.pushReplacementNamed(Routes.homePage);
-              getIt.get<HomeCubit>().deletePost(postId);
-            },
-            child: Text(
-              'Delete',
-              style: TextStyles.inter18Regularblack.copyWith(color: ColorsManager.redColor),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   void dispose() {
     _animationController.dispose();
@@ -98,7 +59,6 @@ class _PostCardWidgetState extends State<PostCardWidget> with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) {
-    double _localRating = 0;
     return SlideTransition(
       position: _slideAnimation,
       child: FadeTransition(
@@ -111,21 +71,21 @@ class _PostCardWidgetState extends State<PostCardWidget> with SingleTickerProvid
             );
           },
           child: Container(
-            width: widget.deviceInfo.localWidth * 0.9,
+            width: widget.deviceInfo.screenWidth * 0.9,
             decoration: BoxDecoration(
               color: Colors.white,
               boxShadow: [
                 BoxShadow(
                   color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: widget.deviceInfo.localWidth * 0.01,
-                  blurRadius: widget.deviceInfo.localWidth * 0.02,
+                  spreadRadius: widget.deviceInfo.screenWidth * 0.01,
+                  blurRadius: widget.deviceInfo.screenWidth * 0.02,
                   offset: const Offset(0, 3),
                 ),
               ],
-              borderRadius: BorderRadius.circular(widget.deviceInfo.localWidth * 0.03),
+              borderRadius: BorderRadius.circular(widget.deviceInfo.screenWidth * 0.03),
             ),
             child: Padding(
-              padding: EdgeInsets.all(widget.deviceInfo.localWidth * 0.05),
+              padding: EdgeInsets.all(widget.deviceInfo.screenWidth * 0.05),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -148,7 +108,16 @@ class _PostCardWidgetState extends State<PostCardWidget> with SingleTickerProvid
                                 if (postId == 0) {
                                   return;
                                 }
-                                _showDeleteConfirmationDialog(context, postId);
+                                showDialog(
+                                    context: context,
+                                    builder: (context) => ShowDeleteDialogWidget(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          getIt.get<HomeCubit>().deletePost(postId);
+                                          context.pushReplacementNamed(Routes.homePage);
+                                        },
+                                        deviceInfo: widget.deviceInfo));
+
                                 getIt.get<HomeCubit>().onRefresh();
                               },
                               icon: Icon(
@@ -162,7 +131,7 @@ class _PostCardWidgetState extends State<PostCardWidget> with SingleTickerProvid
                   Divider(
                     color: Colors.black,
                     thickness: widget.deviceInfo.screenWidth * 0.002,
-                    height: widget.deviceInfo.localHeight * 0.015,
+                    height: widget.deviceInfo.screenHeight * 0.015,
                   ),
                   Row(
                     children: [
@@ -189,34 +158,20 @@ class _PostCardWidgetState extends State<PostCardWidget> with SingleTickerProvid
                   ),
                   Row(
                     children: [
-                      RatingStars(
-                        value: _localRating, // Use local rating state
-                        onValueChanged: (value) {
-                          setState(() {
-                            _localRating = value; // Update local rating state
-                          });
-                          // Optionally send the rating to the backend or update the post entity
-                          // getIt.get<HomeCubit>().updatePostRating(widget.post.id, value);
-                        },
-                        starBuilder: (index, color) => Icon(
-                          Icons.star,
-                          color: color,
-                          size: widget.deviceInfo.screenWidth * 0.05,
-                        ),
-                        starCount: 5,
-                        starSize: widget.deviceInfo.screenWidth * 0.04,
-                        valueLabelVisibility: false,
-                      ),
                       const Spacer(),
                       TextButton(
                         onPressed: () {
                           // Handle report action
                           // getIt.get<HomeCubit>().reportPost(widget.post.id);
                           showDialog(
-                              context: context,
-                              builder: (context) => ShowReportPostDialogWidget(
-                                    deviceInfo: widget.deviceInfo,
-                                  ));
+                            context: context,
+                            builder: (context) => ShowReportPostDialogWidget(
+                              deviceInfo: widget.deviceInfo,
+                              onPressedReport: () {
+                                // getIt.get<HomeCubit>().reportPost(widget.post.id);
+                              },
+                            ),
+                          );
                         },
                         child: Text(
                           "Report",

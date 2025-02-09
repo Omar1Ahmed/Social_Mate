@@ -4,13 +4,10 @@ import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:social_media/core/Responsive/Models/device_info.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
 import 'package:social_media/core/di/di.dart';
-import 'package:social_media/core/helper/SharedPref/SharedPrefKeys.dart';
 import 'package:social_media/core/helper/SharedPref/sharedPrefHelper.dart';
-import 'package:social_media/core/helper/extantions.dart';
-import 'package:social_media/core/routing/routs.dart';
 import 'package:social_media/core/theming/colors.dart';
 import 'package:social_media/core/theming/styles.dart';
-import 'package:social_media/features/posts/presentation/homePage/ui/widgets/show_report_post_dialog_widget.dart';
+import 'package:social_media/core/shared/show_report_post_dialog_widget.dart';
 import 'package:social_media/features/posts/presentation/postDetails/presentation/ui/widgets/CommentCard.dart';
 
 class post_details_screen extends StatefulWidget {

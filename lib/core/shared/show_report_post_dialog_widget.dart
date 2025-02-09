@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../core/Responsive/Models/device_info.dart';
-import '../../../../../../core/theming/colors.dart';
+import '../Responsive/Models/device_info.dart';
+import '../theming/colors.dart';
 import 'custom_dialog_widget.dart';
 
 // ignore: must_be_immutable
 class ShowReportPostDialogWidget extends StatelessWidget {
-  ShowReportPostDialogWidget({super.key, required this.deviceInfo});
+  ShowReportPostDialogWidget({super.key, required this.deviceInfo, this.onPressedReport});
   final DeviceInfo deviceInfo;
   int selectedCategory = -1;
   final TextEditingController reasonController = TextEditingController();
-
+  final Function()? onPressedReport;
   @override
   Widget build(BuildContext context) {
     return CustomDialogWidget(
@@ -99,18 +99,7 @@ class ShowReportPostDialogWidget extends StatelessWidget {
       ],
       actions: [
         TextButton(
-          onPressed: () {
-            if (selectedCategory != -1 && reasonController.text.isNotEmpty) {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("Post reported successfully!")),
-              );
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("Please select a category and provide a reason.")),
-              );
-            }
-          },
+          onPressed: onPressedReport,
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(ColorsManager.redColor),
             shape: MaterialStateProperty.all(
