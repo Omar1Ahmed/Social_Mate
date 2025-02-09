@@ -28,8 +28,7 @@ class PostCardWidget extends StatefulWidget {
   _PostCardWidgetState createState() => _PostCardWidgetState();
 }
 
-class _PostCardWidgetState extends State<PostCardWidget>
-    with SingleTickerProviderStateMixin {
+class _PostCardWidgetState extends State<PostCardWidget> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<Offset> _slideAnimation;
 
@@ -58,21 +57,18 @@ class _PostCardWidgetState extends State<PostCardWidget>
       builder: (context) => AlertDialog(
         title: Text(
           'Confirm Delete',
-          style: TextStyles.inter18BoldBlack
-              .copyWith(fontSize: widget.deviceInfo.screenWidth * 0.05),
+          style: TextStyles.inter18BoldBlack.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.05),
         ),
         content: Text(
           'Are you sure you want to delete this post?',
-          style: TextStyles.inter18Regularblack
-              .copyWith(fontSize: widget.deviceInfo.screenWidth * 0.04),
+          style: TextStyles.inter18Regularblack.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.04),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context), // Cancel action
             child: Text(
               'Cancel',
-              style: TextStyles.inter18Regularblack
-                  .copyWith(color: ColorsManager.primaryColor),
+              style: TextStyles.inter18Regularblack.copyWith(color: ColorsManager.primaryColor),
             ),
           ),
           TextButton(
@@ -86,8 +82,7 @@ class _PostCardWidgetState extends State<PostCardWidget>
             },
             child: Text(
               'Delete',
-              style: TextStyles.inter18Regularblack
-                  .copyWith(color: ColorsManager.redColor),
+              style: TextStyles.inter18Regularblack.copyWith(color: ColorsManager.redColor),
             ),
           ),
         ],
@@ -127,8 +122,7 @@ class _PostCardWidgetState extends State<PostCardWidget>
                   offset: const Offset(0, 3),
                 ),
               ],
-              borderRadius:
-                  BorderRadius.circular(widget.deviceInfo.localWidth * 0.03),
+              borderRadius: BorderRadius.circular(widget.deviceInfo.localWidth * 0.03),
             ),
             child: Padding(
               padding: EdgeInsets.all(widget.deviceInfo.localWidth * 0.05),
@@ -143,8 +137,7 @@ class _PostCardWidgetState extends State<PostCardWidget>
                           widget.post.title,
                           overflow: TextOverflow.ellipsis,
                           softWrap: true,
-                          style: TextStyles.inter18BoldBlack.copyWith(
-                              fontSize: widget.deviceInfo.screenWidth * 0.05),
+                          style: TextStyles.inter18BoldBlack.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.05),
                         ),
                       ),
                       widget.idNotMatch
@@ -176,14 +169,12 @@ class _PostCardWidgetState extends State<PostCardWidget>
                       Expanded(
                         child: Text(
                           widget.post.createdBy.fullName,
-                          style: TextStyles.inter18BoldBlack.copyWith(
-                              fontSize: widget.deviceInfo.screenWidth * 0.04),
+                          style: TextStyles.inter18BoldBlack.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.04),
                         ),
                       ),
                       Text(
                         widget.post.createdOn.toString().substring(0, 16),
-                        style: TextStyles.inter18Regularblack.copyWith(
-                            fontSize: widget.deviceInfo.screenWidth * 0.03),
+                        style: TextStyles.inter18Regularblack.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.03),
                       ),
                     ],
                   ),
@@ -194,8 +185,7 @@ class _PostCardWidgetState extends State<PostCardWidget>
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.justify,
                     softWrap: true,
-                    style: TextStyles.inter18RegularWithOpacity.copyWith(
-                        fontSize: widget.deviceInfo.screenWidth * 0.04),
+                    style: TextStyles.inter18RegularWithOpacity.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.04),
                   ),
                   Row(
                     children: [
@@ -230,8 +220,7 @@ class _PostCardWidgetState extends State<PostCardWidget>
                         },
                         child: Text(
                           "Report",
-                          style: TextStyles.inter18Regularblack
-                              .copyWith(color: ColorsManager.redColor),
+                          style: TextStyles.inter18Regularblack.copyWith(color: ColorsManager.redColor),
                         ),
                       ),
                     ],
