@@ -8,11 +8,12 @@ import 'package:social_media/features/posts/presentation/homePage/ui/widgets/log
 import '../../../../../core/Responsive/Models/device_info.dart';
 import '../../../../../core/Responsive/ui_component/info_widget.dart';
 import '../../../../../core/routing/routs.dart';
+import '../../../../../core/shared/tween_animation_widget.dart';
 import '../logic/cubit/home_cubit_cubit.dart';
 import 'widgets/build_error_widget.dart';
 import 'widgets/create_post_widget.dart';
 import 'widgets/post_card_widget.dart';
-import 'widgets/show_create_post_dialog_widget.dart';
+import '../../../../../core/shared/show_create_post_dialog_widget.dart';
 
 class HomepageView extends StatefulWidget {
   const HomepageView({super.key});
@@ -52,7 +53,6 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
   }
 
   @override
-  @override
   Widget build(BuildContext context) {
     return InfoWidget(
       builder: (context, deviceInfo) {
@@ -62,12 +62,13 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
             body: BlocListener<HomeCubit, HomeState>(
               listener: (context, state) {
                 if (state is PostDeleted || state is PostCreated) {
-                  // Trigger a full refresh when a post is deleted or created
+                  context.pop();
                   context.read<HomeCubit>().onRefresh();
                 } else if (state is PostError) {
-                  // Show an error message
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(state.message)),
+                    SnackBar(
+                      content: Text(state.message),
+                    ),
                   );
                 }
               },
@@ -202,32 +203,8 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
         delegate: SliverChildBuilderDelegate(
           (context, index) {
             if (index >= posts.length) return const SizedBox.shrink();
-
-            return TweenAnimationBuilder<double>(
-              duration: Duration(milliseconds: 400 + (index * 100)), // Staggered animation
-              tween: Tween(begin: 0.0, end: 1.0),
-              builder: (context, value, child) {
-                return Opacity(
-                  opacity: value,
-                  child: Transform.translate(
-                    offset: Offset(0, (1 - value) * 20),
-                    child: child,
-                  ),
-                );
-              },
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: deviceInfo.screenWidth * 0.05,
-                  vertical: deviceInfo.localHeight * 0.01,
-                ),
-                child: PostCardWidget(
-                  key: ValueKey(posts[index].id),
-                  deviceInfo: deviceInfo,
-                  idNotMatch: posts[index].createdBy.id == getIt<userMainDetailsCubit>().state.userId ? false : true,
-                  post: posts[index],
-                ),
-              ),
-            );
+            final isNotMatch = posts[index].createdBy.id == getIt<userMainDetailsCubit>().state.userId ? false : true;
+            return TweenAnimationWidget(index: index, deviceInfo: deviceInfo, child: PostCardWidget(post: posts[index], deviceInfo: deviceInfo, idNotMatch: isNotMatch));
           },
           childCount: posts.length,
         ),

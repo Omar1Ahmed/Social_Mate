@@ -2,15 +2,11 @@ import 'package:cherry_toast/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
-import 'package:social_media/core/di/di.dart';
-import 'package:social_media/core/helper/SharedPref/SharedPrefKeys.dart';
-import 'package:social_media/core/helper/SharedPref/sharedPrefHelper.dart';
 import 'package:social_media/features/authentication/presentation/logic/auth_cubit.dart';
 import 'package:social_media/features/authentication/presentation/logic/auth_state.dart';
 import 'package:social_media/features/authentication/presentation/ui/auth_screen/sign_up_screen.dart';
 import 'package:social_media/features/authentication/presentation/ui/widgets/customButton.dart';
 import 'package:cherry_toast/cherry_toast.dart';
-
 import '../../../../../core/routing/routs.dart';
 import 'sign_in_screen.dart';
 
@@ -25,6 +21,9 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   bool rememberMe = false;
+  void initState() {
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return InfoWidget(builder: (context, info) {

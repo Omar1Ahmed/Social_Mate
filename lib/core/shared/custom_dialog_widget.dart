@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social_media/core/Responsive/Models/device_info.dart';
-import '../../../../../../core/theming/colors.dart';
+import '../theming/colors.dart';
 
 class CustomDialogWidget extends StatelessWidget {
   const CustomDialogWidget({
