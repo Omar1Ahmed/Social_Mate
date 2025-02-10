@@ -1,4 +1,5 @@
 // data/models/post_response.dart
+import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 import '../../../../core/entities/post_entity.dart';
 
@@ -38,13 +39,18 @@ class PostData {
 
   Map<String, dynamic> toJson() => _$PostDataToJson(this);
 
-  PostEntity toEntity() => PostEntity(
-        id: id,
-        title: title,
-        content: content,
-        createdBy: createdBy.toEntity(),
-        createdOn: createdOn,
-      );
+  PostEntity toEntity(){
+
+    String FormattedDate = DateFormat("yyyy-MM-dd h:mm a").format(createdOn);
+    return PostEntity(
+      id: id,
+      title: title,
+      content: content,
+      createdBy: createdBy.toEntity(),
+      createdOn: createdOn,
+      FormattedDate: FormattedDate
+    );
+  }
 }
 
 @JsonSerializable()

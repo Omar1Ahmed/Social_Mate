@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social_media/core/theming/styles.dart';
 
-
 class FormTextInput extends StatefulWidget {
   final String label;
   final String hintText;
@@ -17,7 +16,8 @@ class FormTextInput extends StatefulWidget {
     required this.focusNode,
     required this.nextNode,
     required this.controller,
-    this.onTap, this.validator,
+    this.onTap,
+    this.validator,
   });
 
   @override

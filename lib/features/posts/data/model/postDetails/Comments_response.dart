@@ -1,4 +1,8 @@
+import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:social_media/core/entities/post_entity.dart';
+import 'package:social_media/features/posts/data/model/entities/commentEntity.dart';
+import 'package:social_media/features/posts/data/model/post_response.dart';
 
 part 'Comments_response.g.dart';
 
@@ -11,13 +15,15 @@ class PostCommentsModel {
   factory PostCommentsModel.fromJson(Map<String, dynamic> json) => _$PostCommentsModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$PostCommentsModelToJson(this);
+
+  toEntities() => data.map((e) => e.toEntity()).toList();
 }
 
 @JsonSerializable()
 class Comment {
   final int id;
   final String content;
-  final CreatedBy createdBy;
+  final User createdBy;
   final DateTime createdOn;
   final int numOfLikes;
   final int numOfDisLikes;
@@ -34,19 +40,20 @@ class Comment {
   factory Comment.fromJson(Map<String, dynamic> json) => _$CommentFromJson(json);
 
   Map<String, dynamic> toJson() => _$CommentToJson(this);
+
+  CommentEntity toEntity() {
+    String FormattedDate = DateFormat("yyyy-MM-dd h:mm a").format(createdOn);
+
+    return CommentEntity(
+        id: id,
+        content: content,
+        createdBy: createdBy.toEntity(),
+        createdOn: createdOn,
+        FormattedDate: FormattedDate,
+        numOfLikes: numOfLikes,
+        numOfDisLikes: numOfDisLikes
+    );
+  }
 }
 
-@JsonSerializable()
-class CreatedBy {
-  final int id;
-  final String fullName;
 
-  CreatedBy({
-    required this.id,
-    required this.fullName,
-  });
-
-  factory CreatedBy.fromJson(Map<String, dynamic> json) => _$CreatedByFromJson(json);
-
-  Map<String, dynamic> toJson() => _$CreatedByToJson(this);
-}

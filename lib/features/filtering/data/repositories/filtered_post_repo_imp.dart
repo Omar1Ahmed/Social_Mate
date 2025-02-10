@@ -2,7 +2,7 @@
 
 import 'package:social_media/features/filtering/could_be_shared/network_info/network_info.dart';
 import 'package:social_media/features/filtering/data/datasources/filtered_posts_remote_source.dart';
-import 'package:social_media/features/filtering/domain/entities/post_entity.dart';
+import 'package:social_media/features/filtering/domain/entities/filtering_post_entity.dart';
 import 'package:social_media/features/filtering/domain/repositories/filtered_post_repo.dart';
 
 class FilteredPostRepoImp implements FilteredPostRepo {
@@ -19,35 +19,33 @@ class FilteredPostRepoImp implements FilteredPostRepo {
     Map<String, dynamic>? queryParameters,
     required String token,
   }) async {
-    // if (await networkInfo.isConnected) {
-      try {
-        final postModels = await filteredPostsRemoteSource.getFilteredPosts(
-          queryParameters: queryParameters,
-          token: token,
-        );
+    //if (await networkInfo.isConnected) {
+    try {
+      final postModels = await filteredPostsRemoteSource.getFilteredPosts(
+        queryParameters: queryParameters,
+        token: token,
+      );
 
-        // Check if the data is not empty before trying to map
-        if (postModels.isEmpty) {
-          print("PostModel data is empty");
-          return []; // Return an empty list if no data is available
-        }
-
-        // Map the PostModel to PostEntity
-        final postEntities = postModels
-            .map((postModel) => postModel.toEntityList())
-            .expand((element) => element) // Flatten the list
-            .toList();
-
-        print("Filtered Posts: ${postEntities.length} items"); // Debug log
-        return postEntities;
-      } catch (e) {
-        print(e);
-        throw Exception('Failed to fetch filtered posts: $e');
+      
+      if (postModels.isEmpty) {
+        print("PostModel data is empty");
+        return []; 
       }
+
+      
+      final postEntities = postModels
+          .map((postModel) => postModel.toEntityList())
+          .expand((element) => element) 
+          .toList();
+
+      print("Filtered Posts: ${postEntities.length} items"); // Debug log
+      return postEntities;
+    } catch (e) {
+      print(e);
+      throw Exception('Failed to fetch filtered posts: $e');
+    }
     // } else {
     //   throw Exception('No internet connection');
     // }
   }
-
-
 }

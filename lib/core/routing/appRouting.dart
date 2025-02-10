@@ -42,6 +42,8 @@ class AppRouts {
                   BlocProvider<SharingDataCubit>(
                     create: (context) => SharingDataCubit(),
                   ),
+                  BlocProvider<HomeCubit>(
+                      create: (context) => getIt<HomeCubit>()),
                   BlocProvider<FilteredUsersCubit>(
                     create: (context) => getIt<FilteredUsersCubit>(),
                   )

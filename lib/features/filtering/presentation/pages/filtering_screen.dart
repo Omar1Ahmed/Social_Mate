@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
-import 'package:social_media/core/di/di.dart';
-import 'package:social_media/core/helper/SharedPref/SharedPrefKeys.dart';
-import 'package:social_media/core/helper/SharedPref/sharedPrefHelper.dart';
+import 'package:social_media/core/theming/colors.dart';
 import 'package:social_media/core/theming/styles.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
-import 'package:social_media/features/filtering/domain/entities/post_entity.dart';
+import 'package:social_media/features/filtering/domain/entities/filtering_post_entity.dart';
 import 'package:social_media/features/filtering/presentation/cubit/filtered_users/filtered_users_cubit.dart';
 import 'package:social_media/features/filtering/presentation/cubit/filtering_cubit.dart';
 import 'package:social_media/features/filtering/presentation/cubit/sharing_data/sharing_data_cubit.dart';
 import 'package:social_media/features/filtering/presentation/widgets/filtered_post_card.dart';
 import 'package:social_media/features/filtering/presentation/widgets/filtering_tile.dart';
+import 'package:social_media/features/posts/presentation/homePage/logic/cubit/home_cubit_cubit.dart';
 
 class FilteringScreen extends StatefulWidget {
   const FilteringScreen({super.key});
@@ -38,16 +37,17 @@ class _FilteringScreenState extends State<FilteringScreen> {
   }
 
   void _onScroll() {
-    final _sharedPrefHelper = getIt<SharedPrefHelper>();
-    final tokenFromCache = _sharedPrefHelper.getString(SharedPrefKeys.tokenKey);
-    queryParameters = context.read<SharingDataCubit>().state.queryParams;
     final token = context.read<userMainDetailsCubit>().state.token;
     if (scrollController.position.pixels ==
         scrollController.position.maxScrollExtent) {
       //scrollPosition = scrollController.position.pixels;
-      context.read<FilteringCubit>().loadMoreFilteredPosts(
-          queryParameters: queryParameters, token: token ?? tokenFromCache!);
+      final queryParams = context.read<SharingDataCubit>().state.queryParams;
+      print('new queryParams: $queryParams');
+      context
+          .read<FilteringCubit>()
+          .loadMoreFilteredPosts(queryParameters: queryParams, token: token!);
     }
+    print('queryParameters after pagination : $queryParameters');
   }
 
   @override
@@ -84,7 +84,12 @@ class _FilteringScreenState extends State<FilteringScreen> {
                   SizedBox(height: 16),
                   BlocBuilder<FilteringCubit, FilteringState>(
                     builder: (context, state) {
-                      if (state is FilteredPostsIsLoaded) {
+                      if (state is FilteredPostsIsLoading) {
+                        return Center(
+                            child: LinearProgressIndicator(
+                          color: ColorsManager.primaryColor,
+                        ));
+                      } else if (state is FilteredPostsIsLoaded) {
                         if (state.filteredPosts.isNotEmpty) {
                           final newPosts = state.filteredPosts.where((newPost) {
                             return !posts.any((existingPost) =>
@@ -96,13 +101,14 @@ class _FilteringScreenState extends State<FilteringScreen> {
                           print('retrived data is empty ya 3m'); // Debug
                         }
                         print(
-                            'this is the filtered ${state.filteredPosts[0].total}');
+                            'this is the filtered ${posts.length.toString()}');
                         return Column(
                           children: [
                             Padding(
                               padding: EdgeInsets.symmetric(vertical: 8),
                               child: Text(
-                                  'Posts Filtered : ${state.filteredPosts[0].total}'),
+                                'Posts Filtered : ${state.filteredPosts[0].total.toString()}',
+                              ),
                             ),
                             ListView.builder(
                               shrinkWrap: true,
@@ -110,19 +116,28 @@ class _FilteringScreenState extends State<FilteringScreen> {
                               itemCount: posts.length + (state.hasMore ? 1 : 0),
                               itemBuilder: (context, index) {
                                 print('Filtering State: $state');
-                                if (index == state.filteredPosts.length) {
+                                if (index == posts.length && state.hasMore) {
                                   return Center(
                                       child: CircularProgressIndicator());
                                 }
                                 return Column(
                                   children: [
                                     FilteredPostCard(
+                                      filteringCubit:
+                                          context.read<FilteringCubit>(),
+                                      homeCubit: context.read<HomeCubit>(),
                                       postId: posts[index].id,
                                       postOwnerId: posts[index].userId,
                                       title: posts[index].title,
                                       postOwner: posts[index].createdBy,
                                       date: posts[index].createdOn.toString(),
                                       content: posts[index].content,
+                                      onPostDeleted: (deletedPostId) {
+                                        setState(() {
+                                          posts.removeWhere((post) =>
+                                              post.id == deletedPostId);
+                                        });
+                                      },
                                     ),
                                     SizedBox(
                                       height: 16,

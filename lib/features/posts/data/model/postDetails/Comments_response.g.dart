@@ -21,7 +21,7 @@ Map<String, dynamic> _$PostCommentsModelToJson(PostCommentsModel instance) =>
 Comment _$CommentFromJson(Map<String, dynamic> json) => Comment(
       id: (json['id'] as num).toInt(),
       content: json['content'] as String,
-      createdBy: CreatedBy.fromJson(json['createdBy'] as Map<String, dynamic>),
+      createdBy: User.fromJson(json['createdBy'] as Map<String, dynamic>),
       createdOn: DateTime.parse(json['createdOn'] as String),
       numOfLikes: (json['numOfLikes'] as num).toInt(),
       numOfDisLikes: (json['numOfDisLikes'] as num).toInt(),
@@ -34,14 +34,4 @@ Map<String, dynamic> _$CommentToJson(Comment instance) => <String, dynamic>{
       'createdOn': instance.createdOn.toIso8601String(),
       'numOfLikes': instance.numOfLikes,
       'numOfDisLikes': instance.numOfDisLikes,
-    };
-
-CreatedBy _$CreatedByFromJson(Map<String, dynamic> json) => CreatedBy(
-      id: (json['id'] as num).toInt(),
-      fullName: json['fullName'] as String,
-    );
-
-Map<String, dynamic> _$CreatedByToJson(CreatedBy instance) => <String, dynamic>{
-      'id': instance.id,
-      'fullName': instance.fullName,
     };

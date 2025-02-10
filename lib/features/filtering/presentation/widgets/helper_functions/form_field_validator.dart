@@ -1,9 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-String? validateTextInput(String? value) {
-  if (value == null || value.isEmpty) {
-    return 'Please enter some text';
+String? validateTextInput(
+  String sortedByValue,
+  TextEditingController titleController,
+  TextEditingController postOwnerController,
+  TextEditingController createdFromController,
+  TextEditingController createdToController,
+  TextEditingController orderedByController,
+) {
+  if ((sortedByValue.isEmpty) &&
+      titleController.text.isEmpty &&
+      postOwnerController.text.isEmpty &&
+      createdFromController.text.isEmpty &&
+      createdToController.text.isEmpty &&
+      orderedByController.text.isEmpty) {
+    return null;
+  }
+  if ((sortedByValue.isEmpty) && orderedByController.text.isNotEmpty) {
+    return 'you neet to select a value here';
   }
   return null;
 }

@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_media/core/di/di.dart';
-import 'package:social_media/core/helper/SharedPref/SharedPrefKeys.dart';
-import 'package:social_media/core/helper/SharedPref/sharedPrefHelper.dart';
+import 'package:social_media/core/Responsive/Models/device_info.dart';
+import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
+import 'package:social_media/core/theming/colors.dart';
 import 'package:social_media/core/theming/styles.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 import 'package:social_media/features/filtering/presentation/cubit/filtered_users/filtered_users_cubit.dart';
@@ -16,14 +16,18 @@ class PostOwnerDialog extends StatefulWidget {
   final TextEditingController dialogController;
   final BuildContext context;
   final FilteredUsersCubit filteredUsersCubit;
-  const PostOwnerDialog(
-      {super.key,
-      required this.width,
-      required this.height,
-      required this.parentController,
-      required this.context,
-      required this.filteredUsersCubit,
-      required this.dialogController});
+  final Function(String)
+      onPostOwnerSelected; // Callback to return the selected ID
+  PostOwnerDialog({
+    super.key,
+    required this.width,
+    required this.height,
+    required this.parentController,
+    required this.context,
+    required this.filteredUsersCubit,
+    required this.dialogController,
+    required this.onPostOwnerSelected, // Add this callback
+  });
 
   @override
   State<PostOwnerDialog> createState() => _PostOwnerDialogState();
@@ -31,6 +35,9 @@ class PostOwnerDialog extends StatefulWidget {
 
 class _PostOwnerDialogState extends State<PostOwnerDialog> {
   Timer? debounceTimer;
+  String? selectedPostOwnerId; // Store the selected post owner's ID
+  String? selectedPostOwnerName; // Store the selected post owner's full name
+
   @override
   void dispose() {
     debounceTimer?.cancel();
@@ -39,71 +46,95 @@ class _PostOwnerDialogState extends State<PostOwnerDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final _sharedPrefHelper = getIt<SharedPrefHelper>();
-    final tokenFromCache = _sharedPrefHelper.getString(SharedPrefKeys.tokenKey);
     return BlocProvider.value(
       value: widget.filteredUsersCubit,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
-        width: widget.width,
-        height: widget.height,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
-        ),
-        child: Column(
-          children: [
-            TextField(
-              controller: widget.dialogController,
-              decoration:
-                  formInputStyle(label: 'Post Owner', hintText: 'Enter a name'),
-              onChanged: (value) {
-                debounceTimer?.cancel();
-                debounceTimer = Timer(const Duration(seconds: 1), () {
-                  widget.dialogController.text = value;
-                  widget.filteredUsersCubit.loadFilteredUsers(
-                      queryParameters: {'fullName': value},
-                      token: context.read<userMainDetailsCubit>().state.token ?? tokenFromCache!);
-                });
-              },
+      child: InfoWidget(
+        builder: (BuildContext context, DeviceInfo deviceInfo) {
+          return Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
+            width: widget.width,
+            height: widget.height,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(24),
             ),
-            BlocBuilder<FilteredUsersCubit, FilteredUsersState>(
-              builder: (context, state) {
-                if (state is FilteredUsersLoaded) {
-                  return Expanded(
-                    child: ListView.builder(
-                      shrinkWrap: false,
-                      padding: EdgeInsets.all(8),
-                      itemCount: state.filteredUsers.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text(state.filteredUsers[index].fullName),
-                          onTap: () {
-                            widget.dialogController.text =
-                                state.filteredUsers[index].fullName;
-                            widget.parentController.text =
-                                state.filteredUsers[index].id.toString();
-                            Navigator.pop(context);
+            child: Column(
+              children: [
+                Padding(
+                  padding:
+                      EdgeInsets.only(bottom: deviceInfo.screenHeight * 0.02),
+                  child: TextField(
+                    controller: widget.dialogController,
+                    decoration: formInputStyle(
+                        label: 'Post Owner', hintText: 'Enter a name'),
+                    onChanged: (value) {
+                      debounceTimer?.cancel();
+                      debounceTimer = Timer(const Duration(seconds: 1), () {
+                        widget.dialogController.text = value;
+                        widget.filteredUsersCubit.loadFilteredUsers(
+                            queryParameters: {'fullName': value},
+                            token: context
+                                .read<userMainDetailsCubit>()
+                                .state
+                                .token!);
+                      });
+                    },
+                  ),
+                ),
+                BlocBuilder<FilteredUsersCubit, FilteredUsersState>(
+                  builder: (context, state) {
+                    if (state is FilteredUsersLoaded) {
+                      return Expanded(
+                        child: ListView.builder(
+                          shrinkWrap: false,
+                          padding: EdgeInsets.all(8),
+                          itemCount: state.filteredUsers.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text(state.filteredUsers[index].fullName),
+                              onTap: () {
+                                // Store the selected post owner's ID and full name
+                                selectedPostOwnerId =
+                                    state.filteredUsers[index].id.toString();
+                                selectedPostOwnerName =
+                                    state.filteredUsers[index].fullName;
+
+                                // Update the dialog and parent text fields
+                                widget.dialogController.text =
+                                    selectedPostOwnerName!;
+                                widget.parentController.text =
+                                    selectedPostOwnerName!;
+
+                                // Pass the selected ID back to the parent
+                                widget
+                                    .onPostOwnerSelected(selectedPostOwnerId!);
+
+                                // Close the dialog
+                                Navigator.pop(context);
+                              },
+                            );
                           },
-                        );
-                      },
-                    ),
-                  );
-                } else if (state is FilteredUsersLoading) {
-                  return const CircularProgressIndicator();
-                } else if (state is FilteredUsersError) {
-                  return Center(
-                    child: Text('an error occurred '),
-                  );
-                } else {
-                  return Center(
-                    child: Text('enter a name'),
-                  );
-                }
-              },
+                        ),
+                      );
+                    } else if (state is FilteredUsersLoading) {
+                      return const LinearProgressIndicator(
+                        color: ColorsManager.primaryColor,
+                      );
+                    } else if (state is FilteredUsersError) {
+                      return Center(
+                        child: Text('an error occurred '),
+                      );
+                    } else {
+                      return Center(
+                        child: Text('enter a name'),
+                      );
+                    }
+                  },
+                ),
+              ],
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

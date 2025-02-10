@@ -24,7 +24,6 @@ class FilteredPostsRemoteSourceImpl implements FilteredPostsRemoteSource {
       token: token,
     );
 
-
     final postModel = PostModel.fromJson(response.data);
     return [postModel];
   }

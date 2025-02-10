@@ -15,19 +15,19 @@ class FilteredUsersRepoImpl implements FilteredUsersRepo {
   Future<List<UserModel>> getFilteredUsers(
       {required Map<String, dynamic> queryParameters,
       required String token}) async {
-    // if (await networkInfo.isConnected) {
-      try {
-        final userModels = await filteredUsersRemoteSource.getFilteredUsers(
-            queryParameters: queryParameters, token: token);
-        if (userModels.isEmpty) {
-          print('UserModel data is empty');
-          return [];
-        }
-        print('userModels in the repo : $userModels');
-        return userModels;
-      } catch (e) {
-        throw Exception('Failed to fetch filtered users: $e');
+    //if (await networkInfo.isConnected) {
+    try {
+      final userModels = await filteredUsersRemoteSource.getFilteredUsers(
+          queryParameters: queryParameters, token: token);
+      if (userModels.isEmpty) {
+        print('UserModel data is empty');
+        return [];
       }
+      print('userModels in the repo : $userModels');
+      return userModels;
+    } catch (e) {
+      throw Exception('Failed to fetch filtered users: $e');
+    }
     // } else {
     //   throw Exception('No internet connection');
     // }

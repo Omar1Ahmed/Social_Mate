@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:social_media/features/filtering/domain/entities/post_entity.dart';
+import 'package:social_media/features/filtering/domain/entities/filtering_post_entity.dart';
 
 part 'sharing_data_state.dart';
 

@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'colors.dart';
 
 class TextStyles {
-  static const inter18Bold = TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'Inter');
+  static const inter18Bold =
+      TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'Inter');
 
   static const inter14RegularBlue = TextStyle(
     fontSize: 14,
@@ -82,11 +83,13 @@ class TextFieldStyles {
       borderRadius: BorderRadius.circular(100),
     ),
     enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: ColorsManager.primaryColor.withOpacity(0.5)),
+      borderSide:
+          BorderSide(color: ColorsManager.primaryColor.withOpacity(0.5)),
       borderRadius: BorderRadius.circular(100),
     ),
     focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: ColorsManager.primaryColor.withOpacity(0.5)),
+      borderSide:
+          BorderSide(color: ColorsManager.primaryColor.withOpacity(0.5)),
       borderRadius: BorderRadius.circular(100),
     ),
   );
@@ -94,22 +97,26 @@ class TextFieldStyles {
     fillColor: Colors.white,
     filled: true,
     border: OutlineInputBorder(
-      borderSide: BorderSide(color: ColorsManager.primaryColor.withOpacity(0.5)),
+      borderSide:
+          BorderSide(color: ColorsManager.primaryColor.withOpacity(0.5)),
       borderRadius: BorderRadius.circular(100),
     ),
     enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: ColorsManager.primaryColor.withOpacity(0.5)),
+      borderSide:
+          BorderSide(color: ColorsManager.primaryColor.withOpacity(0.5)),
       borderRadius: BorderRadius.circular(100),
     ),
     focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: ColorsManager.primaryColor.withOpacity(0.5)),
+      borderSide:
+          BorderSide(color: ColorsManager.primaryColor.withOpacity(0.5)),
       borderRadius: BorderRadius.circular(100),
     ),
   );
 }
 
 // created by Marwan for filtering
-InputDecoration formInputStyle({required String label, required String hintText}) {
+InputDecoration formInputStyle(
+    {required String label, required String hintText}) {
   return InputDecoration(
     isDense: true,
     hintText: hintText,
@@ -130,6 +137,13 @@ InputDecoration formInputStyle({required String label, required String hintText}
       ),
     ),
     enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8),
+      borderSide: BorderSide(
+        color: const Color.fromARGB(255, 1, 14, 27),
+        width: 1,
+      ),
+    ),
+    disabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(8),
       borderSide: BorderSide(
         color: const Color.fromARGB(255, 1, 14, 27),
