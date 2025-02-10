@@ -4,6 +4,7 @@ class PostEntity {
   final String content;
   final UserEntity createdBy;
   final DateTime createdOn;
+  final String FormattedDate;
 
   PostEntity({
     required this.id,
@@ -11,6 +12,7 @@ class PostEntity {
     required this.content,
     required this.createdBy,
     required this.createdOn,
+    required this.FormattedDate
   });
 }
 

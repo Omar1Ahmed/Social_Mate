@@ -8,7 +8,7 @@ final class PostDetailsInitial extends PostDetailsState {}
 final class PostDetailsLoading extends PostDetailsState {}
 
 final class PostDetailsLoaded extends PostDetailsState {
-  final PostDetailsModel postDetails;
+  final PostEntity postDetails;
   PostDetailsLoaded(this.postDetails);
 }
 

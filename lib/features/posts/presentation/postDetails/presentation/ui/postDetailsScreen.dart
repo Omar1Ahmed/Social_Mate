@@ -46,7 +46,8 @@ class _post_details_screenState extends State<post_details_screen> {
 
         },
         builder: (context, state) {
-          print('builder state : $state');
+
+          final postDetailsCubit = context.read<PostDetailsCubit>();
           final userMainDetails = context.read<userMainDetailsCubit>();
           return SingleChildScrollView(
             child: Padding(
@@ -64,7 +65,7 @@ class _post_details_screenState extends State<post_details_screen> {
                       width: double.infinity,
                       clipBehavior: Clip.none,
                       constraints: BoxConstraints(
-                        minHeight: info.screenHeight* 0.27,
+                        minHeight: info.screenHeight* 0.25,
                       ),
                       padding: EdgeInsetsDirectional.only(start: info.screenWidth * 0.05, end: info.screenWidth * 0.02),
                       decoration: BoxDecoration(
@@ -89,85 +90,69 @@ class _post_details_screenState extends State<post_details_screen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
 
-                              state is PostDetailsLoading || state is PostDetailsInitial?
-                              customShimmer(
-                                  childWidget: SizedBox(
-                                    height: info.screenHeight * 0.053,
-                                    child: Row(children: [
-                                      Container(
-                                        width: info.screenWidth * 0.4,
-                                        height: info.screenHeight * 0.03,
+                              SizedBox(
+                                height: info.screenHeight * 0.053,
+                                child: state is PostDetailsLoading || state is PostDetailsInitial?
+                                customShimmer(
+                                  childWidget: Row(children: [
+                                    Container(
+                                      width: info.screenWidth * 0.4,
+                                      height: info.screenHeight * 0.03,
 
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(info.screenWidth * 0.04),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(info.screenWidth * 0.04),
+                                      ),
+                                    ),
+
+                                    Spacer(),
+
+                                    Container(
+
+                                      width: info.screenWidth * 0.09,
+                                      height: info.screenHeight * 0.04,
+                                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.09)),
+                                    ),
+
+                                    Container(
+                                      width: info.screenWidth * 0.09,
+                                      height: info.screenHeight * 0.04,
+                                      margin: EdgeInsetsDirectional.only(start: info.screenWidth * 0.02),
+                                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.09)),
+                                    )
+                                  ],),)
+                                    :
+
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        postDetailsCubit.post.title.toString(),
+                                        overflow: TextOverflow.ellipsis,
+                                        softWrap: true,
+                                        style: TextStyles.inter18BoldBlack.copyWith(fontSize: info.screenWidth * 0.042),
+                                      ),
+                                    ),
+
+                                    if(userMainDetails.state.userId== postDetailsCubit.post.createdBy!.id)
+                                      IconButton(
+                                        onPressed: () {
+
+                                        },
+                                        icon: Icon(
+                                          Icons.close,
+                                          color: ColorsManager.redColor.withOpacity(0.7),
+                                          size: info.screenWidth * 0.065,
                                         ),
                                       ),
 
-                                      Spacer(),
-
-                                      Container(
-
-                                        width: info.screenWidth * 0.09,
-                                        height: info.screenHeight * 0.04,
-                                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.09)),
-                                      ),
-
-                                      Container(
-                                        width: info.screenWidth * 0.09,
-                                        height: info.screenHeight * 0.04,
-                                        margin: EdgeInsetsDirectional.only(start: info.screenWidth * 0.02),
-                                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.09)),
-                                      )
-                                    ],),
-                              ))
-                                  :
-
-                              Row(
-                                children: [
-                                   Expanded(
-                                    child: Text(
-                                      context.read<PostDetailsCubit>().post.title.toString(),
-                                      overflow: TextOverflow.ellipsis,
-                                      softWrap: true,
-                                      style: TextStyles.inter18BoldBlack.copyWith(fontSize: info.screenWidth * 0.044),
-                                    ),
-                                  ),
-
-
-                                     IconButton(
-
-                                        onPressed: (){
-
-                                          showDialog(
-                                              context: context,
-                                              builder: (context) => ShowReportPostDialogWidget(
-                                                deviceInfo: info,
-                                              ));
-
-                                        }, icon: Icon(
-                                      Icons.flag,
-                                      color: ColorsManager.redColor.withOpacity(0.7),
-                                      size: info.screenWidth * 0.065,
-                                    )),
-
-
-                                  if(userMainDetails.state.userId== context.read<PostDetailsCubit>().post.createdBy!.id)
-                                       IconButton(
-                                    onPressed: () {
-
-                                    },
-                                    icon: Icon(
-                                      Icons.close,
-                                      color: ColorsManager.redColor.withOpacity(0.7),
-                                      size: info.screenWidth * 0.065,
-                                    ),
-                                  ),
-
-                                ],
+                                  ],
+                                ),
                               ),
+
 
                               Divider(
                                 color: Colors.black,
@@ -196,21 +181,47 @@ class _post_details_screenState extends State<post_details_screen> {
                                   ))
                                   :
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Expanded(
-                                    child: Text(
-                                      'Omar',
-                                      style: TextStyles.inter18BoldBlack.copyWith(fontSize: info.screenWidth * 0.04),
+
+                                  Padding(
+                                    padding: EdgeInsetsDirectional.only(start: info.screenWidth * 0.015),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          postDetailsCubit.post.createdBy!.fullName.toString(),
+                                          style: TextStyles.inter18BoldBlack.copyWith(fontSize: info.screenWidth * 0.04),
+                                        ),
+
+                                        Text(
+                                          postDetailsCubit.post.FormattedDate.toString(),
+                                          style: TextStyles.inter18Regularblack.copyWith(fontSize: info.screenWidth * 0.03),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  Text(
-                                    '2025-01-01 10:00 AM',
-                                    style: TextStyles.inter18Regularblack.copyWith(fontSize: info.screenWidth * 0.03),
-                                  ),
+                                  IconButton(
+
+                                      onPressed: (){
+
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) => ShowReportPostDialogWidget(
+                                              deviceInfo: info,
+                                            ));
+                                        }, icon: Icon(
+                                    Icons.flag,
+                                    color: ColorsManager.redColor.withOpacity(0.7),
+                                    size: info.screenWidth * 0.065,
+                                  )),
                                 ],
                               ),
 
-                              SizedBox(height: info.localHeight * 0.017),
+
+
+                              SizedBox(height: info.localHeight * 0.013),
 
                               state is PostDetailsLoading || state is PostDetailsInitial ?
                               customShimmer(
@@ -235,18 +246,21 @@ class _post_details_screenState extends State<post_details_screen> {
                                           height: info.screenHeight * 0.025,
                                           decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.025))
                                       ),
-                                      SizedBox(height: info.screenHeight * 0.01),
+                                      
                                     ],
                                   ) )
                               :
-                              Text(
-                                context.read<PostDetailsCubit>().post.content ?? 'Empty Content !!!!',
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.justify,
-                                softWrap: true,
-                                style: TextStyles.inter18RegularWithOpacity.copyWith(fontSize: info.screenWidth * 0.04),
-                              ),
+                              Container(
+                                width: double.infinity,
+                                padding: EdgeInsetsDirectional.only(start: info.screenWidth * 0.052, end: info.screenWidth * 0.02,bottom: info.screenHeight * 0.01),
+
+                                child: Text(
+                                  context.read<PostDetailsCubit>().post.content ?? 'Empty Content !!!',
+                                  textAlign: TextAlign.justify,
+                                  softWrap: true,
+                                  style: TextStyles.inter18RegularWithOpacity.copyWith(fontSize: info.screenWidth * 0.04,color: ColorsManager.blackColor, fontWeight: FontWeight.w500),
+                                ),
+                              )
 
                             ],
                           ),
