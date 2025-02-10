@@ -25,7 +25,7 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
     bool isConnected = await ConnectivityHelper.isConnected();
 
     print('Is connected : ${isConnected}');
-    
+
     try{
      emit(PostDetailsLoading());
      post = await postDetailsRepository.getPostDetails(_PostId);

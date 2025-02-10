@@ -18,7 +18,7 @@ class PostDetailsRemoteDataSourceImpl implements PostDetailsRemoteDataSource {
       final response = await dio.get("/posts/$postId", header: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ${userMainDetails.state.token}',
-      });
+      },);
 
       print(response);
       print('base Url : ${dio.baseUrl}');
