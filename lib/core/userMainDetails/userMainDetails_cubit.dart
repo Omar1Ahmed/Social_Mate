@@ -34,6 +34,7 @@ class userMainDetailsCubit extends Cubit<userMainDetailsState> {
     try {
       final token = _sharedPrefHelper.getString(SharedPrefKeys.tokenKey);
       if (token != null) {
+        print('Saved token: $token');
         decodeAndAssignToken(token);
       }
     } catch (e) {

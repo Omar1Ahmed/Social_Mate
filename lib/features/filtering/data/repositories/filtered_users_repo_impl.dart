@@ -5,10 +5,12 @@ import 'package:social_media/features/filtering/domain/repositories/filtered_use
 
 class FilteredUsersRepoImpl implements FilteredUsersRepo {
   final UserRemoteDataSource filteredUsersRemoteSource;
-  final NetworkInfo networkInfo;
+  // final NetworkInfo networkInfo;
 
   FilteredUsersRepoImpl(
-      {required this.filteredUsersRemoteSource, required this.networkInfo});
+      {required this.filteredUsersRemoteSource,
+        // required this.networkInfo
+      });
   @override
   Future<List<UserModel>> getFilteredUsers(
       {required Map<String, dynamic> queryParameters,

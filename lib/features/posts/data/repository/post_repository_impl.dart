@@ -2,7 +2,7 @@
 
 import 'package:social_media/core/entities/post_entity.dart';
 import 'package:social_media/features/posts/data/model/post_response.dart';
-import 'package:social_media/features/posts/domain/repository/post_remote_data_source.dart';
+import 'package:social_media/features/posts/domain/data_source/post_remote_data_source.dart';
 
 import '../../domain/repository/post_repository.dart';
 

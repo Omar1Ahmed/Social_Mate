@@ -7,10 +7,10 @@ import 'package:social_media/features/filtering/domain/repositories/filtered_pos
 
 class FilteredPostRepoImp implements FilteredPostRepo {
   final FilteredPostsRemoteSource filteredPostsRemoteSource;
-  final NetworkInfo networkInfo;
+  // final NetworkInfo networkInfo;
 
   FilteredPostRepoImp({
-    required this.networkInfo,
+    // required this.networkInfo,
     required this.filteredPostsRemoteSource,
   });
 

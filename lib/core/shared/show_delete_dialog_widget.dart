@@ -3,6 +3,7 @@ import 'package:social_media/core/Responsive/Models/device_info.dart';
 import 'package:social_media/core/theming/colors.dart';
 import 'package:social_media/core/theming/styles.dart';
 
+
 class ShowDeleteDialogWidget extends StatelessWidget {
   const ShowDeleteDialogWidget(
       {super.key, required this.deviceInfo, this.onPressed});
