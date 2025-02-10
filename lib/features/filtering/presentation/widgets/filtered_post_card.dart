@@ -4,7 +4,7 @@ import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
 import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/helper/extantions.dart';
 import 'package:social_media/core/routing/routs.dart';
-import 'package:social_media/core/shared/show_delete_dialog_widget.dart';
+import 'package:social_media/core/shared/widgets/show_delete_dialog_widget.dart';
 import 'package:social_media/core/theming/colors.dart';
 import 'package:social_media/core/theming/styles.dart';
 import 'package:social_media/core/userMainDetails/jwt_token_decode/data/model/jwtModel.dart';

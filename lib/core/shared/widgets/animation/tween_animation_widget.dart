@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../Responsive/Models/device_info.dart';
+import '../../../Responsive/Models/device_info.dart';
 
 class TweenAnimationWidget extends StatelessWidget {
   final Widget child;

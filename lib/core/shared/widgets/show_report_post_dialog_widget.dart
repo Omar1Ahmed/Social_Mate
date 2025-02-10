@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../Responsive/Models/device_info.dart';
-import '../theming/colors.dart';
+import '../../Responsive/Models/device_info.dart';
+import '../../theming/colors.dart';
 import 'custom_dialog_widget.dart';
 
 // ignore: must_be_immutable
