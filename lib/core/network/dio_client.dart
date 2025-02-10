@@ -32,7 +32,7 @@ class DioClient implements ApiCalls {
 
 
   @override
-  Future<Map<String, dynamic>> get(String url, {Map<String, dynamic>? header,Map<String, dynamic>? queryParameters,}) async {
+  Future<Map<String, dynamic>> get(String url, {Map<String, dynamic>? queryParameters,Map<String, dynamic>? header}) async {
     try {
       final response = await dio.get(
         url,
