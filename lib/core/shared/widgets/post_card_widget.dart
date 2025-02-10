@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/helper/extantions.dart';
-import 'package:social_media/core/shared/show_report_post_dialog_widget.dart';
+import 'package:social_media/core/shared/widgets/show_report_post_dialog_widget.dart';
 import 'package:social_media/features/posts/presentation/postDetails/presentation/logic/post_details_cubit.dart';
-import '../../../../../../core/Responsive/Models/device_info.dart';
-import '../../../../../../core/entities/post_entity.dart';
-import '../../../../../../core/routing/routs.dart';
-import '../../../../../../core/shared/show_delete_dialog_widget.dart';
-import '../../../../../../core/shared/slide_Transition__widget.dart';
-import '../../../../../../core/theming/colors.dart';
-import '../../../../../../core/theming/styles.dart';
-import '../../logic/cubit/home_cubit_cubit.dart';
+import '../../Responsive/Models/device_info.dart';
+import '../../entities/post_entity.dart';
+import '../../routing/routs.dart';
+import 'show_delete_dialog_widget.dart';
+import 'animation/slide_Transition__widget.dart';
+import '../../theming/colors.dart';
+import '../../theming/styles.dart';
+import '../../../features/posts/presentation/homePage/logic/cubit/home_cubit_cubit.dart';
 
 class PostCardWidget extends StatefulWidget {
   final DeviceInfo deviceInfo;
   final PostEntity post;
   final bool idNotMatch;
-
+  final void Function() onPressedDelete;
   const PostCardWidget({
     super.key,
     required this.deviceInfo,
     required this.idNotMatch,
     required this.post,
+    required this.onPressedDelete,
   });
 
   @override
@@ -79,15 +80,7 @@ class _PostCardWidgetState extends State<PostCardWidget> with SingleTickerProvid
                               if (postId == 0) {
                                 return;
                               }
-                              showDialog(
-                                  context: context,
-                                  builder: (context) => ShowDeleteDialogWidget(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                        getIt.get<HomeCubit>().deletePost(postId);
-                                        context.pushReplacementNamed(Routes.homePage);
-                                      },
-                                      deviceInfo: widget.deviceInfo));
+                              showDialog(context: context, builder: (context) => ShowDeleteDialogWidget(onPressed: widget.onPressedDelete, deviceInfo: widget.deviceInfo));
 
                               getIt.get<HomeCubit>().onRefresh();
                             },
@@ -112,25 +105,7 @@ class _PostCardWidgetState extends State<PostCardWidget> with SingleTickerProvid
                         style: TextStyles.inter18BoldBlack.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.04),
                       ),
                     ),
-                    Text(
-                      widget.post.createdOn.toString().substring(0, 16),
-                      style: TextStyles.inter18Regularblack.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.03),
-                    ),
-                  ],
-                ),
-                SizedBox(height: widget.deviceInfo.localHeight * 0.01),
-                Text(
-                  widget.post.content,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.justify,
-                  softWrap: true,
-                  style: TextStyles.inter18RegularWithOpacity.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.04),
-                ),
-                Row(
-                  children: [
-                    const Spacer(),
-                    TextButton(
+                    IconButton(
                       onPressed: () {
                         // Handle report action
                         // getIt.get<HomeCubit>().reportPost(widget.post.id);
@@ -144,13 +119,27 @@ class _PostCardWidgetState extends State<PostCardWidget> with SingleTickerProvid
                           ),
                         );
                       },
-                      child: Text(
-                        "Report",
-                        style: TextStyles.inter18Regularblack.copyWith(color: ColorsManager.redColor),
+                      icon: Icon(
+                        Icons.flag,
+                        color: ColorsManager.redColor,
+                        size: widget.deviceInfo.screenWidth * 0.06,
                       ),
                     ),
                   ],
-                )
+                ),
+                Text(
+                  widget.post.createdOn.toString().substring(0, 16),
+                  style: TextStyles.inter18Regularblack.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.03),
+                ),
+                SizedBox(height: widget.deviceInfo.localHeight * 0.01),
+                Text(
+                  widget.post.content,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.justify,
+                  softWrap: true,
+                  style: TextStyles.inter18RegularWithOpacity.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.04),
+                ),
               ],
             ),
           ),

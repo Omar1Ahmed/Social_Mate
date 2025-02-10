@@ -4,24 +4,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:social_media/core/Responsive/Models/device_info.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
-import 'package:social_media/core/Shimmer/ShimmerStyle.dart';
+import 'package:social_media/core/shared/widgets/Shimmer/ShimmerStyle.dart';
 import 'package:social_media/core/di/di.dart';
-import 'package:social_media/core/helper/SharedPref/SharedPrefKeys.dart';
 import 'package:social_media/core/helper/SharedPref/sharedPrefHelper.dart';
-import 'package:social_media/core/helper/extantions.dart';
-import 'package:social_media/core/routing/routs.dart';
-import 'package:social_media/core/shared/show_report_post_dialog_widget.dart';
-import 'package:social_media/core/shared/slide_Transition__widget.dart';
-import 'package:social_media/core/shared/tween_animation_widget.dart';
+
+import 'package:social_media/core/shared/widgets/show_report_post_dialog_widget.dart';
+import 'package:social_media/core/shared/widgets/animation/slide_Transition__widget.dart';
+import 'package:social_media/core/shared/widgets/animation/tween_animation_widget.dart';
 import 'package:social_media/core/theming/colors.dart';
 import 'package:social_media/core/theming/styles.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 
 import 'package:social_media/features/posts/presentation/postDetails/presentation/logic/post_details_cubit.dart';
-import 'package:social_media/features/posts/presentation/postDetails/presentation/ui/widgets/CommentCard.dart';
+import 'package:social_media/core/shared/widgets/CommentCard.dart';
 
 class post_details_screen extends StatefulWidget {
   @override
@@ -667,7 +664,7 @@ class _post_details_screenState extends State<post_details_screen> {
                                 height: info.screenHeight * 0.3,
                                 child: Image.asset('assets/images/noComments.png'),
                               ),
-                    ))
+                    ),),
               ],
           );
         }),

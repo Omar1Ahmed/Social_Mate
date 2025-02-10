@@ -8,12 +8,12 @@ import 'package:social_media/features/posts/presentation/homePage/ui/widgets/log
 import '../../../../../core/Responsive/Models/device_info.dart';
 import '../../../../../core/Responsive/ui_component/info_widget.dart';
 import '../../../../../core/routing/routs.dart';
-import '../../../../../core/shared/tween_animation_widget.dart';
+import '../../../../../core/shared/widgets/animation/tween_animation_widget.dart';
 import '../logic/cubit/home_cubit_cubit.dart';
 import 'widgets/build_error_widget.dart';
 import 'widgets/create_post_widget.dart';
-import 'widgets/post_card_widget.dart';
-import '../../../../../core/shared/show_create_post_dialog_widget.dart';
+import '../../../../../core/shared/widgets/post_card_widget.dart';
+import '../../../../../core/shared/widgets/show_create_post_dialog_widget.dart';
 
 class HomepageView extends StatefulWidget {
   const HomepageView({super.key});
@@ -98,7 +98,8 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
             floatingActionButton: FloatingActionButton(
               backgroundColor: Colors.white,
               foregroundColor: ColorsManager.primaryColor,
-              onPressed: () => _showCreatePostDialog(deviceInfo),
+              onPressed: () => context.pushNamed(Routes.adminReportScreen),
+              //_showCreatePostDialog(deviceInfo),
               child: Icon(Icons.edit_outlined, color: ColorsManager.primaryColor),
             ),
             floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
@@ -161,23 +162,23 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
         children: [
           Image.asset(
             'assets/images/Title_img.png',
-            width: deviceInfo.localWidth * 0.48,
-            height: deviceInfo.localHeight * 0.06,
+            width: deviceInfo.screenWidth * 0.48,
+            height: deviceInfo.screenHeight * 0.06,
             fit: BoxFit.contain,
           ),
           SizedBox(
-            width: 16,
+            width: deviceInfo.screenWidth * 0.02,
           ),
           IconButton(
             icon: Icon(
               Icons.search,
-              size: deviceInfo.localWidth * 0.08,
+              size: deviceInfo.screenWidth * 0.08,
               color: ColorsManager.primaryColor,
             ),
             onPressed: () => context.pushNamed(Routes.filteringScreen),
             style: ElevatedButton.styleFrom(
               shape: const CircleBorder(),
-              padding: EdgeInsets.all(deviceInfo.localWidth * 0.02),
+              padding: EdgeInsets.all(deviceInfo.screenWidth * 0.02),
               backgroundColor: ColorsManager.lightGreyColor,
               shadowColor: Colors.transparent,
             ).copyWith(elevation: ButtonStyleButton.allOrNull(0)),
@@ -204,7 +205,21 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
           (context, index) {
             if (index >= posts.length) return const SizedBox.shrink();
             final isNotMatch = posts[index].createdBy.id == getIt<userMainDetailsCubit>().state.userId ? false : true;
-            return TweenAnimationWidget(index: index, deviceInfo: deviceInfo, child: PostCardWidget(post: posts[index], deviceInfo: deviceInfo, idNotMatch: isNotMatch));
+            return TweenAnimationWidget(
+              index: index,
+              deviceInfo: deviceInfo,
+              child: PostCardWidget(
+                post: posts[index],
+                deviceInfo: deviceInfo,
+                idNotMatch: isNotMatch,
+                onPressedDelete: () {
+                  context.pop();
+                  final postId = posts[index].id;
+                  getIt.get<HomeCubit>().deletePost(postId);
+                  context.pushReplacementNamed(Routes.homePage);
+                },
+              ),
+            );
           },
           childCount: posts.length,
         ),
@@ -219,7 +234,7 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
     if (state is PostLoadingMore) {
       return SliverToBoxAdapter(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(deviceInfo.screenWidth * 0.05),
           child: Center(
             child: CircularProgressIndicator(color: ColorsManager.primaryColor),
           ),
@@ -229,12 +244,12 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
     return const SliverToBoxAdapter(child: SizedBox.shrink());
   }
 
-  void _showCreatePostDialog(DeviceInfo deviceInfo) {
-    showDialog(
-      context: context,
-      builder: (context) => ShowCreatePostDialogWidget(
-        deviceInfo: deviceInfo,
-      ),
-    );
-  }
+  // void _showCreatePostDialog(DeviceInfo deviceInfo) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) => ShowCreatePostDialogWidget(
+  //       deviceInfo: deviceInfo,
+  //     ),
+  //   );
+  // }
 }

@@ -25,7 +25,7 @@ import 'package:social_media/features/posts/data/repository/postDetails/postDeta
 import 'package:social_media/features/posts/domain/data_source/postDetails/postDetails_remoteDataSource.dart';
 import 'package:social_media/features/posts/domain/repository/postDetails/postDetails_repository.dart';
 import 'package:social_media/features/posts/presentation/postDetails/presentation/logic/post_details_cubit.dart';
-import '../../features/posts/data/data_source/post_remote_data_source_impl.dart';
+import '../../features/posts/data/data_source/homePage/post_remote_data_source_impl.dart';
 import '../../features/posts/data/repository/post_repository_impl.dart' as impl;
 import '../../features/posts/domain/data_source/post_remote_data_source.dart';
 import '../../features/posts/domain/repository/post_repository.dart' as repo;
