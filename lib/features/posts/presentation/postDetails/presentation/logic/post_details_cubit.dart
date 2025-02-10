@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:social_media/core/entities/post_entity.dart';
+import 'package:social_media/core/helper/Connectivity/connectivity_helper.dart';
 import 'package:social_media/features/posts/data/model/postDetails/postDetails_reponse.dart';
 import 'package:social_media/features/posts/domain/repository/postDetails/postDetails_repository.dart';
 
@@ -21,6 +22,10 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
 
   Future<void> getPostDetails() async {
 
+    bool isConnected = await ConnectivityHelper.isConnected();
+
+    print('Is connected : ${isConnected}');
+    
     try{
      emit(PostDetailsLoading());
      post = await postDetailsRepository.getPostDetails(_PostId);

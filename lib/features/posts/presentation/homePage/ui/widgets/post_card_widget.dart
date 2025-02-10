@@ -35,7 +35,8 @@ class _PostCardWidgetState extends State<PostCardWidget> with SingleTickerProvid
     return SlideTransitionWidget(
       child: InkWell(
         onTap: () {
-          PostDetailsCubit().setSelectedPost(widget.post.id);
+          PostDetailsCubit.setSelectedPost(widget.post.id);
+
           context.pushNamed(
             Routes.postDetailsScreen,
           );

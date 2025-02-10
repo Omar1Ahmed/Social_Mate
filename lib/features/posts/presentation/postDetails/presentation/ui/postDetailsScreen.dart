@@ -11,10 +11,11 @@ import 'package:social_media/core/helper/SharedPref/SharedPrefKeys.dart';
 import 'package:social_media/core/helper/SharedPref/sharedPrefHelper.dart';
 import 'package:social_media/core/helper/extantions.dart';
 import 'package:social_media/core/routing/routs.dart';
+import 'package:social_media/core/shared/show_report_post_dialog_widget.dart';
 import 'package:social_media/core/theming/colors.dart';
 import 'package:social_media/core/theming/styles.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
-import 'package:social_media/features/posts/presentation/homePage/ui/widgets/show_report_post_dialog_widget.dart';
+
 import 'package:social_media/features/posts/presentation/postDetails/presentation/logic/post_details_cubit.dart';
 import 'package:social_media/features/posts/presentation/postDetails/presentation/ui/widgets/CommentCard.dart';
 
@@ -30,12 +31,10 @@ class _post_details_screenState extends State<post_details_screen> {
   void initState() {
     super.initState();
     print('initState');
-    // context.read<PostDetailsCubit>().getPostDetails();
+    context.read<PostDetailsCubit>().getPostDetails();
   }
   @override
   Widget build(BuildContext context) {
-
-    context.read<PostDetailsCubit>().getPostDetails();
 
     return InfoWidget(builder: (context, info) {
       return SafeArea(
@@ -44,9 +43,10 @@ class _post_details_screenState extends State<post_details_screen> {
         body: BlocConsumer<PostDetailsCubit, PostDetailsState>(listener: (context, state) {
 
           print('state : $state');
+
         },
         builder: (context, state) {
-          final postDetails = context.read<PostDetailsCubit>();
+          print('builder state : $state');
           final userMainDetails = context.read<userMainDetailsCubit>();
           return SingleChildScrollView(
             child: Padding(
@@ -91,7 +91,7 @@ class _post_details_screenState extends State<post_details_screen> {
                           Column(
                             children: [
 
-                              state is PostDetailsLoading ?
+                              state is PostDetailsLoading || state is PostDetailsInitial?
                               customShimmer(
                                   childWidget: SizedBox(
                                     height: info.screenHeight * 0.053,
@@ -129,7 +129,7 @@ class _post_details_screenState extends State<post_details_screen> {
                                 children: [
                                    Expanded(
                                     child: Text(
-                                      postDetails.post.title.toString(),
+                                      context.read<PostDetailsCubit>().post.title.toString(),
                                       overflow: TextOverflow.ellipsis,
                                       softWrap: true,
                                       style: TextStyles.inter18BoldBlack.copyWith(fontSize: info.screenWidth * 0.044),
@@ -154,7 +154,7 @@ class _post_details_screenState extends State<post_details_screen> {
                                     )),
 
 
-                                  if(userMainDetails.state.userId== postDetails.post.createdBy!.id)
+                                  if(userMainDetails.state.userId== context.read<PostDetailsCubit>().post.createdBy!.id)
                                        IconButton(
                                     onPressed: () {
 
@@ -175,7 +175,7 @@ class _post_details_screenState extends State<post_details_screen> {
                                 height: info.localHeight * 0.015,
                               ),
 
-                              state is PostDetailsLoading ?
+                              state is PostDetailsLoading || state is PostDetailsInitial ?
                               customShimmer(
                                   childWidget: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -212,7 +212,7 @@ class _post_details_screenState extends State<post_details_screen> {
 
                               SizedBox(height: info.localHeight * 0.017),
 
-                              state is PostDetailsLoading ?
+                              state is PostDetailsLoading || state is PostDetailsInitial ?
                               customShimmer(
                                   childWidget: Column(
                                     spacing: info.screenHeight * 0.01,
@@ -240,7 +240,7 @@ class _post_details_screenState extends State<post_details_screen> {
                                   ) )
                               :
                               Text(
-                                postDetails.post.content ?? 'Empty Content !!!!',
+                                context.read<PostDetailsCubit>().post.content ?? 'Empty Content !!!!',
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.justify,
