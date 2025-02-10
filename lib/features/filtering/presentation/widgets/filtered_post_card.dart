@@ -175,10 +175,10 @@ class _FilteredPostCardState extends State<FilteredPostCard> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      PostDetailsCubit().setSelectedPost(widget.postId);
-                      context.pushNamed(
-                        Routes.postDetailsScreen,
-                      );
+                      // PostDetailsCubit().(widget.postId);
+                      // context.pushNamed(
+                      //   Routes.postDetailsScreen,
+                      // );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
