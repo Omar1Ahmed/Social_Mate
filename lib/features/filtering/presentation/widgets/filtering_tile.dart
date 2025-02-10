@@ -271,13 +271,16 @@ class _FilteringTileState extends State<FilteringTile> {
                         nextNode: sortedByNode,
                         controller: createdToController,
                         onTap: () {
-                          showToDatePicker(
-                            context: context,
-                            controller: createdToController,
-                            firstDate: firstDate,
-                            lastDate: lastDate,
-                            onDateSelected: _handleToDateSelected,
-                          );
+                          if (createdToNode.hasFocus) {
+                          } else {
+                            showToDatePicker(
+                              context: context,
+                              controller: createdToController,
+                              firstDate: firstDate,
+                              lastDate: lastDate,
+                              onDateSelected: _handleToDateSelected,
+                            );
+                          }
                         },
                         validator: (value) {
                           return validateDateRange(

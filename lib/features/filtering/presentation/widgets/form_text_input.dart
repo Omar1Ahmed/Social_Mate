@@ -9,16 +9,16 @@ class FormTextInput extends StatefulWidget {
   final TextEditingController controller;
   final VoidCallback? onTap;
   final String? Function(String?)? validator;
-  const FormTextInput(
-      {super.key,
-      required this.label,
-      required this.hintText,
-      required this.focusNode,
-      required this.nextNode,
-      required this.controller,
-      this.onTap,
-      this.validator,
-});
+  const FormTextInput({
+    super.key,
+    required this.label,
+    required this.hintText,
+    required this.focusNode,
+    required this.nextNode,
+    required this.controller,
+    this.onTap,
+    this.validator,
+  });
 
   @override
   State<FormTextInput> createState() => _FormTextInputState();

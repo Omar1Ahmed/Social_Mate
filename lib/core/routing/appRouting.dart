@@ -42,12 +42,17 @@ class AppRouts {
                   BlocProvider<SharingDataCubit>(
                     create: (context) => SharingDataCubit(),
                   ),
+                  BlocProvider<HomeCubit>(
+                      create: (context) => getIt<HomeCubit>()),
                   BlocProvider<FilteredUsersCubit>(
                     create: (context) => getIt<FilteredUsersCubit>(),
                   )
                 ], child: FilteringScreen()));
       case Routes.postDetailsScreen:
-        return MaterialPageRoute(builder: (context) => BlocProvider(create: (context) => PostDetailsCubit(), child: post_details_screen()));
+        return MaterialPageRoute(
+            builder: (context) => BlocProvider(
+                create: (context) => PostDetailsCubit(),
+                child: post_details_screen()));
       default:
         return null;
     }
