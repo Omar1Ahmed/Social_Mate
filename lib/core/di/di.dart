@@ -1,6 +1,5 @@
 // core/di/di.dart
 import 'package:get_it/get_it.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:social_media/core/di/diInstancesHelper.dart';
 import 'package:social_media/core/helper/SharedPref/sharedPrefHelper.dart';
 import 'package:social_media/core/userMainDetails/jwt_token_decode/data/repository/jwt_token_decode_repository_imp.dart';
@@ -13,7 +12,6 @@ import 'package:social_media/features/authentication/presentation/logic/auth_cub
 import 'package:social_media/features/filtering/could_be_shared/fake_end_points/real_end_points.dart';
 import 'package:social_media/features/filtering/could_be_shared/network_clients/dio_network_client.dart';
 import 'package:social_media/features/filtering/could_be_shared/network_clients/real_dio_client.dart';
-import 'package:social_media/features/filtering/could_be_shared/network_info/network_info.dart';
 import 'package:social_media/features/filtering/data/datasources/filtered_posts_remote_source.dart';
 import 'package:social_media/features/filtering/data/datasources/users_remote_data_source.dart';
 import 'package:social_media/features/filtering/data/repositories/filtered_post_repo_imp.dart';
@@ -22,9 +20,14 @@ import 'package:social_media/features/filtering/domain/repositories/filtered_pos
 import 'package:social_media/features/filtering/domain/repositories/filtered_users_repo.dart';
 import 'package:social_media/features/filtering/presentation/cubit/filtered_users/filtered_users_cubit.dart';
 import 'package:social_media/features/filtering/presentation/cubit/filtering_cubit.dart';
+import 'package:social_media/features/posts/data/data_source/postDetails/postDetails_remoteDataSource_impl.dart';
+import 'package:social_media/features/posts/data/repository/postDetails/postDetails_repository_impl.dart';
+import 'package:social_media/features/posts/domain/data_source/postDetails/postDetails_remoteDataSource.dart';
+import 'package:social_media/features/posts/domain/repository/postDetails/postDetails_repository.dart';
+import 'package:social_media/features/posts/presentation/postDetails/presentation/logic/post_details_cubit.dart';
 import '../../features/posts/data/data_source/post_remote_data_source_impl.dart';
 import '../../features/posts/data/repository/post_repository_impl.dart' as impl;
-import '../../features/posts/domain/repository/post_remote_data_source.dart';
+import '../../features/posts/domain/data_source/post_remote_data_source.dart';
 import '../../features/posts/domain/repository/post_repository.dart' as repo;
 import '../../features/posts/domain/repository/post_repository.dart';
 import '../../features/posts/presentation/homePage/logic/cubit/home_cubit_cubit.dart';
@@ -38,9 +41,9 @@ Future<void> initDependencies() async {
   // |------------------------------------------------------------------\
   
   // this is too important
-  getIt.registerSingletonAsync<InternetConnectionChecker>(
-    () async => InternetConnectionChecker.createInstance(checkTimeout: const Duration(milliseconds: 300), checkInterval: const Duration(milliseconds: 300)),
-  );
+  // getIt.registerSingletonAsync<InternetConnectionChecker>(
+  //   () async => InternetConnectionChecker.createInstance(checkTimeout: const Duration(milliseconds: 300), checkInterval: const Duration(milliseconds: 300)),
+  // );
 
   // shared Preferences
   final sharedPrefHelper = SharedPrefHelper();
@@ -48,9 +51,9 @@ Future<void> initDependencies() async {
   getIt.registerSingleton<SharedPrefHelper>(sharedPrefHelper);
 
   //Network info
-  getIt.registerLazySingleton<NetworkInfo>(
-    () => NetworkInfoConnection(connectionChecker: getIt()),
-  );
+  // getIt.registerLazySingleton<NetworkInfo>(
+  //   () => NetworkInfoConnection(connectionChecker: getIt()),
+  // );
 
   // getIt.registerLazySingleton(
   //     () => NetworkInfoConnection(connectionChecker: getIt()));
@@ -88,25 +91,22 @@ Future<void> initDependencies() async {
   // |-------------------------- Data Sources ------------------------------\
   // |------------------------------------------------------------------\
 
-  // getIt.registerFactory<PostRemoteDataSource>(
-  //       () => PostRemoteDataSourceImpl(dio: getIt<DioClient>(), userMainDetails: getIt<userMainDetailsCubit>()),
-  // );
+
+  //post data source
   getIt.registerFactory<PostRemoteDataSource>(
     () => PostRemoteDataSourceImpl(
         dio: getIt<DioClient>(instanceName: diInstancesHelper.PostsDioClient),
         userMainDetails: getIt<userMainDetailsCubit>()),
   );
 
-  // getIt.registerLazySingleton<NetworkInfo>(
-  //   () => NetworkInfoConnection(connectionChecker: getIt()),
-  // );
-  //getIt.registerLazySingleton(() => InternetConnectionChecker);
-  // getIt.registerLazySingleton(
-  //     () => NetworkInfoConnection(connectionChecker: getIt()));
-  // getIt.registerLazySingleton<FilteredPostsRemoteSource>(
-  //     () => FilteredPostsRemoteSourceImpl(
-  //           dioNetworkClient: getIt<DioNetworkClient>(),
-  //         ));
+  // Post Details data source
+  getIt.registerFactory<PostDetailsRemoteDataSource>(
+    () => PostDetailsRemoteDataSourceImpl(
+        dio: getIt<DioClient>(instanceName: diInstancesHelper.PostsDioClient),
+        userMainDetails: getIt<userMainDetailsCubit>()),
+  );
+
+
   getIt.registerLazySingleton<UserRemoteDataSource>(
       () => UserRemoteDataSourceImpl(
             dioNetworkClient: getIt<DioNetworkClient>(instanceName: 'user'),
@@ -116,10 +116,7 @@ Future<void> initDependencies() async {
             dioNetworkClient: getIt<DioNetworkClient>(instanceName: 'real'),
           ));
 
-  // getIt.registerLazySingleton<AuthenticationRemoteDataSource>(
-  //     () => AuthenticationRemoteDataSourceImp(
-  //           dioNetworkClient: DioNetworkClient(RealEndPoints.realUserBaseUrl),
-  //         ));
+
   getIt.registerLazySingleton<AuthenticationRemoteDataSource>(
       () => AuthenticationRemoteDataSourceImp(
             dioNetworkClient: getIt<DioClient>(
@@ -140,13 +137,19 @@ Future<void> initDependencies() async {
         remoteDataSource: getIt<PostRemoteDataSource>()),
   );
 
+  // post Details repository
+  getIt.registerFactory<PostDetailsRepository>(
+    () => PostDetailsRepositoryImpl(
+         postDetailsRemoteDataSource: getIt<PostDetailsRemoteDataSource>()),
+  );
+
   getIt.registerLazySingleton<AuthenticationRepository>(() =>
       AuthenticationRepositoryImp(
-          networkInfo: getIt(), logInRemoteDataSource: getIt()));
+           logInRemoteDataSource: getIt()));
   getIt.registerLazySingleton<FilteredPostRepo>(() => FilteredPostRepoImp(
-      networkInfo: getIt(), filteredPostsRemoteSource: getIt()));
+       filteredPostsRemoteSource: getIt()));
   getIt.registerLazySingleton<FilteredUsersRepo>(() => FilteredUsersRepoImpl(
-      networkInfo: getIt(), filteredUsersRemoteSource: getIt()));
+       filteredUsersRemoteSource: getIt()));
   // |------------------------------------------------------------------\
   // |-------------------------- Cubits ------------------------------\
   // |------------------------------------------------------------------\
@@ -166,6 +169,12 @@ Future<void> initDependencies() async {
   // home Cubit
   getIt.registerFactory<HomeCubit>(
     () => HomeCubit(getIt<repo.PostRepository>()),
+  );
+
+
+  // post Details Cubit
+  getIt.registerFactory<PostDetailsCubit>(
+    () => PostDetailsCubit(getIt<PostDetailsRepository>()),
   );
 
   // the auth Cubit is here 👇

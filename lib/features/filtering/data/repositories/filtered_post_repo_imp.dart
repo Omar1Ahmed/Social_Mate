@@ -7,10 +7,10 @@ import 'package:social_media/features/filtering/domain/repositories/filtered_pos
 
 class FilteredPostRepoImp implements FilteredPostRepo {
   final FilteredPostsRemoteSource filteredPostsRemoteSource;
-  final NetworkInfo networkInfo;
+  // final NetworkInfo networkInfo;
 
   FilteredPostRepoImp({
-    required this.networkInfo,
+    // required this.networkInfo,
     required this.filteredPostsRemoteSource,
   });
 
@@ -19,7 +19,7 @@ class FilteredPostRepoImp implements FilteredPostRepo {
     Map<String, dynamic>? queryParameters,
     required String token,
   }) async {
-    if (await networkInfo.isConnected) {
+    // if (await networkInfo.isConnected) {
       try {
         final postModels = await filteredPostsRemoteSource.getFilteredPosts(
           queryParameters: queryParameters,
@@ -44,9 +44,9 @@ class FilteredPostRepoImp implements FilteredPostRepo {
         print(e);
         throw Exception('Failed to fetch filtered posts: $e');
       }
-    } else {
-      throw Exception('No internet connection');
-    }
+    // } else {
+    //   throw Exception('No internet connection');
+    // }
   }
 
 

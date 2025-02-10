@@ -5,15 +5,17 @@ import 'package:social_media/features/filtering/domain/repositories/filtered_use
 
 class FilteredUsersRepoImpl implements FilteredUsersRepo {
   final UserRemoteDataSource filteredUsersRemoteSource;
-  final NetworkInfo networkInfo;
+  // final NetworkInfo networkInfo;
 
   FilteredUsersRepoImpl(
-      {required this.filteredUsersRemoteSource, required this.networkInfo});
+      {required this.filteredUsersRemoteSource,
+        // required this.networkInfo
+      });
   @override
   Future<List<UserModel>> getFilteredUsers(
       {required Map<String, dynamic> queryParameters,
       required String token}) async {
-    if (await networkInfo.isConnected) {
+    // if (await networkInfo.isConnected) {
       try {
         final userModels = await filteredUsersRemoteSource.getFilteredUsers(
             queryParameters: queryParameters, token: token);
@@ -26,8 +28,8 @@ class FilteredUsersRepoImpl implements FilteredUsersRepo {
       } catch (e) {
         throw Exception('Failed to fetch filtered users: $e');
       }
-    } else {
-      throw Exception('No internet connection');
-    }
+    // } else {
+    //   throw Exception('No internet connection');
+    // }
   }
 }

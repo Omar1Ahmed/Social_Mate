@@ -5,23 +5,31 @@ import 'package:social_media/core/error/dio_exception_handler.dart';
 import 'ApiCalls.dart';
 
 class DioClient implements ApiCalls {
-  final Dio dio;
+  late final Dio dio;
   String baseUrl;
 
-  DioClient({required this.baseUrl}) : dio = Dio(BaseOptions(
+  DioClient({required this.baseUrl}) {
+
+    dio = Dio(BaseOptions(
     baseUrl: baseUrl,
     connectTimeout: const Duration(seconds: 30),
     receiveTimeout: const Duration(seconds: 30),
-  ));
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    ));
 
-  // dio.interceptors.add(LogInterceptor(
-  // request: true,
-  // error: true,
-  // requestBody: true,
-  // requestHeader: true,
-  // responseBody: true,
-  // responseHeader: true,
-  // ));
+    dio.interceptors.add(LogInterceptor(
+    request: true,
+    error: true,
+    requestBody: true,
+    requestHeader: true,
+    responseBody: true,
+    responseHeader: true,
+    ));
+  }
+
+
 
   @override
   Future<Map<String, dynamic>> get(String url, {Map<String, dynamic>? header}) async {

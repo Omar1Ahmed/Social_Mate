@@ -47,7 +47,7 @@ class AppRouts {
                   )
                 ], child: FilteringScreen()));
       case Routes.postDetailsScreen:
-        return MaterialPageRoute(builder: (context) => BlocProvider(create: (context) => PostDetailsCubit(), child: post_details_screen()));
+        return MaterialPageRoute(builder: (context) => BlocProvider(create: (context) => getIt<PostDetailsCubit>(), child: post_details_screen()));
       default:
         return null;
     }

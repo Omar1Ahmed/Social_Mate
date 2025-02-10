@@ -105,7 +105,9 @@ class _PostCardWidgetState extends State<PostCardWidget> with SingleTickerProvid
         opacity: _animationController,
         child: InkWell(
           onTap: () {
-            PostDetailsCubit().setSelectedPost(widget.post.id);
+
+            PostDetailsCubit.setSelectedPost(widget.post.id);
+
             context.pushNamed(
               Routes.postDetailsScreen,
             );
