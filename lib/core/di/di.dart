@@ -95,7 +95,7 @@ Future<void> initDependencies() async {
         dioNetworkClient: getIt<DioNetworkClient>(instanceName: 'user'),
       ));
   getIt.registerLazySingleton<FilteredPostsRemoteSource>(() => FilteredPostsRemoteSourceImpl(
-        dioNetworkClient: getIt<DioNetworkClient>(instanceName: 'real'),
+        dioNetworkClient: getIt<DioClient>(instanceName: diInstancesHelper.PostsDioClient),
       ));
 
   // getIt.registerLazySingleton<AuthenticationRemoteDataSource>(

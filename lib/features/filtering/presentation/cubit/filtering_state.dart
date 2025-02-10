@@ -7,14 +7,14 @@ class FilteringInitial extends FilteringState {}
 class FilteredPostsIsLoading extends FilteringState {}
 
 class FilteredPostsIsLoaded extends FilteringState {
-  final List<FilteringPostEntity> filteredPosts;
+  final List<PostEntity> filteredPosts;
   final bool hasMore;
 
   FilteredPostsIsLoaded(this.filteredPosts, this.hasMore);
 
   // Add a copyWith method for partial updates
   FilteredPostsIsLoaded copyWith({
-    List<FilteringPostEntity>? filteredPosts,
+    List<PostEntity>? filteredPosts,
     bool? hasMore,
   }) {
     return FilteredPostsIsLoaded(
@@ -25,7 +25,7 @@ class FilteredPostsIsLoaded extends FilteringState {
 }
 
 class FilteredPostsIsEmpty extends FilteringState {
-  final List<FilteringPostEntity> filteredPosts;
+  final List<PostEntity> filteredPosts;
   FilteredPostsIsEmpty(this.filteredPosts);
 }
 
@@ -35,6 +35,6 @@ class FilteredPostsHasError extends FilteringState {
 }
 
 class FilteredPostsIsLoadingMore extends FilteringState {
-  final List<FilteringPostEntity> filteredPosts;
+  final List<PostEntity> filteredPosts;
   FilteredPostsIsLoadingMore(this.filteredPosts);
 }

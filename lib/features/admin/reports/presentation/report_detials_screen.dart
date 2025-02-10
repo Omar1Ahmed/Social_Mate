@@ -179,30 +179,30 @@ class _ReportDetialsScreen extends State<ReportDetialsScreen> {
                   child: ListView(
                     padding: EdgeInsetsDirectional.only(bottom: info.screenHeight * 0.07),
                     children: [
-                      CommentCard(
-                        info: info,
-                      ),
-                      CommentCard(
-                        info: info,
-                      ),
-                      CommentCard(
-                        info: info,
-                      ),
-                      CommentCard(
-                        info: info,
-                      ),
-                      CommentCard(
-                        info: info,
-                      ),
-                      CommentCard(
-                        info: info,
-                      ),
-                      CommentCard(
-                        info: info,
-                      ),
-                      CommentCard(
-                        info: info,
-                      ),
+                      // CommentCard(
+                      //   info: info,
+                      // ),
+                      // CommentCard(
+                      //   info: info,
+                      // ),
+                      // CommentCard(
+                      //   info: info,
+                      // ),
+                      // CommentCard(
+                      //   info: info,
+                      // ),
+                      // CommentCard(
+                      //   info: info,
+                      // ),
+                      // CommentCard(
+                      //   info: info,
+                      // ),
+                      // CommentCard(
+                      //   info: info,
+                      // ),
+                      // CommentCard(
+                      //   info: info,
+                      // ),
                     ],
                   ),
                 )

@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
+import 'package:social_media/core/entities/post_entity.dart';
 import 'package:social_media/core/theming/colors.dart';
 import 'package:social_media/core/theming/styles.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
-import 'package:social_media/features/filtering/domain/entities/filtering_post_entity.dart';
+//import 'package:social_media/features/filtering/domain/entities/filtering_post_entity.dart';
 import 'package:social_media/features/filtering/presentation/cubit/filtered_users/filtered_users_cubit.dart';
 import 'package:social_media/features/filtering/presentation/cubit/filtering_cubit.dart';
 import 'package:social_media/features/filtering/presentation/cubit/sharing_data/sharing_data_cubit.dart';
-import 'package:social_media/features/filtering/presentation/widgets/filtered_post_card.dart';
+//import 'package:social_media/features/filtering/presentation/widgets/filtered_post_card.dart';
 import 'package:social_media/features/filtering/presentation/widgets/filtering_tile.dart';
-import 'package:social_media/features/posts/presentation/homePage/logic/cubit/home_cubit_cubit.dart';
+//import 'package:social_media/features/posts/presentation/homePage/logic/cubit/home_cubit_cubit.dart';
+import 'package:social_media/features/posts/presentation/homePage/ui/widgets/post_card_widget.dart';
 
 class FilteringScreen extends StatefulWidget {
   const FilteringScreen({super.key});
@@ -21,7 +23,8 @@ class FilteringScreen extends StatefulWidget {
 
 class _FilteringScreenState extends State<FilteringScreen> {
   Map<String, dynamic> queryParameters = {};
-  List<FilteringPostEntity> posts = [];
+  //List<FilteringPostEntity> posts = [];
+  List<PostEntity> posts = [];
   final ScrollController scrollController = ScrollController();
   //double scrollPosition = 0;
   @override
@@ -104,12 +107,12 @@ class _FilteringScreenState extends State<FilteringScreen> {
                             'this is the filtered ${posts.length.toString()}');
                         return Column(
                           children: [
-                            Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8),
-                              child: Text(
-                                'Posts Filtered : ${state.filteredPosts[0].total.toString()}',
-                              ),
-                            ),
+                            // Padding(
+                            //   padding: EdgeInsets.symmetric(vertical: 8),
+                            //   child: Text(
+                            //     'Posts Filtered : ${state.filteredPosts.[0]}',
+                            //   ),
+                            // ),
                             ListView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
@@ -122,23 +125,24 @@ class _FilteringScreenState extends State<FilteringScreen> {
                                 }
                                 return Column(
                                   children: [
-                                    FilteredPostCard(
-                                      filteringCubit:
-                                          context.read<FilteringCubit>(),
-                                      homeCubit: context.read<HomeCubit>(),
-                                      postId: posts[index].id,
-                                      postOwnerId: posts[index].userId,
-                                      title: posts[index].title,
-                                      postOwner: posts[index].createdBy,
-                                      date: posts[index].createdOn.toString(),
-                                      content: posts[index].content,
-                                      onPostDeleted: (deletedPostId) {
-                                        setState(() {
-                                          posts.removeWhere((post) =>
-                                              post.id == deletedPostId);
-                                        });
-                                      },
-                                    ),
+                                    // FilteredPostCard(
+                                    //   filteringCubit:
+                                    //       context.read<FilteringCubit>(),
+                                    //   homeCubit: context.read<HomeCubit>(),
+                                    //   postId: posts[index].id,
+                                    //   postOwnerId: posts[index].createdBy.id,
+                                    //   title: posts[index].title,
+                                    //   postOwner: posts[index].createdBy.fullName,
+                                    //   date: posts[index].createdOn.toString(),
+                                    //   content: posts[index].content,
+                                    //   onPostDeleted: (deletedPostId) {
+                                    //     setState(() {
+                                    //       posts.removeWhere((post) =>
+                                    //           post.id == deletedPostId);
+                                    //     });
+                                    //   },
+                                    // ),
+                                    PostCardWidget(deviceInfo: deviceInfo, idNotMatch: true, post: posts[index]),
                                     SizedBox(
                                       height: 16,
                                     )
