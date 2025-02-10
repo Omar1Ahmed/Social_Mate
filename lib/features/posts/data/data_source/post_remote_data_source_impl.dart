@@ -45,7 +45,7 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
     try {
       await dio.post(
         "$baseUrl/posts",
-        postData,
+        body: postData,
         header: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ${userMainDetails.state.token ?? token}',

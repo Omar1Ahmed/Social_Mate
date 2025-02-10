@@ -35,6 +35,7 @@ class _SlideTransitionWidgetState extends State<SlideTransitionWidget> with Tick
   @override
   void dispose() {
     _animationController.dispose();
+
     super.dispose();
   }
 

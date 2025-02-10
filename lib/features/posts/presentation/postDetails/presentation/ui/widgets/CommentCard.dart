@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/Responsive/Models/device_info.dart';
+import 'package:social_media/core/di/di.dart';
+import 'package:social_media/core/helper/extantions.dart';
+import 'package:social_media/core/routing/routs.dart';
+import 'package:social_media/core/shared/show_delete_dialog_widget.dart';
 import 'package:social_media/core/theming/colors.dart';
 import 'package:social_media/core/theming/styles.dart';
+import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
+import 'package:social_media/features/posts/data/model/entities/commentEntity.dart';
+import 'package:social_media/features/posts/presentation/homePage/logic/cubit/home_cubit_cubit.dart';
+import 'package:social_media/features/posts/presentation/postDetails/presentation/logic/post_details_cubit.dart';
 
 class CommentCard extends StatelessWidget {
   DeviceInfo info;
-
-  CommentCard({required this.info,super.key});
+  CommentEntity comment;
+  CommentCard({required this.info,required this.comment, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -54,12 +63,12 @@ class CommentCard extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Omar',
+                                comment.createdBy.fullName,
                                 style: TextStyles.inter18BoldBlack.copyWith(fontSize: info.screenWidth * 0.035,color: ColorsManager.blackColor, fontWeight: FontWeight.w800),
                               ),
 
                               Text(
-                                '2025-01-01 10:00 AM',
+                                comment.FormattedDate,
                                 style: TextStyles.inter18Regularblack.copyWith(fontSize: info.screenWidth * 0.035,color: ColorsManager.greyColor, fontWeight: FontWeight.w400),
                               ),
 
@@ -67,14 +76,17 @@ class CommentCard extends StatelessWidget {
                           ),
                         ),
                         Spacer(),
-                        if(true)
+                        if(comment.createdBy.id == context.read<userMainDetailsCubit>().state.userId)
                           IconButton(
                             onPressed: () {
-                              final postId = 1;
-                              if (postId == 0) {
-                                return;
-                              }
-                              // _showDeleteConfirmationDialog(context, postId);
+
+                              showDialog(context: context, builder: (context1) => ShowDeleteDialogWidget(deviceInfo: info,onPressed: (){
+                                print('pressed');
+                                context.read<PostDetailsCubit>().deleteComment(comment.id);
+                                Navigator.pop(context);
+
+                                context.pushReplacementNamed(Routes.postDetailsScreen);
+                              }));
 
                             },
                             icon: Icon(
@@ -90,7 +102,7 @@ class CommentCard extends StatelessWidget {
                       width: double.infinity,
                       padding: EdgeInsetsDirectional.only(start: info.screenWidth * 0.03,bottom: info.screenHeight * 0.013),
                       child: Text(
-                        'kajsdnflksmflasdjnf',
+                        comment.content,
                         textAlign: TextAlign.start,
                         softWrap: true,
                         style: TextStyles.inter18RegularWithOpacity.copyWith(fontSize: info.screenWidth * 0.04),
@@ -104,13 +116,17 @@ class CommentCard extends StatelessWidget {
                 margin: EdgeInsetsDirectional.only(start: info.screenWidth * 0.03),
                 child: Row(
                   children: [
-                    Text('0',style: TextStyles.inter18RegularWithOpacity.copyWith(fontSize: info.screenWidth * 0.04,)),
+                    Text(comment.numOfLikes.toString(),style: TextStyles.inter18RegularWithOpacity.copyWith(fontSize: info.screenWidth * 0.04,)),
 
-                    IconButton(onPressed: (){}, icon: Icon(Icons.thumb_up_alt_outlined, color: ColorsManager.primaryColor, size: info.screenWidth * 0.06,)),
-                    Text('0',style: TextStyles.inter18RegularWithOpacity.copyWith(fontSize: info.screenWidth * 0.04,)),
-                    IconButton(onPressed: (){}, icon: Icon(Icons.thumb_down_alt_outlined, color: ColorsManager.redColor, size: info.screenWidth * 0.06,)),
-                    Spacer(),
-                    IconButton(onPressed: (){}, icon: Icon(Icons.flag, color: ColorsManager.redColor, size: info.screenWidth * 0.06,)),
+                    IconButton(onPressed: (){
+                      context.read<PostDetailsCubit>().giveReaction(commentId: comment.id, reactionType: ReactionType.LIKE);
+                    }, icon: Icon(context.read<PostDetailsCubit>().selectedReactionType == ReactionType.LIKE ? Icons.thumb_up_alt_rounded : Icons.thumb_up_alt_outlined, color: ColorsManager.primaryColor, size: info.screenWidth * 0.06,)),
+                    Text(comment.numOfDisLikes.toString(),style: TextStyles.inter18RegularWithOpacity.copyWith(fontSize: info.screenWidth * 0.04,)),
+
+                    IconButton(onPressed: (){
+                      context.read<PostDetailsCubit>().giveReaction(commentId: comment.id, reactionType: ReactionType.DIS_LIKE);
+
+                    }, icon: Icon(context.read<PostDetailsCubit>().selectedReactionType == ReactionType.DIS_LIKE? Icons.thumb_down_alt_rounded :Icons.thumb_down_alt_outlined, color: ColorsManager.redColor, size: info.screenWidth * 0.06,)),
                   ],
                 ),
               )

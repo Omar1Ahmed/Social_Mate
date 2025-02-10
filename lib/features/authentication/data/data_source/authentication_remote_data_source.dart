@@ -14,7 +14,7 @@ class AuthenticationRemoteDataSourceImp implements AuthenticationRemoteDataSourc
       print('url : ${dioNetworkClient.baseUrl}');
       final response = await dioNetworkClient.post(
         'auth/login',
-        {'username': email, 'password': password},
+        body: {'username': email, 'password': password},
       );
       if (response.containsKey('token')) {
         final token = response['token'] as String;
@@ -40,7 +40,7 @@ class AuthenticationRemoteDataSourceImp implements AuthenticationRemoteDataSourc
 
     final response = await dioNetworkClient.post(
       'auth/register',
-      {
+      body: {
         "firstName": firstName,
         "lastName": lastName,
         "mobileNumber": phone,

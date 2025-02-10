@@ -1,0 +1,23 @@
+import 'package:social_media/core/entities/post_entity.dart';
+import 'package:social_media/features/posts/data/model/post_response.dart';
+
+class CommentEntity {
+  final int id;
+  final String content;
+  final UserEntity createdBy;
+  final DateTime createdOn;
+  final String FormattedDate;
+  final int numOfLikes;
+  final int numOfDisLikes;
+
+  CommentEntity({
+    required this.id,
+    required this.content,
+    required this.createdBy,
+    required this.createdOn,
+    required this.FormattedDate,
+    required this.numOfLikes,
+    required this.numOfDisLikes
+  });
+}
+

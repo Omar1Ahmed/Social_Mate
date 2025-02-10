@@ -41,6 +41,7 @@ class DioClient implements ApiCalls {
           headers: header,
         ),
       );
+
       return _validateResponseData(response.data);
     } on DioException catch (e) {
       throw DioExceptionHandler.handleError(e);
@@ -48,7 +49,7 @@ class DioClient implements ApiCalls {
   }
 
   @override
-  Future<Map<String, dynamic>> post(String url, Map<String, dynamic>? body, {Map<String, dynamic>? header}) async {
+  Future<Map<String, dynamic>> post(String url, {Map<String, dynamic>? body, Map<String, dynamic>? header}) async {
     try {
       final response = await dio.post(
         url,
@@ -61,6 +62,9 @@ class DioClient implements ApiCalls {
 
       if(response.statusCode == 201)
         return {'statusCode': 201};
+
+      if(response.statusCode == 204)
+        return {'statusCode': 204};
 
       return _validateResponseData(response.data);
     } on DioException catch (e) {
@@ -75,15 +79,18 @@ class DioClient implements ApiCalls {
   }
 
   @override
-  Future<Map<String, dynamic>> put(String url, Map<String, dynamic>? body, {Map<String, dynamic>? queryParameters}) async {
+  Future<Map<String, dynamic>> put(String url, Map<String, dynamic>? body, {Map<String, dynamic>? header}) async {
     try {
       final response = await dio.put(
         url,
         data: body,
         options: Options(
-          headers: queryParameters,
+          headers: header,
         ),
       );
+      if(response.statusCode == 204)
+        return {'statusCode': 204};
+
       return _validateResponseData(response.data);
     } on DioException catch (e) {
       throw DioExceptionHandler.handleError(e);
@@ -100,6 +107,10 @@ class DioClient implements ApiCalls {
           method: 'DELETE',
         ),
       );
+
+      if(response.statusCode == 204)
+        return {'statusCode': 204};
+
       return _validateResponseData(response.data);
     } on DioException catch (e) {
       throw DioExceptionHandler.handleError(e);
@@ -107,6 +118,7 @@ class DioClient implements ApiCalls {
   }
 
   Map<String, dynamic> _validateResponseData(dynamic data) {
+
     if (data is Map<String, dynamic>) {
       return data;
     } else if (data == null) {
