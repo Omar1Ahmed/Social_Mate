@@ -28,7 +28,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent, // Transparent to show SafeArea effect
-      statusBarIconBrightness: Brightness.dark, // Use Brightness.light for white icons
+      statusBarIconBrightness:
+          Brightness.dark, // Use Brightness.light for white icons
     ));
     return MultiBlocProvider(
       providers: [
@@ -46,7 +47,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        initialRoute: Routes.adminReportScreen,
+        initialRoute: Routes.splashScreen,
         onGenerateRoute: appRouter.generateRoute,
       ),
     );

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
 import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/helper/extantions.dart';
-import 'package:social_media/core/routing/routs.dart';
+//import 'package:social_media/core/routing/routs.dart';
 import 'package:social_media/core/shared/show_delete_dialog_widget.dart';
 import 'package:social_media/core/theming/colors.dart';
 import 'package:social_media/core/theming/styles.dart';
@@ -14,7 +14,7 @@ import 'package:social_media/features/filtering/presentation/cubit/filtering_cub
 import 'package:social_media/features/filtering/presentation/cubit/sharing_data/sharing_data_cubit.dart';
 import 'package:social_media/features/filtering/presentation/widgets/report_dialog_marwan.dart';
 import 'package:social_media/features/posts/presentation/homePage/logic/cubit/home_cubit_cubit.dart';
-import 'package:social_media/features/posts/presentation/postDetails/presentation/logic/post_details_cubit.dart';
+//import 'package:social_media/features/posts/presentation/postDetails/presentation/logic/post_details_cubit.dart';
 
 class FilteredPostCard extends StatefulWidget {
   final FilteringCubit filteringCubit;

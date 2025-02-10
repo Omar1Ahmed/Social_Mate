@@ -8,5 +8,5 @@ class Routes {
   static const String filteringScreen = '/homeScreen/filteringScreen';
   static const String postDetailsScreen = '/postDetailsScreen';
   static const String profileScreen = '/profileScreen';
-  static const String adminReportScreen = '/adminReportScreen';
+  //static const String adminReportScreen = '/adminReportScreen';
 }

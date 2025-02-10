@@ -1,6 +1,7 @@
 // i think we need to declare customized exceptions ??
 
 import 'package:social_media/core/entities/post_entity.dart';
+import 'package:social_media/core/helper/Connectivity/connectivity_helper.dart';
 //import 'package:social_media/features/filtering/could_be_shared/network_info/network_info.dart';
 import 'package:social_media/features/filtering/data/datasources/filtered_posts_remote_source.dart';
 //import 'package:social_media/features/filtering/domain/entities/filtering_post_entity.dart';
@@ -20,33 +21,31 @@ class FilteredPostRepoImp implements FilteredPostRepo {
     Map<String, dynamic>? queryParameters,
     required String token,
   }) async {
-    //if (await networkInfo.isConnected) {
-    try {
-      final postModels = await filteredPostsRemoteSource.getFilteredPosts(
-        queryParameters: queryParameters,
-        token: token,
-      );
+    if (await ConnectivityHelper.isConnected()) {
+      try {
+        final postModels = await filteredPostsRemoteSource.getFilteredPosts(
+          queryParameters: queryParameters,
+          token: token,
+        );
 
-      
-      // if (postModels.isEmpty) {
-      //   print("PostModel data is empty");
-      //   return []; 
-      // }
+        // if (postModels.isEmpty) {
+        //   print("PostModel data is empty");
+        //   return [];
+        // }
 
-      
-      // final postEntities = postModels
-      //     .map((postModel) => postModel.toEntityList())
-      //     .expand((element) => element) 
-      //     .toList();
+        // final postEntities = postModels
+        //     .map((postModel) => postModel.toEntityList())
+        //     .expand((element) => element)
+        //     .toList();
 
-      // print("Filtered Posts: ${postEntities.length} items"); // Debug log
-      return postModels.toEntities();
-    } catch (e) {
-      print(e);
-      throw Exception('Failed to fetch filtered posts: $e');
+        // print("Filtered Posts: ${postEntities.length} items"); // Debug log
+        return postModels.toEntities();
+      } catch (e) {
+        print(e);
+        throw Exception('Failed to fetch filtered posts: $e');
+      }
+    } else {
+      throw Exception('No internet connection');
     }
-    // } else {
-    //   throw Exception('No internet connection');
-    // }
   }
 }

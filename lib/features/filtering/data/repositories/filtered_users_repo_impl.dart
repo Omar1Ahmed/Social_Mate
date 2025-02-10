@@ -1,4 +1,5 @@
-import 'package:social_media/features/filtering/could_be_shared/network_info/network_info.dart';
+//import 'package:social_media/features/filtering/could_be_shared/network_info/network_info.dart';
+import 'package:social_media/core/helper/Connectivity/connectivity_helper.dart';
 import 'package:social_media/features/filtering/data/datasources/users_remote_data_source.dart';
 import 'package:social_media/features/filtering/data/models/filtered_user_model.dart';
 import 'package:social_media/features/filtering/domain/repositories/filtered_users_repo.dart';
@@ -15,7 +16,7 @@ class FilteredUsersRepoImpl implements FilteredUsersRepo {
   Future<List<UserModel>> getFilteredUsers(
       {required Map<String, dynamic> queryParameters,
       required String token}) async {
-    //if (await networkInfo.isConnected) {
+    if (await ConnectivityHelper.isConnected()) {
     try {
       final userModels = await filteredUsersRemoteSource.getFilteredUsers(
           queryParameters: queryParameters, token: token);
@@ -28,8 +29,8 @@ class FilteredUsersRepoImpl implements FilteredUsersRepo {
     } catch (e) {
       throw Exception('Failed to fetch filtered users: $e');
     }
-    // } else {
-    //   throw Exception('No internet connection');
-    // }
+    } else {
+      throw Exception('No internet connection');
+    }
   }
 }
