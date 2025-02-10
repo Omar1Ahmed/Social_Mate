@@ -98,7 +98,10 @@ class _PostOwnerDialogState extends State<PostOwnerDialog> {
                                     state.filteredUsers[index].id.toString();
                                 selectedPostOwnerName =
                                     state.filteredUsers[index].fullName;
-
+                                if (mounted) {
+                                  widget.dialogController.text =
+                                      selectedPostOwnerName!;
+                                }
                                 // Update the dialog and parent text fields
                                 widget.dialogController.text =
                                     selectedPostOwnerName!;
@@ -109,8 +112,8 @@ class _PostOwnerDialogState extends State<PostOwnerDialog> {
                                 widget
                                     .onPostOwnerSelected(selectedPostOwnerId!);
 
-                                // Close the dialog
-                                Navigator.pop(context);
+                                // Close the dialog and clear the dialog controller reference
+                                Navigator.pop(context, selectedPostOwnerId);
                               },
                             );
                           },

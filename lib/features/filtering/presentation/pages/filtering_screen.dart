@@ -1,11 +1,13 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottie/lottie.dart';
+
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
 import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/entities/post_entity.dart';
 import 'package:social_media/core/helper/Connectivity/connectivity_helper.dart';
+import 'package:social_media/core/helper/extantions.dart';
+import 'package:social_media/core/shared/widgets/post_card_widget.dart';
 import 'package:social_media/core/theming/colors.dart';
 import 'package:social_media/core/theming/styles.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
@@ -15,8 +17,9 @@ import 'package:social_media/features/filtering/presentation/cubit/filtering_cub
 import 'package:social_media/features/filtering/presentation/cubit/sharing_data/sharing_data_cubit.dart';
 //import 'package:social_media/features/filtering/presentation/widgets/filtered_post_card.dart';
 import 'package:social_media/features/filtering/presentation/widgets/filtering_tile.dart';
+import 'package:social_media/features/posts/presentation/homePage/logic/cubit/home_cubit_cubit.dart';
 //import 'package:social_media/features/posts/presentation/homePage/logic/cubit/home_cubit_cubit.dart';
-import 'package:social_media/features/posts/presentation/homePage/ui/widgets/post_card_widget.dart';
+//import 'package:social_media/features/posts/presentation/homePage/ui/widgets/post_card_widget.dart';
 
 class FilteringScreen extends StatefulWidget {
   const FilteringScreen({super.key});
@@ -55,6 +58,19 @@ class _FilteringScreenState extends State<FilteringScreen> {
           .loadMoreFilteredPosts(queryParameters: queryParams, token: token!);
     }
     print('queryParameters after pagination : $queryParameters');
+  }
+
+  void _deletePost(BuildContext context, int postId, String token,
+      Map<String, dynamic> params) {
+    context.read<HomeCubit>().deletePost(postId);
+    context
+        .read<FilteringCubit>()
+        .getFilteredPosts(token: token, queryParameters: params);
+    // }).catchError((error) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(content: Text("Failed to delete post")),
+    //   );
+    // });
   }
 
   @override
@@ -149,9 +165,31 @@ class _FilteringScreenState extends State<FilteringScreen> {
                                       return Column(
                                         children: [
                                           PostCardWidget(
-                                              deviceInfo: deviceInfo,
-                                              idNotMatch: isNotMatch,
-                                              post: posts[index]),
+                                            deviceInfo: deviceInfo,
+                                            idNotMatch: isNotMatch,
+                                            post: posts[index],
+                                            onPressedDelete: () {
+                                              _deletePost(
+                                                  context,
+                                                  posts[index].createdBy.id,
+                                                  context
+                                                      .read<
+                                                          userMainDetailsCubit>()
+                                                      .state
+                                                      .token!,
+                                                  context
+                                                      .read<SharingDataCubit>()
+                                                      .state
+                                                      .queryParams);
+                                              setState(() {
+                                                posts.removeWhere((post) =>
+                                                    post.id ==
+                                                    posts[index].createdBy.id);
+                                              });
+                                              FocusScope.of(context).unfocus();
+                                              context.pop();
+                                            },
+                                          ),
                                           SizedBox(height: 16),
                                         ],
                                       );

@@ -56,7 +56,6 @@ class _FilteringTileState extends State<FilteringTile> {
   @override
   void dispose() {
     titleController.dispose();
-    postOwnerController.dispose();
     createdFromController.dispose();
     createdToController.dispose();
     sortedByItemController.dispose();
@@ -66,6 +65,7 @@ class _FilteringTileState extends State<FilteringTile> {
     createdToNode.dispose();
     sortedByNode.dispose();
     noNode.dispose();
+    postOwnerController.dispose();
     super.dispose();
   }
 
