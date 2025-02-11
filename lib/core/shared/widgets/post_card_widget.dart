@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/helper/extantions.dart';
 import 'package:social_media/core/shared/widgets/show_report_post_dialog_widget.dart';
@@ -6,6 +7,7 @@ import 'package:social_media/features/posts/presentation/postDetails/presentatio
 import '../../Responsive/Models/device_info.dart';
 import '../entities/post_entity.dart';
 import '../../routing/routs.dart';
+import '../model/create_report_model.dart';
 import 'show_delete_dialog_widget.dart';
 import 'animation/slide_Transition__widget.dart';
 import '../../theming/colors.dart';
@@ -106,16 +108,26 @@ class _PostCardWidgetState extends State<PostCardWidget> with SingleTickerProvid
                       ),
                     ),
                     IconButton(
-                      onPressed: () {
+                      onPressed: () async {
                         // Handle report action
                         // getIt.get<HomeCubit>().reportPost(widget.post.id);
                         showDialog(
                           context: context,
-                          builder: (context) => ShowReportPostDialogWidget(
-                            deviceInfo: widget.deviceInfo,
-                            onPressedReport: () {
-                              // getIt.get<HomeCubit>().reportPost(widget.post.id);
-                            },
+                          builder: (context) => BlocProvider(
+                            create: (context) => getIt<HomeCubit>()..reportCategories(),
+                            child: ShowReportPostDialogWidget(
+                              deviceInfo: widget.deviceInfo,
+                              onPressedReport: (categoryId, reason) {
+                                context.pop();
+                                getIt.get<HomeCubit>().reportPost(
+                                      widget.post.id,
+                                      CreateReportModel(
+                                        categoryId: categoryId,
+                                        reason: '$reason',
+                                      ),
+                                    );
+                              },
+                            ),
                           ),
                         );
                       },

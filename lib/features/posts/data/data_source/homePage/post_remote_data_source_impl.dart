@@ -67,26 +67,32 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
 
   @override
   Future<void> reportPost(int postId, CreateReportModel createReportModel) async {
-    await dio.post("$reportBaseUrl/$postId/reports",
+    createReportModel = CreateReportModel(categoryId: 1, reason: "spam as;ojnasl;vasvas");
+    try {
+      await dio.post(
+        "$reportBaseUrl/$postId/reports",
         header: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${userMainDetails.state.token ?? token}'
+          'Authorization': 'Bearer $token'
         },
-        body: createReportModel.toJson());
+        body: createReportModel.toJson(),
+      );
+    } catch (e) {
+      throw Exception("Error reporting post: ${e.toString()}");
+    }
   }
 
   @override
-  Future<Category> getCategories() async {
+  Future<List<Category>> getCategories() async {
     try {
       final response = await dio.get(
         "$reportBaseUrl/lookups/categories/report/post",
         header: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${userMainDetails.state.token ?? token}'
+          'Authorization': 'Bearer $token'
         },
       );
-      print("categories $response");
-      return Category.fromJson(response);
+      return (response['data'] as List).map((e) => Category.fromJson(e)).toList();
     } catch (e) {
       throw Exception("Error fetching categories: ${e.toString()}");
     }

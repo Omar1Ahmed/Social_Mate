@@ -2,10 +2,11 @@
 import 'package:bloc/bloc.dart';
 
 import 'package:equatable/equatable.dart';
+import 'package:social_media/features/admin/data/models/main_report_model.dart';
 import '../../../../../../core/shared/entities/post_entity.dart';
+import '../../../../../../core/shared/model/create_report_model.dart';
 import '../../../../../../core/shared/model/post_response.dart';
 import '../../../../domain/repository/post_repository.dart';
-
 part 'home_cubit_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
@@ -93,15 +94,28 @@ class HomeCubit extends Cubit<HomeState> {
       emit(PostDeletedLoading());
       await postRepository.deletePost(postId);
       emit(PostDeleted());
-      await onRefresh(); // Refreshes the screen after deleting a post
     } catch (e) {
       emit(PostDeleteFailed(e.toString()));
     }
   }
 
-  Future<void> reportPost(int postId, CreateReportModel) async {
+  Future<void> reportPost(int postId, CreateReportModel createReportModel) async {
     try {
-      //Todo
-    } catch (e) {}
+      await postRepository.reportPost(postId, createReportModel);
+      emit(PostReported());
+    } catch (e) {
+      emit(PostReportedFailed(e.toString()));
+    }
+  }
+
+  Future<void> reportCategories() async {
+    try {
+      emit(PostReportedLoading());
+      final reportCategories = await postRepository.getCategories();
+      print("reportCategories$reportCategories");
+      emit(LoadedReportCategories(reportCategories));
+    } catch (e) {
+      emit(PostReportedFailed(e.toString()));
+    }
   }
 }

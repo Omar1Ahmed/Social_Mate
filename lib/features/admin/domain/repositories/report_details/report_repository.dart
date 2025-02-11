@@ -2,7 +2,7 @@
 
 import '../../../data/models/report_details/report_models.dart';
 
-abstract class ReportRepository {
-  Future<ReportResponse> getReportDetails();
-  Future<List<RelatedReport>> getRelatedReports();
+abstract class ReportDetailsRepository {
+  Future<ReportResponse> getReportDetails(int reportId);
+  Future<List<RelatedReport>> getRelatedReports(int reportId);
 }
