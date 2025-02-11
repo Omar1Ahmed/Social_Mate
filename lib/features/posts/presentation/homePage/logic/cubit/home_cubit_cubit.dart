@@ -1,8 +1,9 @@
+// ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
 
 import 'package:equatable/equatable.dart';
-import '../../../../../../core/entities/post_entity.dart';
-import '../../../../data/model/post_response.dart';
+import '../../../../../../core/shared/entities/post_entity.dart';
+import '../../../../../../core/shared/model/post_response.dart';
 import '../../../../domain/repository/post_repository.dart';
 
 part 'home_cubit_state.dart';
@@ -76,16 +77,16 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   // Create a new post
-Future<void> createPost(String title, String content) async {
-  final post = CreatePostData(title: title, content: content);
-  try {
-    emit(PostCreateLoading()); // Emit loading state
-    await postRepository.createPost(post);
-    emit(PostCreated()); // Emit success state
-  } catch (e) {
-    emit(PostError(e.toString())); // Emit error state
+  Future<void> createPost(String title, String content) async {
+    final post = CreatePostData(title: title, content: content);
+    try {
+      emit(PostCreateLoading()); // Emit loading state
+      await postRepository.createPost(post);
+      emit(PostCreated()); // Emit success state
+    } catch (e) {
+      emit(PostError(e.toString())); // Emit error state
+    }
   }
-}
 
   Future<void> deletePost(int postId) async {
     try {
@@ -96,5 +97,11 @@ Future<void> createPost(String title, String content) async {
     } catch (e) {
       emit(PostDeleteFailed(e.toString()));
     }
+  }
+
+  Future<void> reportPost(int postId, CreateReportModel) async {
+    try {
+      //Todo
+    } catch (e) {}
   }
 }

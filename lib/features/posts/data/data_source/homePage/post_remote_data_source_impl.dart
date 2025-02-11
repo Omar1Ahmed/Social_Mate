@@ -1,16 +1,16 @@
 import 'package:social_media/core/di/di.dart';
-import 'package:social_media/core/helper/SharedPref/SharedPrefKeys.dart';
-import 'package:social_media/core/helper/SharedPref/sharedPrefHelper.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 
 import '../../../../../core/helper/dotenv/dot_env_helper.dart';
 import '../../../../../core/network/dio_client.dart';
 import '../../../domain/data_source/post_remote_data_source.dart';
-import '../../model/post_response.dart';
+import '../../../../../core/shared/model/create_report_model.dart';
+import '../../../../../core/shared/model/post_response.dart';
 
 class PostRemoteDataSourceImpl implements PostRemoteDataSource {
   final DioClient dio;
   final userMainDetailsCubit userMainDetails;
+  final token = getIt<userMainDetailsCubit>().state.token;
 
   PostRemoteDataSourceImpl({
     required this.dio,
@@ -18,19 +18,18 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
   });
 
   final String baseUrl = EnvHelper.getString('posts_Base_url');
+  final String reportBaseUrl = EnvHelper.getString('report_Base_url');
 
   @override
   Future<PostResponse> getPosts(int pageOffset, int pageSize) async {
-    // 2 lines by marwan
-
-    final token = getIt<userMainDetailsCubit>().state.token;
-
     try {
-      final response = await dio.get("$baseUrl/posts?pageOffset=$pageOffset&pageSize=$pageSize", header: {
+      final response = await dio.get("$baseUrl/posts?", header: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ${userMainDetails.state.token ?? token}',
+      }, queryParameters: {
+        'pageOffset': pageOffset,
+        'pageSize': pageSize
       });
-
       return PostResponse.fromJson(response);
     } catch (e) {
       throw Exception("Error fetching posts: ${e.toString()}");
@@ -39,8 +38,6 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
 
   @override
   Future<void> createPost(CreatePostData post) async {
-    final SharedPrefHelper _sharedPrefHelper = getIt<SharedPrefHelper>();
-    final token = _sharedPrefHelper.getString(SharedPrefKeys.tokenKey);
     final postData = post.toJson();
     try {
       await dio.post(
@@ -58,8 +55,6 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
 
   @override
   Future<void> deletePost(int postId) async {
-    final SharedPrefHelper _sharedPrefHelper = getIt<SharedPrefHelper>();
-    final token = _sharedPrefHelper.getString(SharedPrefKeys.tokenKey);
     await dio.delete(
       "$baseUrl/posts/$postId",
       header: {
@@ -67,5 +62,15 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
         'Authorization': 'Bearer ${userMainDetails.state.token ?? token}',
       },
     );
+  }
+
+  @override
+  Future<void> reportPost(int postId, CreateReportModel createReportModel) async {
+    await dio.post("$reportBaseUrl/$postId/reports",
+        header: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${userMainDetails.state.token ?? token}'
+        },
+        body: createReportModel.toJson());
   }
 }

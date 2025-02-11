@@ -2,7 +2,7 @@
 
 import 'package:social_media/features/filtering/data/models/post_model.dart';
 import 'package:social_media/features/posts/data/model/postDetails/Comments_response.dart';
-import 'package:social_media/features/posts/data/model/post_response.dart';
+import 'package:social_media/core/shared/model/post_response.dart';
 import 'package:social_media/features/posts/presentation/postDetails/presentation/logic/post_details_cubit.dart';
 
 abstract class PostDetailsRemoteDataSource {

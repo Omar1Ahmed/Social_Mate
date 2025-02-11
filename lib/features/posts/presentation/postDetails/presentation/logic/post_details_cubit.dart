@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:social_media/core/entities/post_entity.dart';
+import 'package:social_media/core/shared/entities/post_entity.dart';
 import 'package:social_media/core/error/errorResponseModel.dart';
 import 'package:social_media/core/helper/Connectivity/connectivity_helper.dart';
 import 'package:social_media/features/posts/data/model/entities/commentEntity.dart';

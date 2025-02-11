@@ -1,5 +1,5 @@
-import 'package:social_media/core/entities/post_entity.dart';
-import 'package:social_media/features/posts/data/model/post_response.dart';
+import 'package:social_media/core/shared/entities/post_entity.dart';
+import 'package:social_media/core/shared/model/post_response.dart';
 
 class CommentEntity {
   final int id;

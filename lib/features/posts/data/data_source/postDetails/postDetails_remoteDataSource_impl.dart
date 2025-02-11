@@ -1,7 +1,7 @@
 import 'package:social_media/core/network/dio_client.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 import 'package:social_media/features/posts/data/model/postDetails/Comments_response.dart';
-import 'package:social_media/features/posts/data/model/post_response.dart';
+import 'package:social_media/core/shared/model/post_response.dart';
 import 'package:social_media/features/posts/domain/data_source/postDetails/postDetails_remoteDataSource.dart';
 import 'package:social_media/features/posts/presentation/postDetails/presentation/logic/post_details_cubit.dart';
 

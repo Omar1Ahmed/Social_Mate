@@ -1,6 +1,6 @@
 // i think we need to declare customized exceptions ??
 
-import 'package:social_media/core/entities/post_entity.dart';
+import 'package:social_media/core/shared/entities/post_entity.dart';
 import 'package:social_media/core/helper/Connectivity/connectivity_helper.dart';
 //import 'package:social_media/features/filtering/could_be_shared/network_info/network_info.dart';
 import 'package:social_media/features/filtering/data/datasources/filtered_posts_remote_source.dart';

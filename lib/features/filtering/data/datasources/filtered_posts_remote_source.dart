@@ -3,7 +3,7 @@
 import 'package:social_media/core/network/dio_client.dart';
 //import 'package:social_media/features/filtering/could_be_shared/network_clients/dio_network_client.dart';
 //import 'package:social_media/features/filtering/data/models/post_model.dart';
-import 'package:social_media/features/posts/data/model/post_response.dart';
+import 'package:social_media/core/shared/model/post_response.dart';
 
 abstract class FilteredPostsRemoteSource {
   Future<PostResponse> getFilteredPosts(

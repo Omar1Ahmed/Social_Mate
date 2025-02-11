@@ -9,30 +9,22 @@ class DioClient implements ApiCalls {
   String baseUrl;
 
   DioClient({required this.baseUrl}) {
-
-    dio = Dio(BaseOptions(
-    baseUrl: baseUrl,
-    connectTimeout: const Duration(seconds: 30),
-    receiveTimeout: const Duration(seconds: 30),
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    ));
+    dio = Dio(BaseOptions(baseUrl: baseUrl, connectTimeout: const Duration(seconds: 30), receiveTimeout: const Duration(seconds: 30), headers: {
+      'Content-Type': 'application/json',
+    }));
 
     dio.interceptors.add(LogInterceptor(
-    request: true,
-    error: true,
-    requestBody: true,
-    requestHeader: true,
-    responseBody: true,
-    responseHeader: true,
+      request: true,
+      error: true,
+      requestBody: true,
+      requestHeader: true,
+      responseBody: true,
+      responseHeader: true,
     ));
   }
 
-
-
   @override
-  Future<Map<String, dynamic>> get(String url, {Map<String, dynamic>? queryParameters,Map<String, dynamic>? header}) async {
+  Future<Map<String, dynamic>> get(String url, {Map<String, dynamic>? queryParameters, Map<String, dynamic>? header}) async {
     try {
       final response = await dio.get(
         url,
@@ -60,15 +52,18 @@ class DioClient implements ApiCalls {
       print('lololololo ${response.statusCode}');
       print('lololololo ${response.statusMessage}');
 
-      if(response.statusCode == 201)
-        return {'statusCode': 201};
+      if (response.statusCode == 201)
+        return {
+          'statusCode': 201
+        };
 
-      if(response.statusCode == 204)
-        return {'statusCode': 204};
+      if (response.statusCode == 204)
+        return {
+          'statusCode': 204
+        };
 
       return _validateResponseData(response.data);
     } on DioException catch (e) {
-
       print('lololololo222222222 ${e.error}');
       print('lololololo2222222 ${e.response!.statusCode}');
       print('lololololo2222222 ${e.response!.statusMessage}');
@@ -88,8 +83,10 @@ class DioClient implements ApiCalls {
           headers: header,
         ),
       );
-      if(response.statusCode == 204)
-        return {'statusCode': 204};
+      if (response.statusCode == 204)
+        return {
+          'statusCode': 204
+        };
 
       return _validateResponseData(response.data);
     } on DioException catch (e) {
@@ -108,8 +105,10 @@ class DioClient implements ApiCalls {
         ),
       );
 
-      if(response.statusCode == 204)
-        return {'statusCode': 204};
+      if (response.statusCode == 204)
+        return {
+          'statusCode': 204
+        };
 
       return _validateResponseData(response.data);
     } on DioException catch (e) {
@@ -118,7 +117,6 @@ class DioClient implements ApiCalls {
   }
 
   Map<String, dynamic> _validateResponseData(dynamic data) {
-
     if (data is Map<String, dynamic>) {
       return data;
     } else if (data == null) {

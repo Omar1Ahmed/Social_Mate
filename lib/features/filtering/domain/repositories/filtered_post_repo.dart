@@ -1,4 +1,4 @@
-import 'package:social_media/core/entities/post_entity.dart';
+import 'package:social_media/core/shared/entities/post_entity.dart';
 //import 'package:social_media/features/filtering/domain/entities/filtering_post_entity.dart';
 
 abstract class FilteredPostRepo {

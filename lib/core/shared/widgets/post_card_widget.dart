@@ -4,7 +4,7 @@ import 'package:social_media/core/helper/extantions.dart';
 import 'package:social_media/core/shared/widgets/show_report_post_dialog_widget.dart';
 import 'package:social_media/features/posts/presentation/postDetails/presentation/logic/post_details_cubit.dart';
 import '../../Responsive/Models/device_info.dart';
-import '../../entities/post_entity.dart';
+import '../entities/post_entity.dart';
 import '../../routing/routs.dart';
 import 'show_delete_dialog_widget.dart';
 import 'animation/slide_Transition__widget.dart';

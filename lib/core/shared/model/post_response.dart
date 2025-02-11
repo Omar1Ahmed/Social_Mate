@@ -1,7 +1,7 @@
 // data/models/post_response.dart
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
-import '../../../../core/entities/post_entity.dart';
+import '../entities/post_entity.dart';
 
 part 'post_response.g.dart';
 
@@ -41,6 +41,7 @@ class PostData {
 
   PostEntity toEntity(){
 
+    // ignore: non_constant_identifier_names
     String FormattedDate = DateFormat("yyyy-MM-dd h:mm a").format(createdOn);
     return PostEntity(
       id: id,

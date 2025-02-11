@@ -1,6 +1,6 @@
 // domain/repositories/post_repository.dart
 
-import 'package:social_media/core/entities/post_entity.dart';
+import 'package:social_media/core/shared/entities/post_entity.dart';
 import 'package:social_media/features/posts/data/model/entities/commentEntity.dart';
 import 'package:social_media/features/posts/presentation/postDetails/presentation/logic/post_details_cubit.dart';
 

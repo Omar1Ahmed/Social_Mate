@@ -10,6 +10,7 @@ class ColorsManager {
   static const Color lightblue = Color(0xFFE5EEF3);
   static const Color secondaryColor = Color(0xFF6495ED);
   static const Color secondaryTextColor = Color(0xFF757575); // Gray
+  static const Color orangeColor = Color(0xFFF29339);
   static const List<Color> gradientColors = [
     Colors.white,
     Color(0xFFBBDEFB),
