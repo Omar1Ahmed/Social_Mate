@@ -1,5 +1,6 @@
 import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
+import 'package:social_media/features/admin/data/models/main_report_model.dart';
 
 import '../../../../../core/helper/dotenv/dot_env_helper.dart';
 import '../../../../../core/network/dio_client.dart';
@@ -72,5 +73,22 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
           'Authorization': 'Bearer ${userMainDetails.state.token ?? token}'
         },
         body: createReportModel.toJson());
+  }
+
+  @override
+  Future<Category> getCategories() async {
+    try {
+      final response = await dio.get(
+        "$reportBaseUrl/lookups/categories/report/post",
+        header: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${userMainDetails.state.token ?? token}'
+        },
+      );
+      print("categories $response");
+      return Category.fromJson(response);
+    } catch (e) {
+      throw Exception("Error fetching categories: ${e.toString()}");
+    }
   }
 }

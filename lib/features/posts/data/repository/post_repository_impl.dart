@@ -4,6 +4,7 @@ import 'package:social_media/core/shared/entities/post_entity.dart';
 import 'package:social_media/core/shared/model/post_response.dart';
 import 'package:social_media/features/posts/domain/data_source/post_remote_data_source.dart';
 
+import '../../../admin/data/models/main_report_model.dart';
 import '../../domain/repository/post_repository.dart';
 import '../../../../core/shared/model/create_report_model.dart';
 
@@ -39,5 +40,10 @@ class PostRepositoryImpl implements PostRepository {
   @override
   Future<void> reportPost(int postId ,CreateReportModel createReportModel) {
     return remoteDataSource.reportPost(postId ,createReportModel);
+  }
+  
+  @override
+  Future<Category> getCategories() {
+    return remoteDataSource.getCategories();
   }
 }

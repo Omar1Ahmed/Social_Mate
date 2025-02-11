@@ -94,12 +94,26 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
                 },
               ),
             ),
-            floatingActionButton: FloatingActionButton(
-              backgroundColor: Colors.white,
-              foregroundColor: ColorsManager.primaryColor,
-              onPressed: () => context.pushNamed(Routes.adminReportScreen),
-              //_showCreatePostDialog(deviceInfo),
-              child: Icon(Icons.edit_outlined, color: ColorsManager.primaryColor),
+            floatingActionButton: SizedBox(
+              width: deviceInfo.screenWidth * 0.15,
+              height: deviceInfo.screenWidth * 0.15,
+              child: FloatingActionButton(
+                heroTag: 'adminReportButton',
+                backgroundColor: Colors.white,
+                foregroundColor: ColorsManager.primaryColor,
+                onPressed: () => context.pushNamed(Routes.adminReportScreen),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(deviceInfo.screenWidth * 0.08),
+                ),
+                elevation: deviceInfo.screenWidth * 0.02,
+                mini: deviceInfo.screenWidth < 400,
+                materialTapTargetSize: MaterialTapTargetSize.padded,
+                child: Icon(
+                  Icons.edit_outlined,
+                  color: ColorsManager.primaryColor,
+                  size: deviceInfo.screenWidth * 0.06,
+                ),
+              ),
             ),
             floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
           ),

@@ -13,4 +13,5 @@ abstract class PostRepository {
   Future<PostEntity> createPost(CreatePostData post);
   Future<void> deletePost(int postId);
   Future<void> reportPost(int postId,CreateReportModel createReportModel);
+  Future <void> getCategories();
 }
