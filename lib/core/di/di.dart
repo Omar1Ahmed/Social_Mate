@@ -2,6 +2,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:social_media/core/di/diInstancesHelper.dart';
 import 'package:social_media/core/helper/SharedPref/sharedPrefHelper.dart';
+import 'package:social_media/core/helper/dotenv/dot_env_helper.dart';
 import 'package:social_media/core/userMainDetails/jwt_token_decode/data/repository/jwt_token_decode_repository_imp.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 import 'package:social_media/features/authentication/data/data_source/AuthenticaionRemoteDataSource.dart';
@@ -37,6 +38,11 @@ import '../network/dio_client.dart';
 final getIt = GetIt.instance;
 
 Future<void> initDependencies() async {
+
+  final postUrl = EnvHelper.getString('posts_Base_url');
+  final userUrl = EnvHelper.getString('user_Base_url');
+  final reportUrl = EnvHelper.getString('report_Base_url');
+
   // |------------------------------------------------------------------\
   // |-------------------------- Services ------------------------------\
   // |------------------------------------------------------------------\
@@ -60,10 +66,13 @@ Future<void> initDependencies() async {
 
 
   // users Management api  client
-  getIt.registerLazySingleton<DioClient>(() => DioClient(baseUrl: RealEndPoints.realUserBaseUrl), instanceName: diInstancesHelper.userDioClient);
+  getIt.registerLazySingleton<DioClient>(() => DioClient(baseUrl: postUrl), instanceName: diInstancesHelper.userDioClient);
 
   // posts api client
-  getIt.registerLazySingleton<DioClient>(() => DioClient(baseUrl: RealEndPoints.realPostsBaseUrl), instanceName: diInstancesHelper.PostsDioClient);
+  getIt.registerLazySingleton<DioClient>(() => DioClient(baseUrl: userUrl), instanceName: diInstancesHelper.PostsDioClient);
+
+  // report api client
+  getIt.registerLazySingleton<DioClient>(() => DioClient(baseUrl: reportUrl), instanceName: diInstancesHelper.ReportDioClient);
 
 
   getIt.registerLazySingleton<RealDioNetworkClient>(() => RealDioNetworkClient());

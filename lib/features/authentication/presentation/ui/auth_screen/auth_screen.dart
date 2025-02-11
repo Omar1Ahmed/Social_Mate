@@ -1,5 +1,6 @@
 import 'package:cherry_toast/resources/arrays.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
 import 'package:social_media/features/authentication/presentation/logic/auth_cubit.dart';
@@ -26,7 +27,7 @@ class _AuthScreenState extends State<AuthScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    return InfoWidget(builder: (context, info) {
+    return SafeArea(child: InfoWidget(builder: (context, info) {
       return BlocConsumer<AuthCubit, AuthState>(listener: (context, state) {
         if (state is AuthLogInTokenRetrivedState) {
           Navigator.pushNamed(context, Routes.homePage);
@@ -105,11 +106,11 @@ class _AuthScreenState extends State<AuthScreen> {
                           if (context.read<AuthCubit>().IsSignIn) {
 
                             context.read<AuthCubit>().isRememberMe = true;
-                              context.read<AuthCubit>().logIn(context,);
+                            context.read<AuthCubit>().logIn(context,);
 
                           } else {
 
-                              context.read<AuthCubit>().signUp(context);
+                            context.read<AuthCubit>().signUp(context);
                           }
                         }),
                   ),
@@ -129,7 +130,7 @@ class _AuthScreenState extends State<AuthScreen> {
           ),
         );
       });
-    });
+    }));
   }
 }
 
@@ -141,6 +142,13 @@ class AuthHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.white, // Transparent to show SafeArea effect
+      statusBarIconBrightness: Brightness.dark, // Use Brightness.light for white icons
+
+    ));
+
     return InfoWidget(builder: (context, info) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,

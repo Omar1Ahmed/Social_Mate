@@ -15,4 +15,5 @@ abstract class PostDetailsRemoteDataSource {
   Future<dynamic> GiveReaction(int postId, int commentId, ReactionType reactionType);
 
   Future<dynamic> deleteComment(int postId, int commentId);
+  Future<dynamic> createComment(int postId, String comment);
 }

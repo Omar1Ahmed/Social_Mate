@@ -144,4 +144,21 @@ try {
 
   }
 
+  @override
+  Future createComment(int postId, String comment) async {
+
+    final response = await dio.post('/posts/$postId/comments',
+        header: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${userMainDetails.state.token}',
+        },
+      body: {
+        "content": comment
+      }
+    );
+
+    return response;
+
+  }
+
 }

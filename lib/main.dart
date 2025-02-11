@@ -16,14 +16,21 @@ Future<void> main() async {
 
   // Run the app with DevicePreview enabled
   runApp(
-    DevicePreview(
-      // Wrap the app with DevicePreview
-      enabled: !bool.fromEnvironment('dart.vm.product'), // Disable in release mode
-      builder: (context) => MyApp(
+    MyApp(
         appRouter: AppRouts(),
-      ),
     ),
   );
+
+  // runApp(
+  //   DevicePreview(
+  //     // Wrap the app with DevicePreview
+  //     enabled: !bool.fromEnvironment('dart.vm.product'), // Disable in release mode
+  //     builder: (context) => MyApp(
+  //       appRouter: AppRouts(),
+  //     ),
+  //   ),
+  // );
+
 }
 
 class MyApp extends StatelessWidget {
@@ -32,26 +39,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent, // Transparent to show SafeArea effect
+       statusBarColor: Colors.transparent, // Transparent to show SafeArea effect
       statusBarIconBrightness: Brightness.dark, // Use Brightness.light for white icons
+
     ));
 
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<AuthCubit>(
-          create: (context) => getIt<AuthCubit>(),
-        ),
-        BlocProvider<userMainDetailsCubit>(
-          create: (context) => getIt<userMainDetailsCubit>(),
-        ),
-        // Uncomment if you want to include the TokenCubit
-        // BlocProvider<TokenCubit>(
-        //   create: (context) => getIt<TokenCubit>(),
-        // ),
-      ],
+    return BlocProvider<userMainDetailsCubit>(
+      create: (context) => getIt<userMainDetailsCubit>(),
+
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
+        color: Colors.white,
         initialRoute: Routes.splashScreen,
         onGenerateRoute: appRouter.generateRoute,
         builder: DevicePreview.appBuilder, // Use the builder provided by DevicePreview

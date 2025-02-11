@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/helper/extantions.dart';
@@ -53,6 +54,11 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.white, // Transparent to show SafeArea effect
+      statusBarIconBrightness: Brightness.dark, // Use Brightness.light for white icons
+
+    ));
     return InfoWidget(
       builder: (context, deviceInfo) {
         return SafeArea(

@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
 import 'package:social_media/core/shared/entities/post_entity.dart';
 import 'package:social_media/core/error/errorResponseModel.dart';
@@ -15,6 +16,8 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
   PostDetailsRepository postDetailsRepository;
 
   PostDetailsCubit(this.postDetailsRepository) : super(PostDetailsInitial());
+
+  TextEditingController createCommentController = TextEditingController();
 
   late PostEntity post;
   List<CommentEntity>? comments;
@@ -187,4 +190,33 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
 
   }
 
+
+  Future<void> createComment()async{
+
+
+    try{
+      emit(CommentsCreationLoading());
+      final response = await postDetailsRepository.createComment(_PostId, createCommentController.text);
+      print('give reaction: $response');
+
+      if(response['statusCode'] == 200) {
+
+        emit(CommentsCreated());
+      }else{
+        selectedReactionType = null;
+        emit(CommentsError('Failed to Delete to The post'));
+      }
+    }catch(e,trace){
+      if(e is ErrorResponseModel){
+
+        emit(CommentsError(e.message.toString()));
+
+
+      }else{
+
+        emit(deleteCommentFail(e.toString()));
+      }
+    }
+
+  }
 }

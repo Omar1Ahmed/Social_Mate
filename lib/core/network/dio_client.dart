@@ -1,6 +1,7 @@
 // core/network/dio_client.dart
 import 'package:dio/dio.dart';
 import 'package:social_media/core/error/dio_exception_handler.dart';
+import 'package:social_media/core/helper/Connectivity/connectivity_helper.dart';
 
 import 'ApiCalls.dart';
 
@@ -25,7 +26,9 @@ class DioClient implements ApiCalls {
 
   @override
   Future<Map<String, dynamic>> get(String url, {Map<String, dynamic>? queryParameters, Map<String, dynamic>? header}) async {
-    try {
+    final isConnected = await ConnectivityHelper.isConnected();
+    if (isConnected) {
+      try {
       final response = await dio.get(
         url,
         queryParameters: queryParameters,
@@ -38,10 +41,15 @@ class DioClient implements ApiCalls {
     } on DioException catch (e) {
       throw DioExceptionHandler.handleError(e);
     }
+    }else{
+      throw Exception('No internet connection');
+    }
   }
 
   @override
   Future<Map<String, dynamic>> post(String url, {Map<String, dynamic>? body, Map<String, dynamic>? header}) async {
+    final isConnected = await ConnectivityHelper.isConnected();
+    if (isConnected) {
     try {
       final response = await dio.post(
         url,
@@ -62,6 +70,11 @@ class DioClient implements ApiCalls {
           'statusCode': 204
         };
 
+      if (response.statusCode == 200)
+        return {
+          'statusCode': 200
+        };
+
       return _validateResponseData(response.data);
     } on DioException catch (e) {
       print('lololololo222222222 ${e.error}');
@@ -71,10 +84,16 @@ class DioClient implements ApiCalls {
       print(e.response!.data);
       throw DioExceptionHandler.handleError(e);
     }
+    }else{
+      throw Exception('No internet connection');
+    }
   }
 
   @override
   Future<Map<String, dynamic>> put(String url, Map<String, dynamic>? body, {Map<String, dynamic>? header}) async {
+
+    final isConnected = await ConnectivityHelper.isConnected();
+    if (isConnected) {
     try {
       final response = await dio.put(
         url,
@@ -92,10 +111,16 @@ class DioClient implements ApiCalls {
     } on DioException catch (e) {
       throw DioExceptionHandler.handleError(e);
     }
+  }else{
+  throw Exception('No internet connection');
+  }
   }
 
   @override
   Future<Map<String, dynamic>> delete(String url, {Map<String, dynamic>? header}) async {
+
+    final isConnected = await ConnectivityHelper.isConnected();
+    if (isConnected) {
     try {
       final response = await dio.request(
         url,
@@ -114,6 +139,10 @@ class DioClient implements ApiCalls {
     } on DioException catch (e) {
       throw DioExceptionHandler.handleError(e);
     }
+
+  }else{
+throw Exception('No internet connection');
+}
   }
 
   Map<String, dynamic> _validateResponseData(dynamic data) {
@@ -128,5 +157,6 @@ class DioClient implements ApiCalls {
     } else {
       throw Exception('Invalid response format: Expected Map<String, dynamic>, but got ${data.runtimeType}');
     }
+
   }
 }
