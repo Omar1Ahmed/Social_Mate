@@ -1,11 +1,8 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
 import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/entities/post_entity.dart';
-import 'package:social_media/core/helper/Connectivity/connectivity_helper.dart';
 import 'package:social_media/core/helper/extantions.dart';
 import 'package:social_media/core/shared/widgets/post_card_widget.dart';
 import 'package:social_media/core/theming/colors.dart';
@@ -19,7 +16,6 @@ import 'package:social_media/features/filtering/presentation/cubit/sharing_data/
 import 'package:social_media/features/filtering/presentation/widgets/filtering_tile.dart';
 import 'package:social_media/features/posts/presentation/homePage/logic/cubit/home_cubit_cubit.dart';
 //import 'package:social_media/features/posts/presentation/homePage/logic/cubit/home_cubit_cubit.dart';
-//import 'package:social_media/features/posts/presentation/homePage/ui/widgets/post_card_widget.dart';
 
 class FilteringScreen extends StatefulWidget {
   const FilteringScreen({super.key});
@@ -30,10 +26,9 @@ class FilteringScreen extends StatefulWidget {
 
 class _FilteringScreenState extends State<FilteringScreen> {
   Map<String, dynamic> queryParameters = {};
-  //List<FilteringPostEntity> posts = [];
   List<PostEntity> posts = [];
   final ScrollController scrollController = ScrollController();
-  //double scrollPosition = 0;
+
   @override
   void initState() {
     super.initState();
@@ -50,7 +45,6 @@ class _FilteringScreenState extends State<FilteringScreen> {
     final token = context.read<userMainDetailsCubit>().state.token;
     if (scrollController.position.pixels ==
         scrollController.position.maxScrollExtent) {
-      //scrollPosition = scrollController.position.pixels;
       final queryParams = context.read<SharingDataCubit>().state.queryParams;
       print('new queryParams: $queryParams');
       context
@@ -60,22 +54,8 @@ class _FilteringScreenState extends State<FilteringScreen> {
     print('queryParameters after pagination : $queryParameters');
   }
 
-  void _deletePost(BuildContext context, int postId, String token,
-      Map<String, dynamic> params) {
-    context.read<HomeCubit>().deletePost(postId);
-    context
-        .read<FilteringCubit>()
-        .getFilteredPosts(token: token, queryParameters: params);
-    // }).catchError((error) {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(content: Text("Failed to delete post")),
-    //   );
-    // });
-  }
-
   @override
   Widget build(BuildContext context) {
-    final Connectivity _connectivity = Connectivity();
     return InfoWidget(builder: (context, deviceInfo) {
       return Scaffold(
         appBar: AppBar(
@@ -85,262 +65,145 @@ class _FilteringScreenState extends State<FilteringScreen> {
           ),
           centerTitle: true,
         ),
-        body: StreamBuilder<ConnectivityResult>(
-          stream: _connectivity.onConnectivityChanged.map((results) =>
-              results.isNotEmpty ? results.first : ConnectivityResult.none),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            } else if (!snapshot.hasData ||
-                snapshot.data == ConnectivityResult.none) {
-              return Center(child: Image.asset('assets/images/no_internet.gif')
-                  // Lottie.asset('assets/animations/Animation - 1739194315197'),
-                  );
-            } else {
-              return SafeArea(
-                child: SingleChildScrollView(
-                  controller: scrollController,
-                  scrollDirection: Axis.vertical,
-                  clipBehavior: Clip.antiAlias,
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: BlocListener<SharingDataCubit, SharingDataState>(
-                    listener: (context, sharingState) {
-                      if (sharingState.posts.isEmpty) {
-                        posts.clear();
+        body: SafeArea(
+          child: SingleChildScrollView(
+            controller: scrollController,
+            scrollDirection: Axis.vertical,
+            clipBehavior: Clip.antiAlias,
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: BlocListener<SharingDataCubit, SharingDataState>(
+              listener: (context, sharingState) {
+                if (sharingState.posts.isEmpty) {
+                  posts.clear();
+                }
+              },
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FilteringTile(
+                    homeCubit: context.read<HomeCubit>(),
+                    filteringCubit: context.read<FilteringCubit>(),
+                    sharingDataCubit: context.read<SharingDataCubit>(),
+                    filteredUsersCubit: context.read<FilteredUsersCubit>(),
+                  ),
+                  SizedBox(height: 16),
+                  BlocBuilder<FilteringCubit, FilteringState>(
+                    builder: (context, state) {
+                      if (state is FilteredPostsIsLoading) {
+                        return Center(
+                          child: LinearProgressIndicator(
+                            color: ColorsManager.primaryColor,
+                          ),
+                        );
+                      } else if (state is FilteredPostsIsLoaded) {
+                        if (state.filteredPosts.isNotEmpty) {
+                          final newPosts = state.filteredPosts.where((newPost) {
+                            return !posts.any((existingPost) =>
+                                existingPost.id == newPost.id);
+                          }).toList();
+                          posts.addAll(newPosts);
+                        }
+                        if (posts.isEmpty) {
+                          print('retrived data is empty ya 3m'); // Debug
+                        }
+                        print(
+                            'this is the filtered ${posts.length.toString()}');
+                        return Column(
+                          children: [
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: posts.length + (state.hasMore ? 1 : 0),
+                              itemBuilder: (context, index) {
+                                print('Filtering State: $state');
+                                if (index == posts.length && state.hasMore) {
+                                  return Center(
+                                      child: CircularProgressIndicator());
+                                }
+                                final isNotMatch = posts[index].createdBy.id ==
+                                        getIt<userMainDetailsCubit>()
+                                            .state
+                                            .userId
+                                    ? false
+                                    : true;
+                                return Column(
+                                  children: [
+                                    // FilteredPostCard(
+                                    //   filteringCubit:
+                                    //       context.read<FilteringCubit>(),
+                                    //   homeCubit: context.read<HomeCubit>(),
+                                    //   postId: posts[index].id,
+                                    //   postOwnerId: posts[index].createdBy.id,
+                                    //   title: posts[index].title,
+                                    //   postOwner: posts[index].createdBy.fullName,
+                                    //   date: posts[index].createdOn.toString(),
+                                    //   content: posts[index].content,
+                                    //   onPostDeleted: (deletedPostId) {
+                                    //     setState(() {
+                                    //       posts.removeWhere((post) =>
+                                    //           post.id == deletedPostId);
+                                    //     });
+                                    //   },
+                                    // ),
+                                    PostCardWidget(
+                                        onPressedDelete: () {
+                                          getIt
+                                              .get<HomeCubit>()
+                                              .deletePost(posts[index].id);
+
+                                          setState(() {
+                                            print("${posts.length}");
+                                            posts.removeWhere((post) =>
+                                                post.id == posts[index].id);
+
+                                            print("${posts.length}");
+                                          });
+                                          // final query = context
+                                          //     .read<SharingDataCubit>()
+                                          //     .state
+                                          //     .queryParams;
+                                          // final token = context
+                                          //     .read<userMainDetailsCubit>()
+                                          //     .state
+                                          //     .token!;
+                                          // context
+                                          //     .read<FilteringCubit>()
+                                          //     .getFilteredPosts(
+                                          //         token: token,
+                                          //         queryParameters: query);
+                                          context.pop();
+                                        },
+                                        deviceInfo: deviceInfo,
+                                        idNotMatch: isNotMatch,
+                                        post: posts[index]),
+                                    SizedBox(
+                                      height: 16,
+                                    )
+                                  ],
+                                );
+                              },
+                            ),
+                          ],
+                        );
+                      } else if (state is FilteredPostsHasError) {
+                        return Text('Sorry something went wrong , Try again');
+                      } else if (state is FilteredPostsIsEmpty) {
+                        return Center(
+                          child: Text('No posts found'),
+                        );
+                      } else {
+                        return Center(
+                          child: Text('No posts yet , try to filter some'),
+                        );
                       }
                     },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        FilteringTile(
-                          // Will only show if connected
-                          filteringCubit: context.read<FilteringCubit>(),
-                          sharingDataCubit: context.read<SharingDataCubit>(),
-                          filteredUsersCubit:
-                              context.read<FilteredUsersCubit>(),
-                        ),
-                        SizedBox(height: 16),
-                        BlocBuilder<FilteringCubit, FilteringState>(
-                          builder: (context, state) {
-                            if (state is FilteredPostsIsLoading) {
-                              return Center(
-                                  child: LinearProgressIndicator(
-                                color: ColorsManager.primaryColor,
-                              ));
-                            } else if (state is FilteredPostsIsLoaded) {
-                              if (state.filteredPosts.isNotEmpty) {
-                                final newPosts =
-                                    state.filteredPosts.where((newPost) {
-                                  return !posts.any((existingPost) =>
-                                      existingPost.id == newPost.id);
-                                }).toList();
-                                posts.addAll(newPosts);
-                              }
-                              if (posts.isEmpty) {
-                                print('retrieved data is empty ya 3m'); // Debug
-                              }
-                              print(
-                                  'this is the filtered ${posts.length.toString()}');
-                              return Column(
-                                children: [
-                                  ListView.builder(
-                                    shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    itemCount:
-                                        posts.length + (state.hasMore ? 1 : 0),
-                                    itemBuilder: (context, index) {
-                                      if (index == posts.length &&
-                                          state.hasMore) {
-                                        return Center(
-                                            child: CircularProgressIndicator());
-                                      }
-                                      final isNotMatch =
-                                          posts[index].createdBy.id ==
-                                                  getIt<userMainDetailsCubit>()
-                                                      .state
-                                                      .userId
-                                              ? false
-                                              : true;
-                                      return Column(
-                                        children: [
-                                          PostCardWidget(
-                                            deviceInfo: deviceInfo,
-                                            idNotMatch: isNotMatch,
-                                            post: posts[index],
-                                            onPressedDelete: () {
-                                              _deletePost(
-                                                  context,
-                                                  posts[index].createdBy.id,
-                                                  context
-                                                      .read<
-                                                          userMainDetailsCubit>()
-                                                      .state
-                                                      .token!,
-                                                  context
-                                                      .read<SharingDataCubit>()
-                                                      .state
-                                                      .queryParams);
-                                              setState(() {
-                                                posts.removeWhere((post) =>
-                                                    post.id ==
-                                                    posts[index].createdBy.id);
-                                              });
-                                              FocusScope.of(context).unfocus();
-                                              context.pop();
-                                            },
-                                          ),
-                                          SizedBox(height: 16),
-                                        ],
-                                      );
-                                    },
-                                  ),
-                                ],
-                              );
-                            } else if (state is FilteredPostsHasError) {
-                              return Text(
-                                  'Sorry something went wrong, Try again');
-                            } else if (state is FilteredPostsIsEmpty) {
-                              return Center(
-                                child: Text('No posts found'),
-                              );
-                            } else {
-                              return Center(
-                                child: Text('No posts yet, try to filter some'),
-                              );
-                            }
-                          },
-                        ),
-                      ],
-                    ),
                   ),
-                ),
-              );
-            }
-          },
+                ],
+              ),
+            ),
+          ),
         ),
       );
     });
   }
 }
-          
-    //     return SafeArea(
-    //       child: SingleChildScrollView(
-    //         controller: scrollController,
-    //         scrollDirection: Axis.vertical,
-    //         clipBehavior: Clip.antiAlias,
-    //         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-    //         child: BlocListener<SharingDataCubit, SharingDataState>(
-    //           listener: (context, sharingState) {
-    //             if (sharingState.posts.isEmpty) {
-    //               posts.clear();
-    //             }
-    //           },
-    //           child: Column(
-    //             mainAxisAlignment: MainAxisAlignment.center,
-    //             children: [
-    //               FilteringTile(
-    //                 filteringCubit: context.read<FilteringCubit>(),
-    //                 sharingDataCubit: context.read<SharingDataCubit>(),
-    //                 filteredUsersCubit: context.read<FilteredUsersCubit>(),
-    //               ),
-    //               SizedBox(height: 16),
-    //               BlocBuilder<FilteringCubit, FilteringState>(
-    //                 builder: (context, state) {
-    //                   if (state is FilteredPostsIsLoading) {
-    //                     return Center(
-    //                         child: LinearProgressIndicator(
-    //                       color: ColorsManager.primaryColor,
-    //                     ));
-    //                   } else if (state is FilteredPostsIsLoaded) {
-    //                     if (state.filteredPosts.isNotEmpty) {
-    //                       final newPosts = state.filteredPosts.where((newPost) {
-    //                         return !posts.any((existingPost) =>
-    //                             existingPost.id == newPost.id);
-    //                       }).toList();
-    //                       posts.addAll(newPosts);
-    //                     }
-    //                     if (posts.isEmpty) {
-    //                       print('retrived data is empty ya 3m'); // Debug
-    //                     }
-    //                     print(
-    //                         'this is the filtered ${posts.length.toString()}');
-    //                     return Column(
-    //                       children: [
-    //                         // Padding(
-    //                         //   padding: EdgeInsets.symmetric(vertical: 8),
-    //                         //   child: Text(
-    //                         //     'Posts Filtered : ${state.filteredPosts.[0]}',
-    //                         //   ),
-    //                         // ),
-    //                         ListView.builder(
-    //                           shrinkWrap: true,
-    //                           physics: const NeverScrollableScrollPhysics(),
-    //                           itemCount: posts.length + (state.hasMore ? 1 : 0),
-    //                           itemBuilder: (context, index) {
-    //                             print('Filtering State: $state');
-    //                             if (index == posts.length && state.hasMore) {
-    //                               return Center(
-    //                                   child: CircularProgressIndicator());
-    //                             }
-    //                             final isNotMatch = posts[index].createdBy.id ==
-    //                                     getIt<userMainDetailsCubit>()
-    //                                         .state
-    //                                         .userId
-    //                                 ? false
-    //                                 : true;
-    //                             return Column(
-    //                               children: [
-    //                                 // FilteredPostCard(
-    //                                 //   filteringCubit:
-    //                                 //       context.read<FilteringCubit>(),
-    //                                 //   homeCubit: context.read<HomeCubit>(),
-    //                                 //   postId: posts[index].id,
-    //                                 //   postOwnerId: posts[index].createdBy.id,
-    //                                 //   title: posts[index].title,
-    //                                 //   postOwner: posts[index].createdBy.fullName,
-    //                                 //   date: posts[index].createdOn.toString(),
-    //                                 //   content: posts[index].content,
-    //                                 //   onPostDeleted: (deletedPostId) {
-    //                                 //     setState(() {
-    //                                 //       posts.removeWhere((post) =>
-    //                                 //           post.id == deletedPostId);
-    //                                 //     });
-    //                                 //   },
-    //                                 // ),
-    //                                 PostCardWidget(
-    //                                     deviceInfo: deviceInfo,
-    //                                     idNotMatch: isNotMatch,
-    //                                     post: posts[index]),
-    //                                 SizedBox(
-    //                                   height: 16,
-    //                                 )
-    //                               ],
-    //                             );
-    //                           },
-    //                         ),
-    //                       ],
-    //                     );
-    //                   } else if (state is FilteredPostsHasError) {
-    //                     return Text('Sorry something went wrong , Try again');
-    //                   } else if (state is FilteredPostsIsEmpty) {
-    //                     return Center(
-    //                       child: Text('No posts found'),
-    //                     );
-    //                   } else {
-    //                     return Center(
-    //                       child: Text('No posts yet , try to filter some'),
-    //                     );
-    //                   }
-    //                 },
-    //               ),
-    //             ],
-    //           ),
-    //         ),
-    //       ),
-    //     );
-    //     }
-    //     else{} 
-    //   );
-    // },);
-  

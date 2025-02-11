@@ -31,6 +31,7 @@ final String? Function(String?)? validator;
         builder: (FormFieldState<String> field) { 
         return Column(
           children: [
+            // user shouldn't be able to type
             DropdownMenu(
                 onSelected: onSelected,
                 requestFocusOnTap: true,

@@ -12,16 +12,20 @@ import 'package:social_media/features/filtering/presentation/widgets/helper_func
 import 'package:social_media/features/filtering/presentation/widgets/helper_functions/form_field_validator.dart';
 import 'package:social_media/features/filtering/presentation/widgets/drop_menu.dart';
 import 'package:social_media/features/filtering/presentation/widgets/post_owner_dialog.dart';
+import 'package:social_media/features/posts/presentation/homePage/logic/cubit/home_cubit_cubit.dart';
 
 class FilteringTile extends StatefulWidget {
   final FilteringCubit filteringCubit;
+  final HomeCubit homeCubit;
   final SharingDataCubit sharingDataCubit;
   final FilteredUsersCubit filteredUsersCubit;
+
   const FilteringTile(
       {super.key,
       required this.filteringCubit,
       required this.sharingDataCubit,
-      required this.filteredUsersCubit});
+      required this.filteredUsersCubit,
+      required this.homeCubit});
 
   @override
   State<FilteringTile> createState() => _FilteringTileState();
@@ -51,6 +55,7 @@ class _FilteringTileState extends State<FilteringTile> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late Map<String, dynamic> queryParameters;
   late FilteringCubit filteringCubit;
+  late HomeCubit homeCubit;
   late String postOwnerId = '';
 
   @override
@@ -66,12 +71,17 @@ class _FilteringTileState extends State<FilteringTile> {
     sortedByNode.dispose();
     noNode.dispose();
     postOwnerController.dispose();
+    filteringCubit.close();
+    homeCubit.close();
+
     super.dispose();
   }
 
   @override
   void initState() {
     filteringCubit = widget.filteringCubit;
+    homeCubit = widget.homeCubit;
+
     super.initState();
 
     sortedByItemController.addListener(() {
@@ -116,6 +126,8 @@ class _FilteringTileState extends State<FilteringTile> {
       selectedToDate = newDate;
     });
   }
+
+  
 
   void _onFilterButtonPressed() {
     FocusScope.of(context).unfocus();
