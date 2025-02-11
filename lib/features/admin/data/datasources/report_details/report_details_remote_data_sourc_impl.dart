@@ -2,7 +2,8 @@
 
 import 'package:dio/dio.dart';
 import 'package:social_media/core/network/dio_client.dart';
-import 'package:social_media/features/admin/data/models/reports_details/report_models.dart';
+
+import '../../models/report_details/report_models.dart';
 
 class ReportDataSource {
   final DioClient dio;
@@ -33,4 +34,5 @@ class ReportDataSource {
       rethrow;
     }
   }
+
 }

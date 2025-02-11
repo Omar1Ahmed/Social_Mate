@@ -1,7 +1,6 @@
 // lib/data/repositories/report_repository_impl.dart
 
-
-import 'package:social_media/features/admin/domain/entities/report_details/report_entity.dart';
+import 'package:social_media/features/admin/data/models/report_details/report_models.dart';
 
 import '../../../domain/repositories/report_details/report_repository.dart';
 import '../../datasources/report_details/report_details_remote_data_sourc_impl.dart';
@@ -12,24 +11,13 @@ class ReportRepositoryImpl implements ReportRepository {
   ReportRepositoryImpl({required this.dataSource});
 
   @override
-  Future<ReportEntity> getReportDetails() async {
+  Future<ReportResponse> getReportDetails() async {
     final reportResponse = await dataSource.fetchReportData();
-    return ReportEntity(
-      reason: reportResponse.reportDetails.reason,
-      categoryTitle: reportResponse.reportDetails.category.titleEn,
-      statusTitle: reportResponse.reportDetails.status.titleEn,
-    );
+    return reportResponse;
   }
 
   @override
-  Future<List<ReportEntity>> getRelatedReports() async {
-    final reportResponse = await dataSource.fetchReportData();
-    return reportResponse.relatedReports.map((relatedReport) {
-      return ReportEntity(
-        reason: 'Related Report', // Adjust based on your JSON structure
-        categoryTitle: relatedReport.category.titleEn,
-        statusTitle: relatedReport.status.titleEn,
-      );
-    }).toList();
+  Future<List<RelatedReport>> getRelatedReports() async{
+    return dataSource.fetchReportData().then((value) => value.relatedReports);
   }
 }

@@ -11,7 +11,7 @@ import 'package:social_media/features/on_boarding/presentation/ui/onboarding_scr
 import 'package:social_media/features/posts/presentation/postDetails/presentation/logic/post_details_cubit.dart';
 import 'package:social_media/features/posts/presentation/postDetails/presentation/ui/postDetailsScreen.dart';
 import 'package:social_media/features/splash_screen/presentation/ui/splash_screen.dart';
-import '../../features/admin/presentation/report_details/presentation/ui/report_detials_screen.dart';
+import '../../features/admin/presentation/report_details/ui/report_detials_screen.dart';
 import '../../features/posts/presentation/homePage/logic/cubit/home_cubit_cubit.dart';
 import '../../features/posts/presentation/homePage/ui/homePage_view.dart';
 import '../di/di.dart';
