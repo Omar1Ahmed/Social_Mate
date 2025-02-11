@@ -8,6 +8,7 @@ import 'package:social_media/core/Responsive/Models/device_info.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
 import 'package:social_media/core/helper/extantions.dart';
 import 'package:social_media/core/shared/widgets/Shimmer/ShimmerStyle.dart';
+import 'package:social_media/core/shared/widgets/cherryToast/CherryToastMsgs.dart';
 
 import 'package:social_media/core/shared/widgets/show_report_post_dialog_widget.dart';
 import 'package:social_media/core/shared/widgets/animation/slide_Transition__widget.dart';
@@ -49,83 +50,40 @@ class _post_details_screenState extends State<post_details_screen> {
               );
             }
             if (state is SuccessPostRate) {
-              CherryToast.success(
-                title: Text(
-                  "Success!!",
-                  style: TextStyle(color: Colors.white),
-                ),
-                toastDuration: Duration(seconds: 3),
-                borderRadius: info.screenWidth * 0.04,
-                backgroundColor: Colors.green,
-                shadowColor: Colors.black45,
-                animationDuration: Duration(milliseconds: 300),
-                animationType: AnimationType.fromTop,
-                autoDismiss: true,
-                description: Text(
-                  'Successfully Rated The Post',
-                  style: TextStyle(color: Colors.white70),
-                ),
-              ).show(context);
+              CherryToastMsgs.CherryToastSuccess(
+                info: info,
+                context: context,
+                title: 'Success!!',
+                description: 'You Rated The Post Successfully',
+              );
             }
 
             if (state is FailPostRate) {
-              CherryToast.error(
-                title: Text(
-                  "Failed!",
-                  style: TextStyle(color: Colors.white),
-                ),
-                toastDuration: Duration(seconds: 5),
-                borderRadius: info.screenWidth * 0.04,
-                backgroundColor: Color(0xff9b0d0d),
-                shadowColor: Colors.black45,
-                animationDuration: Duration(milliseconds: 300),
-                animationType: AnimationType.fromTop,
-                autoDismiss: true,
-                description: Text(
-                  'Failed to Rate The post',
-                  style: TextStyle(color: Colors.white70),
-                ),
-              ).show(context);
+              CherryToastMsgs.CherryToastError(
+                info: info,
+                context: context,
+                title: 'Failed!!',
+                description: 'You Rated The Post Failed',
+              );
             }
 
             if (state is GiveReactionSuccess) {
-              CherryToast.success(
-                title: Text(
-                  "Success!!",
-                  style: TextStyle(color: Colors.white),
-                ),
-                toastDuration: Duration(seconds: 3),
-                borderRadius: info.screenWidth * 0.04,
-                backgroundColor: Colors.green,
-                shadowColor: Colors.black45,
-                animationDuration: Duration(milliseconds: 300),
-                animationType: AnimationType.fromTop,
-                autoDismiss: true,
-                description: Text(
-                  'Successfully Reacted to The Post',
-                  style: TextStyle(color: Colors.white70),
-                ),
-              ).show(context);
+              CherryToastMsgs.CherryToastSuccess(
+                info: info,
+                context: context,
+                title: 'Success!!',
+                description: 'You Reacted To The Comment Successfully',
+              );
             }
 
             if (state is GiveReactionFail) {
-              CherryToast.error(
-                title: Text(
-                  "Failed!",
-                  style: TextStyle(color: Colors.white),
-                ),
-                toastDuration: Duration(seconds: 5),
-                borderRadius: info.screenWidth * 0.04,
-                backgroundColor: Color(0xff9b0d0d),
-                shadowColor: Colors.black45,
-                animationDuration: Duration(milliseconds: 300),
-                animationType: AnimationType.fromTop,
-                autoDismiss: true,
-                description: Text(
-                  state.message,
-                  style: TextStyle(color: Colors.white70),
-                ),
-              ).show(context);
+              CherryToastMsgs.CherryToastError(
+                info: info,
+                context: context,
+                title: 'Failed!!',
+                description: 'You Reacted To The Comment Failed',
+              );
+
             }
           }, builder: (context, state) {
             final postDetailsCubit = context.read<PostDetailsCubit>();
@@ -573,6 +531,8 @@ class _post_details_screenState extends State<post_details_screen> {
           }));
     });
   }
+
+
 
   Widget _buildHeader(DeviceInfo deviceInfo, BuildContext context) {
     return Padding(

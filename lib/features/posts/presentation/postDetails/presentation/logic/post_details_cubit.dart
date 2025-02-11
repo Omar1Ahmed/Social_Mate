@@ -66,9 +66,7 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
 
   Future<void> getPostCommentsCount() async {
 
-    bool isConnected = await ConnectivityHelper.isConnected();
-
-    print('Is connected Comment: ${isConnected}');
+    print('commentsCount ');
 
     try{
       emit(CommentsCountLoading());
@@ -214,7 +212,7 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
 
       }else{
 
-        emit(deleteCommentFail(e.toString()));
+        emit(CommentsError(e.toString()));
       }
     }
 
