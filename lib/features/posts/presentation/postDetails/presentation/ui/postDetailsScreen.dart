@@ -40,7 +40,6 @@ class _post_details_screenState extends State<post_details_screen> {
             print('state : $state');
 
             if (state is PostDetailsLoaded) {
-              print('PostDetailsLoaded started to get comments');
               Future.wait(
                 [
                   context.read<PostDetailsCubit>().getPostCommentsCount(),
