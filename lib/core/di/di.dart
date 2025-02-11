@@ -65,10 +65,10 @@ Future<void> initDependencies() async {
   // ---------------------------- Dio Setup ----------------------------
 
   // users Management api  client
-  getIt.registerLazySingleton<DioClient>(() => DioClient(baseUrl: postUrl), instanceName: diInstancesHelper.userDioClient);
+  getIt.registerLazySingleton<DioClient>(() => DioClient(baseUrl: userUrl), instanceName: diInstancesHelper.userDioClient);
 
   // posts api client
-  getIt.registerLazySingleton<DioClient>(() => DioClient(baseUrl: userUrl), instanceName: diInstancesHelper.PostsDioClient);
+  getIt.registerLazySingleton<DioClient>(() => DioClient(baseUrl: postUrl), instanceName: diInstancesHelper.PostsDioClient);
 
   // report api client
   getIt.registerLazySingleton<DioClient>(() => DioClient(baseUrl: reportUrl), instanceName: diInstancesHelper.ReportDioClient);
