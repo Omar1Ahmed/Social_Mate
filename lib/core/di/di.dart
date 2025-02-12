@@ -84,7 +84,7 @@ Future<void> initDependencies() async {
 
   //post data source
   getIt.registerFactory<PostRemoteDataSource>(
-    () => PostRemoteDataSourceImpl(dio: getIt<DioClient>(instanceName: diInstancesHelper.PostsDioClient), userMainDetails: getIt<userMainDetailsCubit>()),
+    () => PostRemoteDataSourceImpl(dio: getIt<DioClient>(instanceName: diInstancesHelper.PostsDioClient), dioRep: getIt<DioClient>(instanceName: diInstancesHelper.ReportDioClient), userMainDetails: getIt<userMainDetailsCubit>()),
   );
 
   // Post Details data source
@@ -93,7 +93,8 @@ Future<void> initDependencies() async {
   );
 // report data source
   getIt.registerFactory<ReportDetailsRemoteDataSource>(
-    () => ReportDetailsRemoteDataSourceImpl(getIt<userMainDetailsCubit>(), dio: getIt<DioClient>(instanceName: diInstancesHelper.ReportDioClient)),);
+    () => ReportDetailsRemoteDataSourceImpl(getIt<userMainDetailsCubit>(), dio: getIt<DioClient>(instanceName: diInstancesHelper.ReportDioClient)),
+  );
 
   getIt.registerLazySingleton<UserRemoteDataSource>(() => UserRemoteDataSourceImpl(
         dioNetworkClient: getIt<DioNetworkClient>(instanceName: 'user'),

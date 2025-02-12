@@ -6,7 +6,6 @@ import 'package:device_preview/device_preview.dart'; // Import the package
 import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/routing/routs.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
-import 'package:social_media/features/authentication/presentation/logic/auth_cubit.dart';
 import 'core/routing/appRouting.dart';
 
 Future<void> main() async {
@@ -14,22 +13,22 @@ Future<void> main() async {
   await dotenv.load();
   await initDependencies();
 
-  // Run the app with DevicePreview enabled
-  runApp(
-    MyApp(
-        appRouter: AppRouts(),
-    ),
-  );
-
+   // Run the app with DevicePreview enabled
   // runApp(
-  //   DevicePreview(
-  //     // Wrap the app with DevicePreview
-  //     enabled: !bool.fromEnvironment('dart.vm.product'), // Disable in release mode
-  //     builder: (context) => MyApp(
+  //   MyApp(
   //       appRouter: AppRouts(),
-  //     ),
   //   ),
   // );
+
+  runApp(
+    DevicePreview(
+      // Wrap the app with DevicePreview
+      enabled: !bool.fromEnvironment('dart.vm.product'), // Disable in release mode
+      builder: (context) => MyApp(
+        appRouter: AppRouts(),
+      ),
+    ),
+  );
 
 }
 
