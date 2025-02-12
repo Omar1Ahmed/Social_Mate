@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/helper/extantions.dart';
+import 'package:social_media/core/shared/widgets/animation/slide_Transition__widget.dart';
 import 'package:social_media/core/theming/colors.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 import 'package:social_media/features/posts/presentation/homePage/ui/widgets/log_out_dialog.dart';
@@ -57,7 +58,6 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.white, // Transparent to show SafeArea effect
       statusBarIconBrightness: Brightness.dark, // Use Brightness.light for white icons
-
     ));
     return InfoWidget(
       builder: (context, deviceInfo) {
@@ -156,16 +156,7 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
   }
 
   Widget _buildAnimatedCreatePostWidget(DeviceInfo deviceInfo) {
-    return SlideTransition(
-      position: Tween<Offset>(
-        begin: const Offset(0, 1),
-        end: Offset.zero,
-      ).animate(
-        CurvedAnimation(
-          parent: _createPostAnimationController,
-          curve: Curves.easeInOut,
-        ),
-      ),
+    return SlideTransitionWidget(
       child: CreatePostWidget(deviceInfo: deviceInfo),
     );
   }

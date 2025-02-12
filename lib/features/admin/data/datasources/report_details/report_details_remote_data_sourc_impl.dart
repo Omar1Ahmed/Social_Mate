@@ -1,6 +1,5 @@
 // lib/data/datasources/report_data_source.dart
 
-import 'package:social_media/core/helper/dotenv/dot_env_helper.dart';
 import 'package:social_media/core/network/dio_client.dart';
 
 import '../../../../../core/di/di.dart';
@@ -12,14 +11,13 @@ class ReportDetailsRemoteDataSourceImpl implements ReportDetailsRemoteDataSource
   final DioClient dio;
   final userMainDetailsCubit userMainDetails;
   final token = getIt<userMainDetailsCubit>().state.token;
-  final String baseUrl = EnvHelper.getString('report_Base_url');
   ReportDetailsRemoteDataSourceImpl(this.userMainDetails, {required this.dio});
 
   @override
   Future<ReportResponse> getReportDetails(int reportId) async {
     try {
       final response = await dio.get(
-        '$baseUrl/posts/reports/$reportId',
+        '/posts/reports/$reportId',
         header: {
           'Authorization': 'Bearer $token'
         },

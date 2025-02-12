@@ -117,15 +117,15 @@ class _PostCardWidgetState extends State<PostCardWidget> with SingleTickerProvid
                             create: (context) => getIt<HomeCubit>()..reportCategories(),
                             child: ShowReportPostDialogWidget(
                               deviceInfo: widget.deviceInfo,
-                              onPressedReport: (categoryId, reason) {
-                                context.pop();
-                                getIt.get<HomeCubit>().reportPost(
+                              onPressedReport: (categoryId, reason) async {
+                                await getIt.get<HomeCubit>().reportPost(
                                       widget.post.id,
                                       CreateReportModel(
                                         categoryId: categoryId,
-                                        reason: '$reason',
+                                        reason: reason,
                                       ),
                                     );
+                                context.pop();
                               },
                             ),
                           ),
