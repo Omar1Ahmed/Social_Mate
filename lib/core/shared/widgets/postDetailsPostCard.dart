@@ -288,7 +288,7 @@ class PostDetailsPostCard extends StatelessWidget {
                   child: RatingStars(
                     // value: postDetailsCubit.SelectedRatingValue ?? 0.0,
                     value: SelectedRatingValue ?? 0.0,
-                    onValueChanged: (value) => disableStars ? null : setRateAverage!(value.toInt()),
+                    onValueChanged: disableStars ? null :(value) =>  setRateAverage!(value.toInt()),
                     starBuilder: (index, color) => Icon(
                       Icons.star,
                       color: color,
