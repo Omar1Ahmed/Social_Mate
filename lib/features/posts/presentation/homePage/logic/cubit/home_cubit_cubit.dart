@@ -100,9 +100,13 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   Future<void> reportPost(int postId, CreateReportModel createReportModel) async {
+    print('report');
     try {
       await postRepository.reportPost(postId, createReportModel);
+    print('report2');
       emit(PostReported());
+    print('report3');
+
     } catch (e) {
       emit(PostReportedFailed(e.toString()));
     }

@@ -8,12 +8,14 @@ import 'package:social_media/core/theming/colors.dart';
 import 'package:social_media/core/theming/styles.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 import 'package:social_media/features/posts/data/model/entities/commentEntity.dart';
+import 'package:social_media/features/posts/presentation/postDetails/presentation/logic/comment/comment_cubit.dart';
 import 'package:social_media/features/posts/presentation/postDetails/presentation/logic/post_details_cubit.dart';
 
 class CommentCard extends StatelessWidget {
   final DeviceInfo info;
+  final int index;
   final CommentEntity comment;
-  const CommentCard({required this.info, required this.comment, super.key});
+  const CommentCard({required this.info, required this.index, required this.comment,super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -72,12 +74,10 @@ class CommentCard extends StatelessWidget {
                                 builder: (context1) => ShowDeleteDialogWidget(
                                     deviceInfo: info,
                                     onPressed: () {
-                                      print('pressed');
                                       context.read<PostDetailsCubit>().deleteComment(comment.id);
-                                      Navigator.pop(context);
-
-                                      context.pushReplacementNamed(Routes.postDetailsScreen);
                                     }));
+
+
                           },
                           icon: Icon(
                             Icons.close,
@@ -111,10 +111,12 @@ class CommentCard extends StatelessWidget {
                       )),
                   IconButton(
                       onPressed: () {
-                        context.read<PostDetailsCubit>().giveReaction(commentId: comment.id, reactionType: ReactionType.LIKE);
+                        // context.read<PostDetailsCubit>().giveReaction(commentId: comment.id,index: index, reactionType: ReactionType.LIKE);
+                        context.read<CommentCubit>().giveReaction(postId: context.read<PostDetailsCubit>().post!.id, reactionType: ReactionType.LIKE);
                       },
                       icon: Icon(
-                        context.read<PostDetailsCubit>().selectedReactionType == ReactionType.LIKE ? Icons.thumb_up_alt_rounded : Icons.thumb_up_alt_outlined,
+                        context.read<CommentCubit>().selectedReactionType == ReactionType.LIKE ? Icons.thumb_up_alt_rounded :
+                        Icons.thumb_up_alt_outlined,
                         color: ColorsManager.primaryColor,
                         size: info.screenWidth * 0.06,
                       )),
@@ -124,10 +126,14 @@ class CommentCard extends StatelessWidget {
                       )),
                   IconButton(
                       onPressed: () {
-                        context.read<PostDetailsCubit>().giveReaction(commentId: comment.id, reactionType: ReactionType.DIS_LIKE);
-                      },
+
+                        // context.read<PostDetailsCubit>().giveReaction(commentId: comment.id,index: index, reactionType: ReactionType.DIS_LIKE);
+                        context.read<CommentCubit>().giveReaction(postId: context.read<PostDetailsCubit>().post!.id, reactionType: ReactionType.DIS_LIKE);
+
+                        },
                       icon: Icon(
-                        context.read<PostDetailsCubit>().selectedReactionType == ReactionType.DIS_LIKE ? Icons.thumb_down_alt_rounded : Icons.thumb_down_alt_outlined,
+                        context.read<CommentCubit>().selectedReactionType == ReactionType.DIS_LIKE ? Icons.thumb_down_alt_rounded :
+                        Icons.thumb_down_alt_outlined,
                         color: ColorsManager.redColor,
                         size: info.screenWidth * 0.06,
                       )),

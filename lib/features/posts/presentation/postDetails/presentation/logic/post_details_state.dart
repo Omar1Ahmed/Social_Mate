@@ -43,12 +43,12 @@ final class CommentsError extends PostDetailsState {
 
 
 // Give Reaction
-final class GiveReactionLoading extends PostDetailsState {}
-final class GiveReactionSuccess extends PostDetailsState {}
-final class GiveReactionFail extends PostDetailsState {
-   final String message;
-  GiveReactionFail(this.message);
-}
+// final class GiveReactionLoading extends PostDetailsState {}
+// final class GiveReactionSuccess extends PostDetailsState {}
+// final class GiveReactionFail extends PostDetailsState {
+//    final String message;
+//   GiveReactionFail(this.message);
+// }
 
 final class deleteCommentLoading extends PostDetailsState {}
 final class deleteCommentSuccess extends PostDetailsState {}

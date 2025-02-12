@@ -6,10 +6,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:social_media/core/Responsive/Models/device_info.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
+import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/helper/extantions.dart';
+import 'package:social_media/core/routing/routs.dart';
+import 'package:social_media/core/shared/model/create_report_model.dart';
 import 'package:social_media/core/shared/widgets/Shimmer/ShimmerStyle.dart';
 import 'package:social_media/core/shared/widgets/cherryToast/CherryToastMsgs.dart';
 import 'package:social_media/core/shared/widgets/postDetailsPostCard.dart';
+import 'package:social_media/core/shared/widgets/show_delete_dialog_widget.dart';
 
 import 'package:social_media/core/shared/widgets/show_report_post_dialog_widget.dart';
 import 'package:social_media/core/shared/widgets/animation/slide_Transition__widget.dart';
@@ -17,6 +21,8 @@ import 'package:social_media/core/shared/widgets/animation/tween_animation_widge
 import 'package:social_media/core/theming/colors.dart';
 import 'package:social_media/core/theming/styles.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
+import 'package:social_media/features/posts/presentation/homePage/logic/cubit/home_cubit_cubit.dart';
+import 'package:social_media/features/posts/presentation/postDetails/presentation/logic/comment/comment_cubit.dart';
 
 import 'package:social_media/features/posts/presentation/postDetails/presentation/logic/post_details_cubit.dart';
 import 'package:social_media/core/shared/widgets/CommentCard.dart';
@@ -27,10 +33,10 @@ class post_details_screen extends StatefulWidget {
 }
 
 class _post_details_screenState extends State<post_details_screen> {
-  late FocusNode focusNode;
+
   @override
   void initState() {
-    focusNode = FocusNode();
+
     super.initState();
     print('initState');
     context.read<PostDetailsCubit>().getPostDetails();
@@ -71,23 +77,23 @@ class _post_details_screenState extends State<post_details_screen> {
           );
         }
 
-        if (state is GiveReactionSuccess) {
-          CherryToastMsgs.CherryToastSuccess(
-            info: info,
-            context: context,
-            title: 'Success!!',
-            description: 'You Reacted To The Comment Successfully',
-          );
-        }
-
-        if (state is GiveReactionFail) {
-          CherryToastMsgs.CherryToastError(
-            info: info,
-            context: context,
-            title: 'Failed!!',
-            description: 'You Reacted To The Comment Failed',
-          );
-        }
+        // if (state is GiveReactionSuccess) {
+        //   CherryToastMsgs.CherryToastSuccess(
+        //     info: info,
+        //     context: context,
+        //     title: 'Success!!',
+        //     description: 'You Reacted To The Comment Successfully',
+        //   );
+        // }
+        //
+        // if (state is GiveReactionFail) {
+        //   CherryToastMsgs.CherryToastError(
+        //     info: info,
+        //     context: context,
+        //     title: 'Failed!!',
+        //     description: 'You Reacted To The Comment Failed',
+        //   );
+        // }
 
         if (state is CommentsCreated) {
           Future.wait(
@@ -112,10 +118,38 @@ class _post_details_screenState extends State<post_details_screen> {
             description: state.message,
           );
         }
+
+        if(state is deleteCommentSuccess){
+
+          CherryToastMsgs.CherryToastSuccess(
+            info: info,
+            context: context,
+            title: 'Success!!',
+            description: 'Your Comment is Successfully deleted',
+          );
+
+          Navigator.pop(context);
+          Future.wait([
+          context.read<PostDetailsCubit>().getPostCommentsCount(),
+          context.read<PostDetailsCubit>().getPostComments(),
+          ]);
+          }
+
+        if(state is deleteCommentFail){
+          CherryToastMsgs.CherryToastError(
+            info: info,
+            context: context,
+            title: 'Failed!!',
+            description: state.message,
+          );
+        }
+
+
       }, builder: (context, state) {
         final postDetailsCubit = context.read<PostDetailsCubit>();
         final userMainDetails = context.read<userMainDetailsCubit>();
         return Scaffold(
+
           backgroundColor: ColorsManager.whiteColor,
           body: Column(
             children: [
@@ -139,14 +173,45 @@ class _post_details_screenState extends State<post_details_screen> {
                               titleText: postDetailsCubit.post?.title,
                               showDeleteButton: userMainDetails.state.userId == postDetailsCubit.post?.createdBy.id,
                               DeleteButtonOnPressed: () {
-                                print('Pressed');
+                                context.read<PostDetailsCubit>().commentfocusNode.unfocus();
+                                showDialog(context: context, builder: (context1) => ShowDeleteDialogWidget(onPressed: (){
+                                  context1.pop();
+                                  getIt.get<HomeCubit>().deletePost(context.read<PostDetailsCubit>().post!.id);
+                                  context1.pushReplacementNamed(Routes.homePage);
+                                }, deviceInfo: info));
                               },
                               isNameAndDateShimmer: state is PostDetailsLoading || state is PostDetailsInitial,
                               fullNameText: postDetailsCubit.post?.createdBy.fullName,
                               formattedDateText: postDetailsCubit.post?.FormattedDate,
                               showReportButton: true,
                               ReportButtonOnPressed: () {
-                                print('report Pressed');
+                                context.read<PostDetailsCubit>().commentfocusNode.unfocus();
+                                showDialog(
+                                  context: context,
+                                  builder: (context1) => BlocProvider(
+                                    create: (context) => getIt<HomeCubit>()..reportCategories(),
+                                    child: ShowReportPostDialogWidget(
+                                      deviceInfo: info,
+                                      onPressedReport: (categoryId, reason) async {
+                                        await getIt.get<HomeCubit>().reportPost(
+                                          postDetailsCubit.post!.id,
+                                          CreateReportModel(
+                                            categoryId: categoryId,
+                                            reason: reason,
+                                          ),
+                                        );
+                                        context.pop();
+
+                                        CherryToastMsgs.CherryToastSuccess(
+                                          info: info,
+                                          context: context,
+                                          title: 'Success!!',
+                                          description: 'You Reported The Post Successfully',
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                );
                               },
                               isContentShimmer: state is PostDetailsLoading || state is PostDetailsInitial,
                               contentText: postDetailsCubit.post?.content,
@@ -172,7 +237,7 @@ class _post_details_screenState extends State<post_details_screen> {
                         ),
                       ),
                     ),
-                    postDetailsCubit.comments == null
+                    postDetailsCubit.comments == null || postDetailsCubit.comments == []
                         ? SliverToBoxAdapter(
                             child: customShimmer(
                                 childWidget: Column(children: [
@@ -287,13 +352,35 @@ class _post_details_screenState extends State<post_details_screen> {
                                       index: index,
                                       deviceInfo: info,
                                       child: SlideTransitionWidget(
-                                          child: CommentCard(
-                                        comment: postDetailsCubit.comments![index],
-                                        info: info,
-                                      )),
+                                          child: BlocProvider(create: (_) => CommentCubit(postDetailsRepository: getIt(),comment: postDetailsCubit.comments![index]),
+                                              child: BlocConsumer<CommentCubit, CommentState>(
+                                                listener: (context, state) {
+                                                  if(state is GiveReactionSuccess){
+                                                      CherryToastMsgs.CherryToastSuccess(
+                                                        info: info,
+                                                        context: context,
+                                                        title: 'Success!!',
+                                                        description: 'You Reacted To The Comment Successfully',
+                                                      );
+                                                  }
+
+                                                  if(state is GiveReactionFail){
+                                                    CherryToastMsgs.CherryToastError(
+                                                            info: info,
+                                                            context: context,
+                                                            title: 'Failed!!',
+                                                            description: state.message,
+                                                          );
+                                                  }
+                                                },
+                                                  builder: (context, state) => CommentCard(
+                                                index: index,
+                                                comment: postDetailsCubit.comments![index],
+                                                info: info,
+                                              )))),
                                     )
                                   : Container(
-                                      margin: EdgeInsetsDirectional.only(top: info.screenHeight * 0.08),
+                                      margin: EdgeInsetsDirectional.only(top: info.screenHeight * 0.07),
                                       width: info.screenWidth * 0.6,
                                       height: info.screenHeight * 0.3,
                                       child: Image.asset('assets/images/noComments.png'),
@@ -305,6 +392,7 @@ class _post_details_screenState extends State<post_details_screen> {
               ),
               Container(
                 height: info.screenHeight * 0.076,
+                // color: Colors.red,
                 padding: EdgeInsetsDirectional.only(bottom: info.screenHeight * 0.007, top: info.screenHeight * 0.007),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -321,15 +409,16 @@ class _post_details_screenState extends State<post_details_screen> {
                           hintText: 'Add comment',
                         ),
                         textInputAction: TextInputAction.send,
-                        focusNode: focusNode,
+                        focusNode: context.read<PostDetailsCubit>().commentfocusNode,
                         onSubmitted: (_) {
-                          FocusScope.of(context).requestFocus(focusNode);
+                          FocusScope.of(context).requestFocus(context.read<PostDetailsCubit>().commentfocusNode);
                           postDetailsCubit.createComment(context);
                         },
                       ),
                     ),
                     IconButton(
                         onPressed: () {
+
                           postDetailsCubit.createComment(context);
                         },
                         icon: Icon(

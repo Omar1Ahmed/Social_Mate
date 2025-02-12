@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:social_media/core/helper/format_time_ago.dart';
 import 'package:social_media/features/posts/data/model/entities/commentEntity.dart';
 import 'package:social_media/core/shared/model/post_response.dart';
 
@@ -41,7 +42,7 @@ class Comment {
   Map<String, dynamic> toJson() => _$CommentToJson(this);
 
   CommentEntity toEntity() {
-    String FormattedDate = DateFormat("yyyy-MM-dd h:mm a").format(createdOn);
+    String FormattedDate = formatTimeAgo(createdOn.toString());
 
     return CommentEntity(
         id: id,

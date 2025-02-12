@@ -4,6 +4,7 @@ import 'package:social_media/core/helper/extantions.dart';
 import 'package:social_media/core/shared/widgets/Shimmer/ShimmerStyle.dart';
 import 'package:social_media/core/shared/widgets/build_category_selection_field.dart';
 import 'package:social_media/core/shared/widgets/cherryToast/CherryToastMsgs.dart';
+import 'package:social_media/core/theming/styles.dart';
 import 'package:social_media/features/admin/data/models/main_report_model.dart';
 import '../../../features/posts/presentation/homePage/logic/cubit/home_cubit_cubit.dart';
 import '../../../features/posts/presentation/homePage/ui/widgets/build_error_widget.dart';
@@ -32,13 +33,22 @@ class _ShowReportPostDialogWidgetState extends State<ShowReportPostDialogWidget>
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeCubit, HomeState>(
+    return BlocConsumer<HomeCubit, HomeState>(
+      listener: (context, state) {
+
+        print('state22222: $state');
+         if(state is PostReported){
+        // Future.delayed( Duration(seconds: 2), () => Navigator.pop(context));
+          print('reporteeeeeeeeeeeed');
+        }
+      },
       builder: (context, state) {
+        print('state: $state');
         if (state is LoadedReportCategories) {
           return _buildReportDialog(context, state.categories);
         } else if (state is PostReportedLoading) {
           return _buildShimmerEffect(); // Display shimmer effect while loading
-        } else {
+        }else{
           return BuildErrorWidget(deviceInfo: widget.deviceInfo);
         }
       },
@@ -90,7 +100,7 @@ class _ShowReportPostDialogWidgetState extends State<ShowReportPostDialogWidget>
       actions: [
         _buildReportButton(
           widget.deviceInfo,
-          () {
+          () async {
             if (selectedCategory == -1) {
               CherryToastMsgs.CherryToastError(
                 info: widget.deviceInfo,
@@ -106,7 +116,8 @@ class _ShowReportPostDialogWidgetState extends State<ShowReportPostDialogWidget>
                 description: 'Please provide a reason for the report.',
               );
             } else {
-              widget.onPressedReport!(categories[selectedCategory].id, reasonController.text);
+              await widget.onPressedReport!(categories[selectedCategory].id, reasonController.text);
+              print('reporteeeeeeeeeeeed55555555555555 ${context.read<HomeCubit>().state} ');
             }
           },
         ),

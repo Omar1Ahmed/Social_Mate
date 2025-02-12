@@ -14,21 +14,21 @@ Future<void> main() async {
   await initDependencies();
 
   // Run the app with DevicePreview enabled
-  // runApp(
-  //   MyApp(
-  //       appRouter: AppRouts(),
-  //   ),
-  // );
-
   runApp(
-    DevicePreview(
-      // Wrap the app with DevicePreview
-      enabled: !bool.fromEnvironment('dart.vm.product'), // Disable in release mode
-      builder: (context) => MyApp(
+    MyApp(
         appRouter: AppRouts(),
-      ),
     ),
   );
+
+  // runApp(
+  //   DevicePreview(
+  //     // Wrap the app with DevicePreview
+  //     enabled: !bool.fromEnvironment('dart.vm.product'), // Disable in release mode
+  //     builder: (context) => MyApp(
+  //       appRouter: AppRouts(),
+  //     ),
+  //   ),
+  // );
 }
 
 class MyApp extends StatelessWidget {

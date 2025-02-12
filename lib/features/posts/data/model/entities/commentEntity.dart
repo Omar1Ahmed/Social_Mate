@@ -7,8 +7,8 @@ class CommentEntity {
   final UserEntity createdBy;
   final DateTime createdOn;
   final String FormattedDate;
-  final int numOfLikes;
-  final int numOfDisLikes;
+  int numOfLikes;
+  int numOfDisLikes;
 
   CommentEntity({
     required this.id,
