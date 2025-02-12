@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:social_media/core/Responsive/Models/device_info.dart';
 import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/helper/extantions.dart';
+import 'package:social_media/core/shared/widgets/cherryToast/CherryToastMsgs.dart';
 import '../../routing/routs.dart';
 import '../../theming/colors.dart';
 import '../../../features/posts/presentation/homePage/logic/cubit/home_cubit_cubit.dart';
@@ -55,19 +56,15 @@ class ShowCreatePostDialogWidget extends StatelessWidget {
             final String content = contentController.text.trim();
 
             if (title.isEmpty || content.isEmpty) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("Please fill in all fields.")),
-              );
+              CherryToastMsgs.CherryToastError(info: deviceInfo, context: context, title: "Invalid Input", description: "Please enter a title and content.");
               return;
             }
 
             if (title.length < 25) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("Title must be at least 25 characters.")),
-              );
+              CherryToastMsgs.CherryToastError(info: deviceInfo, context: context, title: "Invalid Title", description: "Title must be at least 25 characters.");
               return;
             }
-
+            CherryToastMsgs.CherryToastSuccess(info: deviceInfo, context: context, title: "post created", description: "post created successfully.");
             await getIt.get<HomeCubit>().createPost(title, content);
             context.pushReplacementNamed(Routes.homePage);
             titleController.clear();
