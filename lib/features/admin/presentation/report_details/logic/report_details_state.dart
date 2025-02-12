@@ -15,6 +15,6 @@ final class ReportDetailsError extends ReportDetailsState {
 
 }
 final class ReportDetailsLoaded extends ReportDetailsState {
-  final ReportResponse report;
+  final ReportData report;
   const ReportDetailsLoaded({required this.report});
 }

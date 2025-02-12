@@ -1,8 +1,8 @@
 // lib/domain/repositories/report_repository.dart
 
-import '../../../data/models/report_details/report_models.dart';
+import '../../../data/models/main_report_model.dart';
 
 abstract class ReportDetailsRepository {
-  Future<ReportResponse> getReportDetails(int reportId);
-  Future<List<RelatedReport>> getRelatedReports(int reportId);
+  Future<ReportData> getReportDetails(int reportId);
+  Future<List<ReportData>> getRelatedReports(int reportId);
 }

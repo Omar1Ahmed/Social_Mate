@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../data/models/report_details/report_models.dart';
+import '../../../data/models/main_report_model.dart';
 import '../../../domain/repositories/report_details/report_repository.dart';
 
 part 'report_details_state.dart';

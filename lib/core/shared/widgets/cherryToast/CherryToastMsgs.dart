@@ -5,6 +5,7 @@ import 'package:social_media/core/Responsive/Models/device_info.dart';
 
 class CherryToastMsgs {
 
+ // ignore: non_constant_identifier_names
  static CherryToastSuccess({required DeviceInfo info, required BuildContext context, required String title, required String description,  AnimationType animationType = AnimationType.fromTop, Duration duration = const Duration(seconds: 3)}) {
   return CherryToast.success(
     title: Text(
@@ -26,6 +27,7 @@ class CherryToastMsgs {
 }
 
 
+// ignore: non_constant_identifier_names
 static CherryToastError({required DeviceInfo info, required BuildContext context, required String title, required String description,  AnimationType animationType = AnimationType.fromTop, Duration duration = const Duration(seconds: 3)}) {
   return CherryToast.error(
     title: Text(
@@ -43,6 +45,6 @@ static CherryToastError({required DeviceInfo info, required BuildContext context
       description,
       style: TextStyle(color: Colors.white70),
     ),
-  ).show(context);;
+  ).show(context);
 }
 }
