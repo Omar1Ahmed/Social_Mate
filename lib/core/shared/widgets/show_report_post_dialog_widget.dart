@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/helper/extantions.dart';
+import 'package:social_media/core/shared/widgets/Shimmer/ShimmerStyle.dart';
 import 'package:social_media/core/shared/widgets/build_category_selection_field.dart';
 import 'package:social_media/core/shared/widgets/cherryToast/CherryToastMsgs.dart';
 import 'package:social_media/features/admin/data/models/main_report_model.dart';
@@ -36,11 +37,36 @@ class _ShowReportPostDialogWidgetState extends State<ShowReportPostDialogWidget>
         if (state is LoadedReportCategories) {
           return _buildReportDialog(context, state.categories);
         } else if (state is PostReportedLoading) {
-          return const Center(child: CircularProgressIndicator());
+          return _buildShimmerEffect(); // Display shimmer effect while loading
         } else {
           return BuildErrorWidget(deviceInfo: widget.deviceInfo);
         }
       },
+    );
+  }
+
+  Widget _buildShimmerEffect() {
+    return CustomDialogWidget(
+      deviceInfo: widget.deviceInfo,
+      title: "Report the Post",
+      fields: [
+        customShimmer(
+          childWidget: Container(
+            height: widget.deviceInfo.localHeight * 0.1,
+            width: double.infinity,
+            color: Colors.grey.shade300,
+          ),
+        ),
+        SizedBox(height: widget.deviceInfo.localHeight * 0.02),
+        customShimmer(
+          childWidget: Container(
+            height: widget.deviceInfo.localHeight * 0.15,
+            width: double.infinity,
+            color: Colors.grey.shade300,
+          ),
+        ),
+      ],
+      actions: [],
     );
   }
 
