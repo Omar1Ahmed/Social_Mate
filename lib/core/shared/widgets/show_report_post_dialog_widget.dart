@@ -107,6 +107,12 @@ class _ShowReportPostDialogWidgetState extends State<ShowReportPostDialogWidget>
               );
             } else {
               widget.onPressedReport!(categories[selectedCategory].id, reasonController.text);
+              CherryToastMsgs.CherryToastSuccess(
+                info: widget.deviceInfo,
+                context: context,
+                title: 'Success',
+                description: 'Post reported successfully.',
+              );
             }
           },
         ),
