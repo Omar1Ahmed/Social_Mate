@@ -25,6 +25,7 @@ class PostDetailsPostCard extends StatelessWidget {
     required this.isRateAverageShimmer,
     required this.rateAverageText,
     this.showStars = true,
+    this.disableStars = false,
     required this.SelectedRatingValue,
     this.setRateAverage,
   });
@@ -46,6 +47,7 @@ class PostDetailsPostCard extends StatelessWidget {
   final bool isRateAverageShimmer;
   final String? rateAverageText;
   final bool showStars;
+  final bool disableStars;
   final double? SelectedRatingValue;
   final Function(int)? setRateAverage;
 
@@ -134,7 +136,7 @@ class PostDetailsPostCard extends StatelessWidget {
                 Divider(
                   color: Colors.black,
                   thickness: info.screenWidth * 0.002,
-                  height: info.localHeight * 0.015,
+                  height: info.screenHeight * 0.015,
                 ),
                 // state is PostDetailsLoading || state is PostDetailsInitial
                 isNameAndDateShimmer
@@ -206,7 +208,7 @@ class PostDetailsPostCard extends StatelessWidget {
               Divider(
                 color: Colors.black,
                 thickness: info.screenWidth * 0.001,
-                height: info.localHeight * 0.0061,
+                height: info.screenHeight * 0.0061,
               ),
               Row(
                 children: [
@@ -245,7 +247,7 @@ class PostDetailsPostCard extends StatelessWidget {
                 ],
               ),
               // postDetailsCubit.RateAverage == null
-              if(showStars)
+              showStars ?
                 isRateAverageShimmer
                     ? customShimmer(
                     childWidget: Container(
@@ -286,11 +288,7 @@ class PostDetailsPostCard extends StatelessWidget {
                   child: RatingStars(
                     // value: postDetailsCubit.SelectedRatingValue ?? 0.0,
                     value: SelectedRatingValue ?? 0.0,
-
-                    // onValueChanged: (value) {
-                    //   postDetailsCubit.setRateAverage(value.toInt());
-                    // },
-                    onValueChanged: (value) => setRateAverage!(value.toInt()),
+                    onValueChanged: (value) => disableStars ? null : setRateAverage!(value.toInt()),
                     starBuilder: (index, color) => Icon(
                       Icons.star,
                       color: color,
@@ -300,7 +298,11 @@ class PostDetailsPostCard extends StatelessWidget {
                     starSize: info.screenWidth * 0.075,
                     valueLabelVisibility: false,
                   ),
-                ),
+                )
+              : SizedBox(
+                height: info.screenHeight * 0.015,
+              ),
+
             ])
           ],
         ));

@@ -23,8 +23,8 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
   List<CommentEntity>? comments;
   static int _PostId = 0;
   int? commentsCount;
-  double? RateAverage;
-  double SelectedRatingValue = 0;
+  double? rateAverage;
+  double selectedRatingValue = 0;
   ReactionType? selectedReactionType;
 
   static void setSelectedPost(int postId) {
@@ -33,13 +33,13 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
   }
 
   Future<void> setRateAverage(int value) async {
-    SelectedRatingValue = value.toDouble();
+    selectedRatingValue = value.toDouble();
     emit(SetPostRateLoading());
     final response = await postDetailsRepository.RatePost(_PostId, value);
     if (response['statusCode'] == 204) {
       emit(SuccessPostRate());
     } else {
-      SelectedRatingValue = RateAverage ?? 0;
+      selectedRatingValue = rateAverage ?? 0;
       emit(FailPostRate());
     }
   }
@@ -82,16 +82,16 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
     print('Is connected Rate: ${isConnected}');
     try {
       emit(RatePostAverageLoading());
-      RateAverage = await postDetailsRepository.getPostRateAverage(_PostId);
+      rateAverage = await postDetailsRepository.getPostRateAverage(_PostId);
 
-      SelectedRatingValue = RateAverage!;
+      selectedRatingValue = rateAverage!;
 
       emit(RatePostAverageLoaded());
     } catch (e, trace) {
       print('rate Error ${e.toString()}');
       if (e.toString().contains('null')) {
-        RateAverage = 0;
-        SelectedRatingValue = 0;
+        rateAverage = 0;
+        selectedRatingValue = 0;
         emit(RatePostAverageLoaded());
       }
       print(trace);
@@ -101,9 +101,6 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
 
 
   Future<void> getPostComments() async {
-    bool isConnected = await ConnectivityHelper.isConnected();
-
-    print('Is connected Rate: ${isConnected}');
 
     try {
       emit(CommentsLoading());

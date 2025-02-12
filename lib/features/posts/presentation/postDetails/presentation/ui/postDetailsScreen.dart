@@ -27,8 +27,11 @@ class post_details_screen extends StatefulWidget {
 }
 
 class _post_details_screenState extends State<post_details_screen> {
+
+  late FocusNode focusNode;
   @override
   void initState() {
+    focusNode = FocusNode();
     super.initState();
     print('initState');
     context.read<PostDetailsCubit>().getPostDetails();
@@ -88,7 +91,8 @@ class _post_details_screenState extends State<post_details_screen> {
             }
 
             if(state is CommentsCreated){
-              CherryToastMsgs.CherryToastSuccess(
+              context.read<PostDetailsCubit>().getPostComments();
+            CherryToastMsgs.CherryToastSuccess(
                 info: info,
                 context: context,
                 title: 'Success!!',
@@ -147,10 +151,10 @@ class _post_details_screenState extends State<post_details_screen> {
                                   contentText: postDetailsCubit.post?.content,
                                   isCommentsCountShimmer: postDetailsCubit.commentsCount == null,
                                   commentsCountText: '${postDetailsCubit.commentsCount} comments',
-                                  isRateAverageShimmer: postDetailsCubit.RateAverage == null,
-                                  rateAverageText: '${postDetailsCubit.RateAverage} Rate',
+                                  isRateAverageShimmer: postDetailsCubit.rateAverage == null,
+                                  rateAverageText: '${postDetailsCubit.rateAverage} Rate',
                                   showStars: true,
-                                  SelectedRatingValue: postDetailsCubit.SelectedRatingValue,
+                                  SelectedRatingValue: postDetailsCubit.selectedRatingValue,
                                   setRateAverage: (postDetailsCubit.setRateAverage), 
                                 ),
 
@@ -321,8 +325,11 @@ class _post_details_screenState extends State<post_details_screen> {
 
                                       ),
                                       textInputAction: TextInputAction.send,
-
-                                      // onSubmitted: (_) => postDetailsCubit.createComment(context),
+                                      focusNode: focusNode,
+                                      onSubmitted: (_) {
+                                        FocusScope.of(context).requestFocus(focusNode);
+                                        postDetailsCubit.createComment(context);
+                                      },
 
                                     ),
                                   ),
