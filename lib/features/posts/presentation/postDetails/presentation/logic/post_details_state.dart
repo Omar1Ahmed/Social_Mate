@@ -34,6 +34,13 @@ final class SetPostRateLoading extends PostDetailsState {}
 final class CommentsLoading extends PostDetailsState {}
 final class CommentsLoaded extends PostDetailsState {}
 
+final class CommentsCreated extends PostDetailsState {}
+final class CommentsCreationLoading extends PostDetailsState {}
+final class CommentsError extends PostDetailsState {
+  final String message;
+  CommentsError(this.message);
+}
+
 
 // Give Reaction
 final class GiveReactionLoading extends PostDetailsState {}

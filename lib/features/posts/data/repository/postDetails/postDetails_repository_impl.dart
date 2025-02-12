@@ -71,5 +71,13 @@ class PostDetailsRepositoryImpl implements PostDetailsRepository {
 
   }
 
+  @override
+  Future createComment(int postId, String comment) {
+
+    final response = postDetailsRemoteDataSource.createComment(postId, comment);
+
+    return response;
+  }
+
 
 }

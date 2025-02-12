@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
 import 'package:social_media/core/shared/entities/post_entity.dart';
 import 'package:social_media/core/error/errorResponseModel.dart';
@@ -16,12 +17,14 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
 
   PostDetailsCubit(this.postDetailsRepository) : super(PostDetailsInitial());
 
-  late PostEntity post;
+  TextEditingController createCommentController = TextEditingController();
+
+  PostEntity? post;
   List<CommentEntity>? comments;
   static int _PostId = 0;
   int? commentsCount;
-  double? RateAverage;
-  double SelectedRatingValue = 0;
+  double? rateAverage;
+  double selectedRatingValue = 0;
   ReactionType? selectedReactionType;
 
   static void setSelectedPost(int postId) {
@@ -30,31 +33,28 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
   }
 
   Future<void> setRateAverage(int value) async {
-
-    SelectedRatingValue = value.toDouble();
+    selectedRatingValue = value.toDouble();
     emit(SetPostRateLoading());
     final response = await postDetailsRepository.RatePost(_PostId, value);
-    if(response['statusCode'] == 204){
-
+    if (response['statusCode'] == 204) {
       emit(SuccessPostRate());
-    }else{
-      SelectedRatingValue = RateAverage?? 0;
+    } else {
+      selectedRatingValue = rateAverage ?? 0;
       emit(FailPostRate());
     }
   }
 
   Future<void> getPostDetails() async {
-
     bool isConnected = await ConnectivityHelper.isConnected();
 
     print('Is connected : ${isConnected}');
 
-    try{
-     emit(PostDetailsLoading());
-     post = await postDetailsRepository.getPostDetails(_PostId);
+    try {
+      emit(PostDetailsLoading());
+      post = await postDetailsRepository.getPostDetails(_PostId);
 
-      emit(PostDetailsLoaded(post));
-    }catch(e,trace){
+      emit(PostDetailsLoaded(post!));
+    } catch (e, trace) {
       print(trace);
       emit(PostDetailsError(e.toString()));
     }
@@ -62,17 +62,14 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
 
 
   Future<void> getPostCommentsCount() async {
+    print('commentsCount ');
 
-    bool isConnected = await ConnectivityHelper.isConnected();
-
-    print('Is connected Comment: ${isConnected}');
-
-    try{
+    try {
       emit(CommentsCountLoading());
       commentsCount = await postDetailsRepository.getPostCommentsCount(_PostId);
       print('commentsCount: $commentsCount');
       emit(CommentsCountLoaded());
-    }catch(e,trace){
+    } catch (e, trace) {
       print(trace);
       emit(PostDetailsError(e.toString()));
     }
@@ -80,25 +77,22 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
 
 
   Future<void> getPostRateAverage() async {
-
     bool isConnected = await ConnectivityHelper.isConnected();
 
     print('Is connected Rate: ${isConnected}');
-    try{
+    try {
       emit(RatePostAverageLoading());
-      RateAverage = await postDetailsRepository.getPostRateAverage(_PostId);
+      rateAverage = await postDetailsRepository.getPostRateAverage(_PostId);
 
-      SelectedRatingValue = RateAverage!;
+      selectedRatingValue = rateAverage!;
 
       emit(RatePostAverageLoaded());
-    }catch(e,trace){
-
+    } catch (e, trace) {
       print('rate Error ${e.toString()}');
-      if(e.toString().contains('null')){
-       RateAverage = 0;
-       SelectedRatingValue = 0;
-      emit(RatePostAverageLoaded());
-
+      if (e.toString().contains('null')) {
+        rateAverage = 0;
+        selectedRatingValue = 0;
+        emit(RatePostAverageLoaded());
       }
       print(trace);
       emit(PostDetailsError(e.toString()));
@@ -108,17 +102,12 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
 
   Future<void> getPostComments() async {
 
-    bool isConnected = await ConnectivityHelper.isConnected();
-
-    print('Is connected Rate: ${isConnected}');
-
-    try{
+    try {
       emit(CommentsLoading());
       comments = await postDetailsRepository.getPostComments(_PostId);
 
       emit(CommentsLoaded());
-    }catch(e,trace){
-
+    } catch (e, trace) {
       print('rate Error ${e.toString()}');
       print(trace);
       emit(PostDetailsError(e.toString()));
@@ -128,63 +117,83 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
   Future<void> giveReaction({
     required int commentId,
     required ReactionType reactionType,
-  }) async{
+  }) async {
+    try {
+      emit(GiveReactionLoading());
+      final response = await postDetailsRepository.GiveReaction(
+          _PostId, commentId, reactionType);
+      print('give reaction: $response');
+      if (response['statusCode'] == 204) {
+        selectedReactionType = reactionType;
 
-    try{
-    emit(GiveReactionLoading());
-    final response = await postDetailsRepository.GiveReaction(_PostId, commentId, reactionType);
-    print('give reaction: $response');
-    if(response['statusCode'] == 204) {
-      selectedReactionType = reactionType;
-
-      emit(GiveReactionSuccess());
-    }else{
-      selectedReactionType = null;
-      emit(GiveReactionFail('Failed to React to The post'));
-    }
-    }catch(e,trace){
-      if(e is ErrorResponseModel){
-        if(e.message.toString().contains(' already reacted')){
+        emit(GiveReactionSuccess());
+      } else {
+        selectedReactionType = null;
+        emit(GiveReactionFail('Failed to React to The post'));
+      }
+    } catch (e, trace) {
+      if (e is ErrorResponseModel) {
+        if (e.message.toString().contains(' already reacted')) {
           selectedReactionType = reactionType;
           emit(GiveReactionFail('Already Reacted to this comment'));
-        }else{
+        } else {
           emit(GiveReactionFail(e.message.toString()));
-
         }
-      }else{
-
-          emit(GiveReactionFail(e.toString()));
+      } else {
+        emit(GiveReactionFail(e.toString()));
       }
     }
   }
 
 
   Future<void> deleteComment(int commentId) async {
-
-    try{
+    try {
       emit(deleteCommentLoading());
-      final response = await postDetailsRepository.deleteComment(_PostId, commentId);
+      final response = await postDetailsRepository.deleteComment(
+          _PostId, commentId);
       print('give reaction: $response');
 
-      if(response['statusCode'] == 204) {
-
+      if (response['statusCode'] == 204) {
         emit(deleteCommentSuccess());
-      }else{
+      } else {
         selectedReactionType = null;
         emit(deleteCommentFail('Failed to Delete to The post'));
       }
-    }catch(e,trace){
-      if(e is ErrorResponseModel){
-
-          emit(deleteCommentFail(e.message.toString()));
-
-
-      }else{
-
+    } catch (e, trace) {
+      if (e is ErrorResponseModel) {
+        emit(deleteCommentFail(e.message.toString()));
+      } else {
         emit(deleteCommentFail(e.toString()));
       }
     }
+  }
 
+
+  Future<void> createComment(BuildContext context) async {
+    if (createCommentController.text.isNotEmpty) {
+      try {
+        emit(CommentsCreationLoading());
+        final response = await postDetailsRepository.createComment(
+            _PostId, createCommentController.text);
+
+        if (response['statusCode'] == 200) {
+          FocusScope.of(context).unfocus();
+          createCommentController.clear();
+            emit(CommentsCreated());
+        } else {
+          selectedReactionType = null;
+          emit(CommentsError('Failed to send Your Comment'));
+        }
+      } catch (e) {
+        if (e is ErrorResponseModel) {
+          emit(CommentsError(e.message.toString()));
+        } else {
+          emit(CommentsError(e.toString()));
+        }
+      }
+    } else {
+      emit(CommentsError('Please Enter Your Comment'));
+    }
   }
 
 }

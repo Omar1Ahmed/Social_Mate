@@ -61,6 +61,22 @@ class PostUpdatedFailed extends HomeState {}
 
 class PostUpdatedSuccessfully extends HomeState {}
 
+class PostReported extends HomeState {}
+
+class LoadedReportCategories extends HomeState {
+  final List<Category> categories;
+
+  const LoadedReportCategories(this.categories);
+}
+
+class PostReportedFailed extends HomeState {
+  final String message;
+
+  const PostReportedFailed(this.message);
+}
+
+class PostReportedLoading extends HomeState {}
+
 class PostError extends HomeState {
   final String message;
 

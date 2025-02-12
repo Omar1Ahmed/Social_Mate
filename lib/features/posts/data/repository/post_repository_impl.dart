@@ -43,7 +43,7 @@ class PostRepositoryImpl implements PostRepository {
   }
   
   @override
-  Future<Category> getCategories() {
+  Future<List<Category>> getCategories() {
     return remoteDataSource.getCategories();
   }
 }

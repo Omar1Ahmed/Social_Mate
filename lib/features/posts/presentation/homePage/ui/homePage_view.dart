@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/helper/extantions.dart';
+import 'package:social_media/core/shared/widgets/animation/slide_Transition__widget.dart';
+import 'package:social_media/core/shared/widgets/cherryToast/CherryToastMsgs.dart';
 import 'package:social_media/core/theming/colors.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 import 'package:social_media/features/posts/presentation/homePage/ui/widgets/log_out_dialog.dart';
 import '../../../../../core/Responsive/Models/device_info.dart';
 import '../../../../../core/Responsive/ui_component/info_widget.dart';
 import '../../../../../core/routing/routs.dart';
+import '../../../../../core/shared/widgets/Shimmer/ShimmerStyle.dart';
 import '../../../../../core/shared/widgets/animation/tween_animation_widget.dart';
+import '../../../../../core/theming/styles.dart';
 import '../logic/cubit/home_cubit_cubit.dart';
-import 'widgets/build_error_widget.dart';
 import 'widgets/create_post_widget.dart';
 import '../../../../../core/shared/widgets/post_card_widget.dart';
 
@@ -53,6 +57,10 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.white, // Transparent to show SafeArea effect
+      statusBarIconBrightness: Brightness.dark, // Use Brightness.light for white icons
+    ));
     return InfoWidget(
       builder: (context, deviceInfo) {
         return SafeArea(
@@ -61,14 +69,19 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
             body: BlocListener<HomeCubit, HomeState>(
               listener: (context, state) {
                 if (state is PostDeleted || state is PostCreated) {
-                  context.pop();
-                  context.read<HomeCubit>().onRefresh();
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    context.pop();
+                    context.read<HomeCubit>().onRefresh();
+                  });
                 } else if (state is PostError) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(state.message),
-                    ),
-                  );
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    CherryToastMsgs.CherryToastError(
+                      info: deviceInfo,
+                      context: context,
+                      title: "Error",
+                      description: state.message,
+                    );
+                  });
                 }
               },
               child: BlocBuilder<HomeCubit, HomeState>(
@@ -150,16 +163,7 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
   }
 
   Widget _buildAnimatedCreatePostWidget(DeviceInfo deviceInfo) {
-    return SlideTransition(
-      position: Tween<Offset>(
-        begin: const Offset(0, 1),
-        end: Offset.zero,
-      ).animate(
-        CurvedAnimation(
-          parent: _createPostAnimationController,
-          curve: Curves.easeInOut,
-        ),
-      ),
+    return SlideTransitionWidget(
       child: CreatePostWidget(deviceInfo: deviceInfo),
     );
   }
@@ -217,7 +221,8 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
         delegate: SliverChildBuilderDelegate(
           (context, index) {
             if (index >= posts.length) return const SizedBox.shrink();
-            final isNotMatch = posts[index].createdBy.id == getIt<userMainDetailsCubit>().state.userId ? false : true;
+            final isNotMatch = posts[index].createdBy.id == getIt.get<userMainDetailsCubit>().state.userId ? false : true;
+
             return TweenAnimationWidget(
               index: index,
               deviceInfo: deviceInfo,
@@ -226,10 +231,12 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
                 deviceInfo: deviceInfo,
                 idNotMatch: isNotMatch,
                 onPressedDelete: () {
-                  context.pop();
-                  final postId = posts[index].id;
-                  getIt.get<HomeCubit>().deletePost(postId);
-                  context.pushReplacementNamed(Routes.homePage);
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    context.pop();
+                    final postId = posts[index].id;
+                    getIt.get<HomeCubit>().deletePost(postId);
+                    context.pushReplacementNamed(Routes.homePage);
+                  });
                 },
               ),
             );
@@ -238,18 +245,44 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
         ),
       );
     }
+
+    // Replace the direct call to CherryToastMsgs.CherryToastError
     return SliverFillRemaining(
-      child: state is PostError ? BuildErrorWidget(deviceInfo: deviceInfo) : Center(child: CircularProgressIndicator()),
+      child: state is PostError
+          ? Center(
+              child: Text("Check your internet connection", style: TextStyles.inter18Regularblack.copyWith(color: ColorsManager.redColor)),
+            )
+          : Center(child: CircularProgressIndicator()),
     );
   }
 
   Widget _buildLoadingIndicator(DeviceInfo deviceInfo, HomeState state) {
     if (state is PostLoadingMore) {
       return SliverToBoxAdapter(
-        child: Padding(
-          padding: EdgeInsets.all(deviceInfo.screenWidth * 0.05),
-          child: Center(
-            child: CircularProgressIndicator(color: ColorsManager.primaryColor),
+        child: customShimmer(
+          childWidget: Column(
+            children: [
+              for (int i = 0; i < 3; i++) // Simulate 3 loading items
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: deviceInfo.screenHeight * 0.01),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: deviceInfo.screenHeight * 0.04,
+                        width: deviceInfo.screenWidth * 0.9,
+                        color: Colors.grey.shade300,
+                      ),
+                      SizedBox(height: deviceInfo.screenHeight * 0.01),
+                      Container(
+                        height: deviceInfo.screenHeight * 0.08,
+                        width: deviceInfo.screenWidth * 0.9,
+                        color: Colors.grey.shade300,
+                      ),
+                    ],
+                  ),
+                ),
+            ],
           ),
         ),
       );

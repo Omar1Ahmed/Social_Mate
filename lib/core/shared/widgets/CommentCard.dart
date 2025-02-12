@@ -50,21 +50,18 @@ class CommentCard extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Container(
-                        height: info.screenHeight * 0.05,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              comment.createdBy.fullName,
-                              style: TextStyles.inter18BoldBlack.copyWith(fontSize: info.screenWidth * 0.035, color: ColorsManager.blackColor, fontWeight: FontWeight.w800),
-                            ),
-                            Text(
-                              comment.FormattedDate,
-                              style: TextStyles.inter18Regularblack.copyWith(fontSize: info.screenWidth * 0.035, color: ColorsManager.greyColor, fontWeight: FontWeight.w400),
-                            ),
-                          ],
-                        ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            comment.createdBy.fullName,
+                            style: TextStyles.inter18BoldBlack.copyWith(fontSize: info.screenWidth * 0.035, color: ColorsManager.blackColor, fontWeight: FontWeight.w800),
+                          ),
+                          Text(
+                            comment.FormattedDate,
+                            style: TextStyles.inter18Regularblack.copyWith(fontSize: info.screenWidth * 0.035, color: ColorsManager.greyColor, fontWeight: FontWeight.w400),
+                          ),
+                        ],
                       ),
                       Spacer(),
                       if (comment.createdBy.id == context.read<userMainDetailsCubit>().state.userId)

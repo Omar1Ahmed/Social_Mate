@@ -14,9 +14,7 @@ class CreateReportModel {
     required this.reason,
   });
 
-  // Factory method to create an instance from JSON
   factory CreateReportModel.fromJson(Map<String, dynamic> json) => _$CreateReportModelFromJson(json);
 
-  // Method to convert the instance to JSON
   Map<String, dynamic> toJson() => _$CreateReportModelToJson(this);
 }

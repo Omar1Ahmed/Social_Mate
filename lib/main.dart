@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:device_preview/device_preview.dart'; // Import the package
+import 'package:device_preview/device_preview.dart';
 import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/routing/routs.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
-import 'package:social_media/features/authentication/presentation/logic/auth_cubit.dart';
 import 'core/routing/appRouting.dart';
 
 Future<void> main() async {
@@ -15,6 +14,12 @@ Future<void> main() async {
   await initDependencies();
 
   // Run the app with DevicePreview enabled
+  // runApp(
+  //   MyApp(
+  //       appRouter: AppRouts(),
+  //   ),
+  // );
+
   runApp(
     DevicePreview(
       // Wrap the app with DevicePreview
@@ -33,28 +38,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent, // Transparent to show SafeArea effect
-      statusBarIconBrightness: Brightness.dark, // Use Brightness.light for white icons
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
     ));
 
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<AuthCubit>(
-          create: (context) => getIt<AuthCubit>(),
-        ),
-        BlocProvider<userMainDetailsCubit>(
-          create: (context) => getIt<userMainDetailsCubit>(),
-        ),
-        // Uncomment if you want to include the TokenCubit
-        // BlocProvider<TokenCubit>(
-        //   create: (context) => getIt<TokenCubit>(),
-        // ),
-      ],
+    return BlocProvider<userMainDetailsCubit>(
+      create: (context) => getIt<userMainDetailsCubit>(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
+        color: Colors.white,
         initialRoute: Routes.splashScreen,
         onGenerateRoute: appRouter.generateRoute,
-        builder: DevicePreview.appBuilder, // Use the builder provided by DevicePreview
+        builder: DevicePreview.appBuilder, 
       ),
     );
   }

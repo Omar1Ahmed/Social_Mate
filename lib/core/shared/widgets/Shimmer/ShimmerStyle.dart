@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:social_media/core/Responsive/Models/device_info.dart';
 
+// ignore: must_be_immutable
 class customShimmer extends StatelessWidget {
   
   Widget childWidget;

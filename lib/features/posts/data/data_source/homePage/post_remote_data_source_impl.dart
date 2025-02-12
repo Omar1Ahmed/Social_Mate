@@ -10,21 +10,22 @@ import '../../../../../core/shared/model/post_response.dart';
 
 class PostRemoteDataSourceImpl implements PostRemoteDataSource {
   final DioClient dio;
+  final DioClient dioRep;
   final userMainDetailsCubit userMainDetails;
   final token = getIt<userMainDetailsCubit>().state.token;
 
   PostRemoteDataSourceImpl({
     required this.dio,
+    required this.dioRep,
     required this.userMainDetails,
   });
 
-  final String baseUrl = EnvHelper.getString('posts_Base_url');
   final String reportBaseUrl = EnvHelper.getString('report_Base_url');
 
   @override
   Future<PostResponse> getPosts(int pageOffset, int pageSize) async {
     try {
-      final response = await dio.get("$baseUrl/posts?", header: {
+      final response = await dio.get("/posts?", header: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ${userMainDetails.state.token ?? token}',
       }, queryParameters: {
@@ -42,7 +43,7 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
     final postData = post.toJson();
     try {
       await dio.post(
-        "$baseUrl/posts",
+        "/posts",
         body: postData,
         header: {
           'Content-Type': 'application/json',
@@ -57,7 +58,7 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
   @override
   Future<void> deletePost(int postId) async {
     await dio.delete(
-      "$baseUrl/posts/$postId",
+      "/posts/$postId",
       header: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ${userMainDetails.state.token ?? token}',
@@ -67,26 +68,31 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
 
   @override
   Future<void> reportPost(int postId, CreateReportModel createReportModel) async {
-    await dio.post("$reportBaseUrl/$postId/reports",
+    try {
+      await dioRep.post(
+        "/posts/$postId/reports",
         header: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${userMainDetails.state.token ?? token}'
+          'Authorization': 'Bearer $token'
         },
-        body: createReportModel.toJson());
+        body: createReportModel.toJson(),
+      );
+    } catch (e) {
+      throw Exception("Error reporting post: ${e.toString()}");
+    }
   }
 
   @override
-  Future<Category> getCategories() async {
+  Future<List<Category>> getCategories() async {
     try {
-      final response = await dio.get(
-        "$reportBaseUrl/lookups/categories/report/post",
+      final response = await dioRep.get(
+        "/lookups/categories/report/post",
         header: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${userMainDetails.state.token ?? token}'
+          'Authorization': 'Bearer $token'
         },
       );
-      print("categories $response");
-      return Category.fromJson(response);
+      return (response['data'] as List).map((e) => Category.fromJson(e)).toList();
     } catch (e) {
       throw Exception("Error fetching categories: ${e.toString()}");
     }
