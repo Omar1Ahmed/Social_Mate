@@ -28,7 +28,6 @@ class FilteredPostsRemoteSourceImpl implements FilteredPostsRemoteSource {
         'Authorization': 'Bearer $token',
       }
     );
-
     //final postModel = PostModel.fromJson(response.data);
     // return [postModels]
     return PostResponse.fromJson(response);

@@ -15,8 +15,7 @@ class MainReportModel {
     required this.total,
   });
 
-  factory MainReportModel.fromJson(Map<String, dynamic> json) =>
-      _$MainReportModelFromJson(json);
+  factory MainReportModel.fromJson(Map<String, dynamic> json) => _$MainReportModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$MainReportModelToJson(this);
 
@@ -56,8 +55,7 @@ class ReportData {
     required this.reason,
   });
 
-  factory ReportData.fromJson(Map<String, dynamic> json) =>
-      _$ReportDataFromJson(json);
+  factory ReportData.fromJson(Map<String, dynamic> json) => _$ReportDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$ReportDataToJson(this);
 }
@@ -89,8 +87,7 @@ class Category {
     required this.titleEn,
   });
 
-  factory Category.fromJson(Map<String, dynamic> json) =>
-      _$CategoryFromJson(json);
+  factory Category.fromJson(Map<String, dynamic> json) => _$CategoryFromJson(json);
 
   Map<String, dynamic> toJson() => _$CategoryToJson(this);
 }
@@ -136,8 +133,7 @@ class DetailedReportModel {
     required this.relatedReports,
   });
 
-  factory DetailedReportModel.fromJson(Map<String, dynamic> json) =>
-      _$DetailedReportModelFromJson(json);
+  factory DetailedReportModel.fromJson(Map<String, dynamic> json) => _$DetailedReportModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$DetailedReportModelToJson(this);
 }
@@ -164,8 +160,7 @@ class ReportDetails {
     required this.post,
   });
 
-  factory ReportDetails.fromJson(Map<String, dynamic> json) =>
-      _$ReportDetailsFromJson(json);
+  factory ReportDetails.fromJson(Map<String, dynamic> json) => _$ReportDetailsFromJson(json);
 
   Map<String, dynamic> toJson() => _$ReportDetailsToJson(this);
 }
@@ -184,8 +179,7 @@ class RelatedReport {
     required this.status,
   });
 
-  factory RelatedReport.fromJson(Map<String, dynamic> json) =>
-      _$RelatedReportFromJson(json);
+  factory RelatedReport.fromJson(Map<String, dynamic> json) => _$RelatedReportFromJson(json);
 
   Map<String, dynamic> toJson() => _$RelatedReportToJson(this);
 }
