@@ -354,28 +354,29 @@ class _post_details_screenState extends State<post_details_screen> {
         vertical: deviceInfo.localHeight * 0.01,
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.start,
+        spacing: deviceInfo.screenWidth * 0.02,
         children: [
+          IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              size: deviceInfo.screenWidth * 0.08,
+              color: ColorsManager.primaryColor,
+            ),
+            onPressed: () => context.pop(),
+            style: ElevatedButton.styleFrom(
+              shape: const CircleBorder(),
+              padding: EdgeInsets.all(deviceInfo.screenWidth * 0.01),
+              backgroundColor: ColorsManager.lightGreyColor,
+              shadowColor: Colors.transparent,
+            ),
+          ),
           Image.asset(
             'assets/images/Title_img.png',
             width: deviceInfo.localWidth * 0.48,
             height: deviceInfo.localHeight * 0.06,
             fit: BoxFit.contain,
           ),
-          // IconButton(
-          //   icon: Icon(
-          //     Icons.arrow_back,
-          //     size: deviceInfo.screenWidth * 0.08,
-          //     color: ColorsManager.primaryColor,
-          //   ),
-          //   onPressed: () => context.pop(),
-          //   style: ElevatedButton.styleFrom(
-          //     shape: const CircleBorder(),
-          //     padding: EdgeInsets.all(deviceInfo.screenWidth * 0.02),
-          //     backgroundColor: ColorsManager.lightGreyColor,
-          //     shadowColor: Colors.transparent,
-          //   ),
-          // ),
         ],
       ),
     );
