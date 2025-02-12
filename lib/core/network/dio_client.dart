@@ -10,7 +10,7 @@ class DioClient implements ApiCalls {
   String baseUrl;
 
   DioClient({required this.baseUrl}) {
-    dio = Dio(BaseOptions(baseUrl: baseUrl, connectTimeout: const Duration(seconds: 30), receiveTimeout: const Duration(seconds: 30), headers: {
+    dio = Dio(BaseOptions(baseUrl: baseUrl, connectTimeout: const Duration(seconds: 5), receiveTimeout: const Duration(seconds: 5), headers: {
       'Content-Type': 'application/json',
     }));
 
