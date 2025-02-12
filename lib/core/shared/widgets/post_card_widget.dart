@@ -140,7 +140,7 @@ class _PostCardWidgetState extends State<PostCardWidget> with SingleTickerProvid
                   ],
                 ),
                 Text(
-                  widget.post.createdOn.toString().substring(0, 16),
+                  widget.post.FormattedDate,
                   style: TextStyles.inter18Regularblack.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.03),
                 ),
                 SizedBox(height: widget.deviceInfo.localHeight * 0.01),

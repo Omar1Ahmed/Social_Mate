@@ -89,7 +89,7 @@ class ReportData {
 class Post {
   final int id;
   final String title;
-  final User createdBy; // get user entity form shared in core
+  final User createdBy; 
 
   const Post({
     required this.id,
