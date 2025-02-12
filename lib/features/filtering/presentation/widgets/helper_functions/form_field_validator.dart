@@ -23,6 +23,13 @@ String? validateTextInput(
   return null;
 }
 
+String? validateSortedBy(String sortedByValue, String orderedByValue) {
+  if (sortedByValue == 'None' && orderedByValue != 'None') {
+    return 'please choose sorting type ';
+  }
+  return null;
+}
+
 String? validateDateRange(DateTime? fromDate, DateTime? toDate,
     TextEditingController fromController, TextEditingController toController) {
   DateFormat format = DateFormat('yyyy-MM-dd');

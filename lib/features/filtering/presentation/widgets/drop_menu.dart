@@ -5,8 +5,9 @@ import 'package:social_media/core/theming/styles.dart';
 class DropMenu extends StatelessWidget {
   final void Function(String?)? onSelected;
   final String menuLabel;
+  final String selectedValue;
   final List<DropdownMenuEntry<String>> sortedByEntries;
-final String? Function(String?)? validator;
+  final String? Function(String?)? validator;
   final double screenWidth;
   final double screenHeight;
   final FocusNode sortedByNode;
@@ -19,82 +20,70 @@ final String? Function(String?)? validator;
     required this.screenHeight,
     required this.sortedByEntries,
     required this.menuLabel,
-    this.onSelected, this.validator,
+    this.onSelected,
+    this.validator,
+    required this.selectedValue,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: FormField(
-        validator : validator,
-        builder: (FormFieldState<String> field) { 
+    return FormField(
+      validator: validator,
+      builder: (FormFieldState<String> field) {
         return Column(
           children: [
             // user shouldn't be able to type
-            DropdownMenu(
-                onSelected: onSelected,
-                requestFocusOnTap: true,
+            Container(
+              height: screenHeight * 0.06,
+              padding: EdgeInsets.symmetric(
+                horizontal: screenWidth * 0.02,
+              ),
+              clipBehavior: Clip.antiAlias,
+              decoration: BoxDecoration(
+                border: Border.all(color: ColorsManager.blackColor, width: 1),
+                borderRadius: BorderRadius.circular(screenWidth * 0.02),
+              ),
+              child: DropdownButton<String>(
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+                isExpanded: true,
+                value: selectedValue,
+                onChanged: onSelected,
                 focusNode: sortedByNode,
-                inputDecorationTheme: InputDecorationTheme(
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                      color: ColorsManager.primaryColor,
-                      width: 1,
-                    ),
-                  ),
-                  floatingLabelAlignment: FloatingLabelAlignment.start,
-                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                      color: Colors.black,
-                      width: 2,
-                    ),
-                  ),
+                style: TextStyles.inter16RegularBlack,
+                hint: Text(
+                  'Select sorting type',
+                  style: TextStyles.inter16RegularBlack,
                 ),
-                controller: menuItemController,
-                alignmentOffset: Offset(-12, 30),
-                hintText: 'Select sorting type',
-                textStyle: TextStyles.inter16RegularBlack,
-                label: Text(
-                  menuLabel,
-                  style: TextStyles.inter18MediumBlack,
-                ),
-                width: screenWidth * 0.9,
-                menuStyle: MenuStyle(
-                  side: WidgetStatePropertyAll(BorderSide(
-                    color: ColorsManager.primaryColor,
-                  )),
-                  elevation: WidgetStatePropertyAll(3),
-                  alignment: Alignment.centerLeft,
-                  minimumSize: WidgetStatePropertyAll(Size(
-                    screenWidth * 0.3,
-                    screenHeight * 0.2,
-                  )),
-                  padding: WidgetStatePropertyAll(EdgeInsets.symmetric(
-                    vertical: 8,
-                    horizontal: 16,
-                  )),
-                  backgroundColor: WidgetStateProperty.all<Color>(Colors.white),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      side: BorderSide(color: Colors.black, width: 5),
-                      borderRadius: BorderRadius.circular(16),
+                items: sortedByEntries.map((entry) {
+                  return DropdownMenuItem<String>(
+                    value: entry.value,
+                    child: Text(
+                      entry.label,
+                      style: TextStyles.inter16RegularBlack,
                     ),
-                  ),
+                  );
+                }).toList(),
+                icon: Icon(
+                  Icons.arrow_drop_down,
+                  color: Colors.black,
                 ),
-                dropdownMenuEntries: sortedByEntries),
+                dropdownColor: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                underline: Container(
+                  height: 2,
+                  color: Colors.black,
+                ),
+                menuMaxHeight: screenHeight * 0.2,
+              ),
+            ),
             if (field.hasError)
               Text(
                 field.errorText ?? '',
-                style: TextStyle(color: Colors.red , fontSize: 12),
+                style: TextStyle(color: Colors.red, fontSize: 12),
               ),
           ],
         );
-         },
-      ),
+      },
     );
   }
 }

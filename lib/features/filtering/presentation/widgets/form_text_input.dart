@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:social_media/core/theming/styles.dart';
 
 /// should be statless
-class FormTextInput extends StatefulWidget {
+class FormTextInput extends StatelessWidget {
+  final double screenWidth;
+  final double screenHeight;
   final String label;
   final String hintText;
   final FocusNode focusNode;
@@ -10,6 +12,7 @@ class FormTextInput extends StatefulWidget {
   final TextEditingController controller;
   final VoidCallback? onTap;
   final String? Function(String?)? validator;
+  final void Function(String)? onChanged;
   const FormTextInput({
     super.key,
     required this.label,
@@ -19,32 +22,27 @@ class FormTextInput extends StatefulWidget {
     required this.controller,
     this.onTap,
     this.validator,
+    required this.screenWidth,
+    required this.screenHeight,
+    this.onChanged,
   });
 
   @override
-  State<FormTextInput> createState() => _FormTextInputState();
-}
-
-class _FormTextInputState extends State<FormTextInput> {
-  @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: TextFormField(
-        validator: widget.validator,
-        controller: widget.controller,
-        focusNode: widget.focusNode,
-        minLines: 1,
-        decoration:
-            formInputStyle(hintText: widget.hintText, label: widget.label),
-        onTap: widget.onTap,
-        onTapOutside: (event) {
-          FocusScope.of(context).unfocus();
-        },
-        onFieldSubmitted: (value) {
-          FocusScope.of(context).requestFocus(widget.nextNode);
-        },
-      ),
+    return TextFormField(
+      onChanged: onChanged,
+      validator: validator,
+      controller: controller,
+      focusNode: focusNode,
+      minLines: 1,
+      decoration: formInputStyle(hintText: hintText, label: label),
+      onTap: onTap,
+      onTapOutside: (event) {
+        FocusScope.of(context).unfocus();
+      },
+      onFieldSubmitted: (value) {
+        FocusScope.of(context).requestFocus(nextNode);
+      },
     );
   }
 }
