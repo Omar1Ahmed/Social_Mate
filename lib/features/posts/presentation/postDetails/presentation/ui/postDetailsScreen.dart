@@ -9,6 +9,7 @@ import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
 import 'package:social_media/core/helper/extantions.dart';
 import 'package:social_media/core/shared/widgets/Shimmer/ShimmerStyle.dart';
 import 'package:social_media/core/shared/widgets/cherryToast/CherryToastMsgs.dart';
+import 'package:social_media/core/shared/widgets/postDetailsPostCard.dart';
 
 import 'package:social_media/core/shared/widgets/show_report_post_dialog_widget.dart';
 import 'package:social_media/core/shared/widgets/animation/slide_Transition__widget.dart';
@@ -85,6 +86,25 @@ class _post_details_screenState extends State<post_details_screen> {
               );
 
             }
+
+            if(state is CommentsCreated){
+              CherryToastMsgs.CherryToastSuccess(
+                info: info,
+                context: context,
+                title: 'Success!!',
+                description: 'Your Comment is Successfully sent',
+              );
+            }
+
+            if(state is CommentsError){
+              CherryToastMsgs.CherryToastError(
+                info: info,
+                context: context,
+                title: 'Failed!!',
+                description: state.message,
+              );
+            }
+
           }, builder: (context, state) {
             final postDetailsCubit = context.read<PostDetailsCubit>();
             final userMainDetails = context.read<userMainDetailsCubit>();
@@ -108,247 +128,32 @@ class _post_details_screenState extends State<post_details_screen> {
                                   thickness: info.screenWidth * 0.001,
                                   color: ColorsManager.greyColor,
                                 ),
-                                Container(
-                                    width: double.infinity,
-                                    clipBehavior: Clip.none,
-                                    constraints: BoxConstraints(
-                                      minHeight: info.screenHeight * 0.25,
-                                    ),
-                                    padding: EdgeInsetsDirectional.only(start: info.screenWidth * 0.05, end: info.screenWidth * 0.02),
-                                    decoration: BoxDecoration(
-                                      color: ColorsManager.whiteColor,
-                                      borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(info.screenWidth * 0.04),
-                                        bottomRight: Radius.circular(info.screenWidth * 0.04),
-                                      ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: ColorsManager.blackColor.withOpacity(0.35),
-                                          blurRadius: info.screenWidth * 0.04,
-                                          spreadRadius: info.screenWidth * 0.0001,
-                                          offset: const Offset(0, 5),
-                                        ),
-                                      ],
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            SizedBox(
-                                              height: info.screenHeight * 0.053,
-                                              child: state is PostDetailsLoading || state is PostDetailsInitial
-                                                  ? customShimmer(
-                                                childWidget: Row(
-                                                  children: [
-                                                    Container(
-                                                      width: info.screenWidth * 0.4,
-                                                      height: info.screenHeight * 0.03,
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.white,
-                                                        borderRadius: BorderRadius.circular(info.screenWidth * 0.04),
-                                                      ),
-                                                    ),
-                                                    Spacer(),
-                                                    Container(
-                                                      width: info.screenWidth * 0.09,
-                                                      height: info.screenHeight * 0.04,
-                                                      margin: EdgeInsetsDirectional.only(start: info.screenWidth * 0.02),
-                                                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.09)),
-                                                    )
-                                                  ],
-                                                ),
-                                              )
-                                                  : Row(
-                                                children: [
-                                                  Expanded(
-                                                    child: Text(
-                                                      postDetailsCubit.post.title.toString(),
-                                                      overflow: TextOverflow.ellipsis,
-                                                      softWrap: true,
-                                                      style: TextStyles.inter18BoldBlack.copyWith(fontSize: info.screenWidth * 0.042),
-                                                    ),
-                                                  ),
-                                                  if (userMainDetails.state.userId == postDetailsCubit.post.createdBy!.id)
-                                                    IconButton(
-                                                      onPressed: () {},
-                                                      icon: Icon(
-                                                        Icons.close,
-                                                        color: ColorsManager.redColor.withOpacity(0.7),
-                                                        size: info.screenWidth * 0.065,
-                                                      ),
-                                                    ),
-                                                ],
-                                              ),
-                                            ),
-                                            Divider(
-                                              color: Colors.black,
-                                              thickness: info.screenWidth * 0.002,
-                                              height: info.localHeight * 0.015,
-                                            ),
-                                            state is PostDetailsLoading || state is PostDetailsInitial
-                                                ? customShimmer(
-                                                childWidget: Column(
-                                                  spacing: info.screenHeight * 0.01,
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Container(width: info.screenWidth * 0.27, height: info.screenHeight * 0.023, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.09))),
-                                                    Container(width: info.screenWidth * 0.22, height: info.screenHeight * 0.018, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.09))),
-                                                  ],
-                                                ))
-                                                : Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Padding(
-                                                  padding: EdgeInsetsDirectional.only(start: info.screenWidth * 0.015),
-                                                  child: Column(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      Text(
-                                                        postDetailsCubit.post.createdBy!.fullName.toString(),
-                                                        style: TextStyles.inter18BoldBlack.copyWith(fontSize: info.screenWidth * 0.04),
-                                                      ),
-                                                      Text(
-                                                        postDetailsCubit.post.FormattedDate.toString(),
-                                                        style: TextStyles.inter18Regularblack.copyWith(fontSize: info.screenWidth * 0.03),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                IconButton(
-                                                    onPressed: () {
-                                                      showDialog(
-                                                          context: context,
-                                                          builder: (context) => ShowReportPostDialogWidget(
-                                                            deviceInfo: info,
-                                                          ));
-                                                    },
-                                                    icon: Icon(
-                                                      Icons.flag,
-                                                      color: ColorsManager.redColor.withOpacity(0.7),
-                                                      size: info.screenWidth * 0.065,
-                                                    )),
-                                              ],
-                                            ),
-                                            Container(
-                                              width: double.infinity,
-                                              padding: EdgeInsetsDirectional.only(start: info.screenWidth * 0.052, end: info.screenWidth * 0.02, bottom: info.screenHeight * 0.01),
-                                              child: state is PostDetailsLoading || state is PostDetailsInitial
-                                                  ? customShimmer(
-                                                  childWidget: Column(
-                                                    spacing: info.screenHeight * 0.01,
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      Container(margin: EdgeInsetsDirectional.only(top: info.screenHeight * 0.02), width: info.screenWidth * 0.75, height: info.screenHeight * 0.022, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.025))),
-                                                      Container(width: info.screenWidth * 0.6, height: info.screenHeight * 0.017, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.03))),
-                                                      Container(width: info.screenWidth * 0.7, height: info.screenHeight * 0.02, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.025))),
-                                                    ],
-                                                  ))
-                                                  : Text(
-                                                context.read<PostDetailsCubit>().post.content ?? 'Empty Content !!!',
-                                                textAlign: TextAlign.start,
-                                                softWrap: true,
-                                                style: TextStyles.inter18RegularWithOpacity.copyWith(fontSize: info.screenWidth * 0.038, color: ColorsManager.blackColor, fontWeight: FontWeight.w500),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                        Column(children: [
-                                          Divider(
-                                            color: Colors.black,
-                                            thickness: info.screenWidth * 0.001,
-                                            height: info.localHeight * 0.0061,
-                                          ),
-                                          Row(
-                                            children: [
-                                              postDetailsCubit.commentsCount == null
-                                                  ? customShimmer(
-                                                  childWidget: Row(
-                                                    spacing: info.screenWidth * 0.01,
-                                                    children: [
-                                                      Container(width: info.screenWidth * 0.05, height: info.screenHeight * 0.015, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.025))),
-                                                      Container(width: info.screenWidth * 0.1, height: info.screenHeight * 0.02, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.025)))
-                                                    ],
-                                                  ))
-                                                  : Text(
-                                                '${postDetailsCubit.commentsCount} comments',
-                                                style: TextStyles.inter18RegularWithOpacity.copyWith(fontSize: info.screenWidth * 0.04, color: ColorsManager.greyColor, fontWeight: FontWeight.w400),
-                                              ),
-                                              const Spacer(),
-                                              postDetailsCubit.RateAverage == null
-                                                  ? customShimmer(
-                                                  childWidget: Row(
-                                                    spacing: info.screenWidth * 0.01,
-                                                    children: [
-                                                      Container(width: info.screenWidth * 0.05, height: info.screenHeight * 0.015, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.025))),
-                                                      Container(width: info.screenWidth * 0.1, height: info.screenHeight * 0.02, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.025)))
-                                                    ],
-                                                  ))
-                                                  : Text(
-                                                '${postDetailsCubit.RateAverage} Rate ',
-                                                style: TextStyles.inter18RegularWithOpacity.copyWith(fontSize: info.screenWidth * 0.04, color: ColorsManager.greyColor, fontWeight: FontWeight.w400),
-                                              ),
-                                            ],
-                                          ),
-                                          postDetailsCubit.RateAverage == null
-                                              ? customShimmer(
-                                              childWidget: Container(
-                                                margin: EdgeInsetsDirectional.only(bottom: info.screenHeight * 0.01),
-                                                width: double.infinity,
-                                                height: info.screenHeight * 0.04,
-                                                child: Row(mainAxisAlignment: MainAxisAlignment.center, spacing: info.screenWidth * 0.01, children: [
-                                                  Container(
-                                                    width: info.screenWidth * 0.09,
-                                                    height: info.screenHeight * 0.04,
-                                                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.09)),
-                                                  ),
-                                                  Container(
-                                                    width: info.screenWidth * 0.09,
-                                                    height: info.screenHeight * 0.04,
-                                                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.09)),
-                                                  ),
-                                                  Container(
-                                                    width: info.screenWidth * 0.09,
-                                                    height: info.screenHeight * 0.04,
-                                                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.09)),
-                                                  ),
-                                                  Container(
-                                                    width: info.screenWidth * 0.09,
-                                                    height: info.screenHeight * 0.04,
-                                                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.09)),
-                                                  ),
-                                                  Container(
-                                                    width: info.screenWidth * 0.09,
-                                                    height: info.screenHeight * 0.04,
-                                                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.09)),
-                                                  ),
-                                                ]),
-                                              ))
-                                              : Container(
-                                            margin: EdgeInsetsDirectional.only(bottom: info.screenHeight * 0.01),
-                                            alignment: Alignment.center,
-                                            child: RatingStars(
-                                              value: postDetailsCubit.SelectedRatingValue ?? 0.0,
-                                              onValueChanged: (value) {
-                                                postDetailsCubit.setRateAverage(value.toInt());
-                                              },
-                                              starBuilder: (index, color) => Icon(
-                                                Icons.star,
-                                                color: color,
-                                                size: info.screenWidth * 0.075,
-                                              ),
-                                              starCount: 5,
-                                              starSize: info.screenWidth * 0.075,
-                                              valueLabelVisibility: false,
-                                            ),
-                                          ),
-                                        ])
-                                      ],
-                                    )),
+                                PostDetailsPostCard(
+                                  info: info,
+                                  isTitleShimmer: state is PostDetailsLoading || state is PostDetailsInitial,
+                                  titleText: postDetailsCubit.post?.title,
+                                  showDeleteButton: userMainDetails.state.userId == postDetailsCubit.post?.createdBy.id,
+                                  DeleteButtonOnPressed: () {
+                                    print('Pressed');
+                                  },
+                                  isNameAndDateShimmer: state is PostDetailsLoading || state is PostDetailsInitial,
+                                  fullNameText: postDetailsCubit.post?.createdBy.fullName,
+                                  formattedDateText: postDetailsCubit.post?.FormattedDate,
+                                  showReportButton: true,
+                                  ReportButtonOnPressed: () {
+                                    print('report Pressed');
+                                  },
+                                  isContentShimmer: state is PostDetailsLoading || state is PostDetailsInitial,
+                                  contentText: postDetailsCubit.post?.content,
+                                  isCommentsCountShimmer: postDetailsCubit.commentsCount == null,
+                                  commentsCountText: '${postDetailsCubit.commentsCount} comments',
+                                  isRateAverageShimmer: postDetailsCubit.RateAverage == null,
+                                  rateAverageText: '${postDetailsCubit.RateAverage} Rate',
+                                  showStars: true,
+                                  SelectedRatingValue: postDetailsCubit.SelectedRatingValue,
+                                  setRateAverage: (postDetailsCubit.setRateAverage), 
+                                ),
+
                                 Container(
                                   margin: EdgeInsetsDirectional.only(top: info.screenHeight * 0.02, start: info.screenWidth * 0.02),
                                   alignment: AlignmentDirectional.centerStart,
@@ -514,11 +319,16 @@ class _post_details_screenState extends State<post_details_screen> {
                                         ),
                                         hintText: 'Add comment',
 
-                                      )
+                                      ),
+                                      textInputAction: TextInputAction.send,
+
+                                      // onSubmitted: (_) => postDetailsCubit.createComment(context),
+
                                     ),
                                   ),
                                   IconButton(onPressed: (){
-                                    postDetailsCubit.createComment();
+
+                                    postDetailsCubit.createComment(context);
                                   }, icon: Icon(Icons.send,
                                     color: ColorsManager.primaryColor,
                                     size: info.screenWidth * 0.08,))
@@ -531,7 +341,6 @@ class _post_details_screenState extends State<post_details_screen> {
           }));
     });
   }
-
 
 
   Widget _buildHeader(DeviceInfo deviceInfo, BuildContext context) {
