@@ -5,6 +5,8 @@ import 'package:social_media/core/helper/extantions.dart';
 import 'package:social_media/core/theming/colors.dart';
 import 'package:social_media/features/admin/presentation/report_details/ui/widgets/report_detials_widget.dart';
 
+import '../../../../../core/shared/widgets/postDetailsPostCard.dart';
+
 class ReportDetailsScreen extends StatelessWidget {
   const ReportDetailsScreen({super.key});
 
@@ -28,6 +30,24 @@ class ReportDetailsScreen extends StatelessWidget {
                         info: info,
                       ),
                       SizedBox(height: info.screenHeight * 0.02),
+                      PostDetailsPostCard(
+                        info: info,
+                        showStars: false,
+                        titleText: 'Post Details',
+                        isTitleShimmer: false,
+                        showDeleteButton: false,
+                        isNameAndDateShimmer: false,
+                        showReportButton: false,
+                        isContentShimmer: false,
+                        isCommentsCountShimmer: false,
+                        isRateAverageShimmer: false,
+                        fullNameText: 'Abdullah Ahmed',
+                        formattedDateText: '2023-05-12 9:00 AM',
+                        contentText: 'Content',
+                        commentsCountText: 'Comments 19',
+                        rateAverageText: 'Rate 5',
+                        SelectedRatingValue: 5,
+                      ),
                     ],
                   ),
                 ),
