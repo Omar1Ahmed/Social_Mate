@@ -38,3 +38,7 @@ class FilteredPostsIsLoadingMore extends FilteringState {
   final List<PostEntity> filteredPosts;
   FilteredPostsIsLoadingMore(this.filteredPosts);
 }
+
+class FilteredPostsNetworkError extends FilteringState {
+  
+}

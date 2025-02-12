@@ -6,10 +6,29 @@ abstract class AllReportsState {
 class AllReportsInitial extends AllReportsState {}
 
 class AllReportsLoading extends AllReportsState {}
+class AllReportsLoadingMore extends AllReportsState {
+  final List<MainReportEntity> allReports;
+  AllReportsLoadingMore(this.allReports);
+}
 class AllReportsLoaded extends AllReportsState {
   final List<MainReportEntity> allReports;
   final bool hasMore;
   AllReportsLoaded(this.allReports, this.hasMore);
+
+  AllReportsLoaded copyWith({
+    List<MainReportEntity>? allReports,
+    bool? hasMore,
+  }) {
+    return AllReportsLoaded(
+      allReports ?? this.allReports,
+      hasMore ?? this.hasMore,
+    );
+  }
+}
+
+class AllReportsEmpty extends AllReportsState {
+  final List<MainReportEntity> allReports;
+  AllReportsEmpty(this.allReports);
 }
 
 class AllReportsError extends AllReportsState {
