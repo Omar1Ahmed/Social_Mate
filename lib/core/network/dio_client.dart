@@ -29,19 +29,19 @@ class DioClient implements ApiCalls {
     final isConnected = await ConnectivityHelper.isConnected();
     if (isConnected) {
       try {
-      final response = await dio.get(
-        url,
-        queryParameters: queryParameters,
-        options: Options(
-          headers: header,
-        ),
-      );
+        final response = await dio.get(
+          url,
+          queryParameters: queryParameters,
+          options: Options(
+            headers: header,
+          ),
+        );
 
-      return _validateResponseData(response.data);
-    } on DioException catch (e) {
-      throw DioExceptionHandler.handleError(e);
-    }
-    }else{
+        return _validateResponseData(response.data);
+      } on DioException catch (e) {
+        throw DioExceptionHandler.handleError(e);
+      }
+    } else {
       throw Exception('No internet connection');
     }
   }
@@ -50,99 +50,96 @@ class DioClient implements ApiCalls {
   Future<Map<String, dynamic>> post(String url, {Map<String, dynamic>? body, Map<String, dynamic>? header}) async {
     final isConnected = await ConnectivityHelper.isConnected();
     if (isConnected) {
-    try {
-      final response = await dio.post(
-        url,
-        data: body,
-        options: Options(headers: header),
-      );
-      print('lololololo ${response.data}');
-      print('lololololo ${response.statusCode}');
-      print('lololololo ${response.statusMessage}');
+      try {
+        final response = await dio.post(
+          url,
+          data: body,
+          options: Options(headers: header),
+        );
+        print('lololololo ${response.data}');
+        print('lololololo ${response.statusCode}');
+        print('lololololo ${response.statusMessage}');
 
-      if (response.statusCode == 201)
-        return {
-          'statusCode': 201
-        };
+        // if (response.statusCode == 201)
+        //   return {
+        //     'statusCode': 201
+        //   };
 
-      if (response.statusCode == 204)
-        return {
-          'statusCode': 204
-        };
+        // if (response.statusCode == 204)
+        //   return {
+        //     'statusCode': 204
+        //   };
 
-      if (response.statusCode == 200)
-        return {
-          'statusCode': 200
-        };
+        // if (response.statusCode == 200)
+        //   return {
+        //     'statusCode': 200
+        //   };
 
-      return _validateResponseData(response.data);
-    } on DioException catch (e) {
-      print('lololololo222222222 ${e.error}');
-      print('lololololo2222222 ${e.response!.statusCode}');
-      print('lololololo2222222 ${e.response!.statusMessage}');
+        return _validateResponseData(response.data);
+      } on DioException catch (e) {
+        print('lololololo222222222 ${e.error}');
+        print('lololololo2222222 ${e.response!.statusCode}');
+        print('lololololo2222222 ${e.response!.statusMessage}');
 
-      print(e.response!.data);
-      throw DioExceptionHandler.handleError(e);
-    }
-    }else{
+        print(e.response!.data);
+        throw DioExceptionHandler.handleError(e);
+      }
+    } else {
       throw Exception('No internet connection');
     }
   }
 
   @override
   Future<Map<String, dynamic>> put(String url, Map<String, dynamic>? body, {Map<String, dynamic>? header}) async {
-
     final isConnected = await ConnectivityHelper.isConnected();
     if (isConnected) {
-    try {
-      final response = await dio.put(
-        url,
-        data: body,
-        options: Options(
-          headers: header,
-        ),
-      );
-      if (response.statusCode == 204)
-        return {
-          'statusCode': 204
-        };
+      try {
+        final response = await dio.put(
+          url,
+          data: body,
+          options: Options(
+            headers: header,
+          ),
+        );
+        if (response.statusCode == 204)
+          return {
+            'statusCode': 204
+          };
 
-      return _validateResponseData(response.data);
-    } on DioException catch (e) {
-      throw DioExceptionHandler.handleError(e);
+        return _validateResponseData(response.data);
+      } on DioException catch (e) {
+        throw DioExceptionHandler.handleError(e);
+      }
+    } else {
+      throw Exception('No internet connection');
     }
-  }else{
-  throw Exception('No internet connection');
-  }
   }
 
   @override
   Future<Map<String, dynamic>> delete(String url, {Map<String, dynamic>? header}) async {
-
     final isConnected = await ConnectivityHelper.isConnected();
     if (isConnected) {
-    try {
-      final response = await dio.request(
-        url,
-        options: Options(
-          headers: header,
-          method: 'DELETE',
-        ),
-      );
+      try {
+        final response = await dio.request(
+          url,
+          options: Options(
+            headers: header,
+            method: 'DELETE',
+          ),
+        );
 
-      if (response.statusCode == 204)
-        return {
-          'statusCode': 204
-        };
+        if (response.statusCode == 204)
+          return {
+            'statusCode': 204
+          };
 
-      return _validateResponseData(response.data);
-    } on DioException catch (e) {
-      throw DioExceptionHandler.handleError(e);
+        return _validateResponseData(response.data);
+      } on DioException catch (e) {
+        throw DioExceptionHandler.handleError(e);
+      }
+    } else {
+      throw Exception('No internet connection');
     }
-
-  }else{
-throw Exception('No internet connection');
-}
   }
 
   Map<String, dynamic> _validateResponseData(dynamic data) {
@@ -157,6 +154,5 @@ throw Exception('No internet connection');
     } else {
       throw Exception('Invalid response format: Expected Map<String, dynamic>, but got ${data.runtimeType}');
     }
-
   }
 }

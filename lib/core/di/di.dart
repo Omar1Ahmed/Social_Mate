@@ -26,6 +26,7 @@ import 'package:social_media/features/posts/domain/repository/postDetails/postDe
 import 'package:social_media/features/posts/presentation/postDetails/presentation/logic/post_details_cubit.dart';
 import '../../features/admin/data/datasources/report_details/report_details_remote_data_sourc_impl.dart';
 import '../../features/admin/domain/datasources/report_remote_data_source.dart';
+import '../../features/filtering/could_be_shared/network_clients/real_dio_client.dart';
 import '../../features/posts/data/data_source/homePage/post_remote_data_source_impl.dart';
 import '../../features/posts/data/repository/post_repository_impl.dart' as impl;
 import '../../features/posts/domain/data_source/post_remote_data_source.dart';
@@ -72,10 +73,10 @@ Future<void> initDependencies() async {
   // report api client
   getIt.registerLazySingleton<DioClient>(() => DioClient(baseUrl: reportUrl), instanceName: diInstancesHelper.ReportDioClient);
 
-  // getIt.registerLazySingleton<RealDioNetworkClient>(() => RealDioNetworkClient());
-  // getIt.registerLazySingleton<UserDioNetworkClient>(() => UserDioNetworkClient());
-  // getIt.registerLazySingleton<DioNetworkClient>(() => RealDioNetworkClient(), instanceName: 'real');
-  // getIt.registerLazySingleton<DioNetworkClient>(() => UserDioNetworkClient(), instanceName: 'user');
+  getIt.registerLazySingleton<RealDioNetworkClient>(() => RealDioNetworkClient());
+  getIt.registerLazySingleton<UserDioNetworkClient>(() => UserDioNetworkClient());
+  getIt.registerLazySingleton<DioNetworkClient>(() => RealDioNetworkClient(), instanceName: 'real');
+  getIt.registerLazySingleton<DioNetworkClient>(() => UserDioNetworkClient(), instanceName: 'user');
 
   // |------------------------------------------------------------------\
   // |-------------------------- Data Sources ------------------------------\

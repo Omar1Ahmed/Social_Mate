@@ -1,6 +1,5 @@
 import 'package:social_media/core/network/dio_client.dart';
 import 'package:social_media/features/authentication/data/data_source/AuthenticaionRemoteDataSource.dart';
-import 'package:social_media/features/authentication/data/model/auth_model.dart';
 
 class AuthenticationRemoteDataSourceImp implements AuthenticationRemoteDataSource {
   // this is the network client mad eby marwan , you don't need yo use it , use yours 3ady
@@ -18,9 +17,12 @@ class AuthenticationRemoteDataSourceImp implements AuthenticationRemoteDataSourc
         'password': password
       },
     );
-    final token = response.containsKey('token') ? response['token'] : '';
-    print('token in data source : $token');
-    return token;
+    if (response.containsKey('token')) {
+      final token = response['token'] as String;
+      return token;
+    } else {
+      throw Exception('Invalid response format: Token not found');
+    }
   }
 
   @override
