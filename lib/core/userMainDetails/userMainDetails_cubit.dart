@@ -13,7 +13,7 @@ class userMainDetailsCubit extends Cubit<userMainDetailsState> {
   final JwtTokenDecodeRepositoryImp _repository;
   final SharedPrefHelper _sharedPrefHelper = getIt<SharedPrefHelper>();
 
-  userMainDetailsCubit(this._repository) : super(userMainDetailsState(token: null));
+  userMainDetailsCubit(this._repository) : super(userMainDetailsState(token: null));  
 
   Future<void> decodeAndAssignToken(String token) async {
     try {
@@ -27,7 +27,7 @@ class userMainDetailsCubit extends Cubit<userMainDetailsState> {
         sub: jwt.sub,
       ));
     } catch (e) {
-      print(e);
+      print("Error decoding token: $e");
       emit(userMainDetailsErrorState(message: e.toString()));
     }
   }
