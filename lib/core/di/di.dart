@@ -11,7 +11,6 @@ import 'package:social_media/features/authentication/data/repository/authenticat
 import 'package:social_media/features/authentication/domain/repository/authentication_repository.dart';
 import 'package:social_media/features/authentication/presentation/logic/auth_cubit.dart';
 import 'package:social_media/features/filtering/could_be_shared/network_clients/dio_network_client.dart';
-import 'package:social_media/features/filtering/could_be_shared/network_clients/real_dio_client.dart';
 import 'package:social_media/features/filtering/data/datasources/filtered_posts_remote_source.dart';
 import 'package:social_media/features/filtering/data/datasources/users_remote_data_source.dart';
 import 'package:social_media/features/filtering/data/repositories/filtered_post_repo_imp.dart';
@@ -27,6 +26,7 @@ import 'package:social_media/features/posts/domain/repository/postDetails/postDe
 import 'package:social_media/features/posts/presentation/postDetails/presentation/logic/post_details_cubit.dart';
 import '../../features/admin/data/datasources/report_details/report_details_remote_data_sourc_impl.dart';
 import '../../features/admin/domain/datasources/report_remote_data_source.dart';
+import '../../features/filtering/could_be_shared/network_clients/real_dio_client.dart';
 import '../../features/posts/data/data_source/homePage/post_remote_data_source_impl.dart';
 import '../../features/posts/data/repository/post_repository_impl.dart' as impl;
 import '../../features/posts/domain/data_source/post_remote_data_source.dart';
@@ -81,7 +81,8 @@ Future<void> initDependencies() async {
   // |------------------------------------------------------------------\
   // |-------------------------- Data Sources ------------------------------\
   // |------------------------------------------------------------------\
-
+  // auth data source
+  getIt.registerLazySingleton<AuthenticationRemoteDataSource>(() => AuthenticationRemoteDataSourceImp(dioNetworkClient: getIt<DioClient>(instanceName: diInstancesHelper.userDioClient)));
   //post data source
   getIt.registerFactory<PostRemoteDataSource>(
     () => PostRemoteDataSourceImpl(dio: getIt<DioClient>(instanceName: diInstancesHelper.PostsDioClient), dioRep: getIt<DioClient>(instanceName: diInstancesHelper.ReportDioClient), userMainDetails: getIt<userMainDetailsCubit>()),
@@ -107,11 +108,7 @@ Future<void> initDependencies() async {
   //     () => AuthenticationRemoteDataSourceImp(
   //           dioNetworkClient: DioNetworkClient(RealEndPoints.realUserBaseUrl),
   //         ));
-  getIt.registerLazySingleton<AuthenticationRemoteDataSource>(() => AuthenticationRemoteDataSourceImp(
-        dioNetworkClient: getIt<DioClient>(
-          instanceName: diInstancesHelper.userDioClient,
-        ),
-      ));
+
   // |------------------------------------------------------------------\
   // |-------------------------- Repositories ------------------------------\
   // |------------------------------------------------------------------\

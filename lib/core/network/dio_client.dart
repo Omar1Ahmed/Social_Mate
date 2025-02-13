@@ -65,56 +65,32 @@ class DioClient implements ApiCalls {
           data: body,
           options: Options(headers: header),
         );
+        print('lololololo ${response.data}');
+        print('lololololo ${response.statusCode}');
+        print('lololololo ${response.statusMessage}');
 
-        // Debug: Print the full response
-        print('Response Data: ${response.data}');
-        print('Status Code: ${response.statusCode}');
-        print('Status Message: ${response.statusMessage}');
+        // if (response.statusCode == 201)
+        //   return {
+        //     'statusCode': 201
+        //   };
 
-        // Handle different response types
-        dynamic responseData = response.data;
-        if (responseData is String && responseData.isNotEmpty) {
-          try {
-            // Parse JSON string to Map<dynamic, dynamic>
-            final parsedJson = jsonDecode(responseData);
-            // Cast to Map<String, dynamic>
-            responseData = parsedJson as Map<String, dynamic>;
-          } catch (e) {
-            print('JSON Parsing or Casting Error: $e');
-            throw Exception('Invalid JSON response: ${response.data}');
-          }
-        } else if (responseData == null || responseData.toString().isEmpty) {
-          // Return an empty map for empty responses
-          responseData = <String, dynamic>{};
-        } else if (responseData is int) {
-          // Wrap integer response in a map
-          responseData = {
-            'value': responseData,
-            'statusCode': response.statusCode, // Include the status code here
-          };
-        }
+        // if (response.statusCode == 204)
+        //   return {
+        //     'statusCode': 204
+        //   };
 
-        // Always return the response body for successful responses
-        if (response.statusCode == 200 ||
-            response.statusCode == 201 ||
-            response.statusCode == 204) {
-          return responseData;
-        } else {
-          throw DioExceptionHandler.handleError(
-            DioException(
-              requestOptions: response.requestOptions,
-              response: response,
-              type: DioExceptionType.badResponse,
-            ),
-          );
-        }
+        // if (response.statusCode == 200)
+        //   return {
+        //     'statusCode': 200
+        //   };
+
+        return _validateResponseData(response.data);
       } on DioException catch (e) {
-        // Handle Dio errors
-        print('DioException Error: ${e.error}');
-        print('Status Code: ${e.response?.statusCode}');
-        print('Status Message: ${e.response?.statusMessage}');
-        print('Response Data: ${e.response?.data}');
+        print('lololololo222222222 ${e.error}');
+        print('lololololo2222222 ${e.response!.statusCode}');
+        print('lololololo2222222 ${e.response!.statusMessage}');
 
+        print(e.response!.data);
         throw DioExceptionHandler.handleError(e);
       }
     } else {
@@ -123,8 +99,7 @@ class DioClient implements ApiCalls {
   }
 
   @override
-  Future<Map<String, dynamic>> put(String url, Map<String, dynamic>? body,
-      {Map<String, dynamic>? header}) async {
+  Future<Map<String, dynamic>> put(String url, Map<String, dynamic>? body, {Map<String, dynamic>? header}) async {
     final isConnected = await ConnectivityHelper.isConnected();
     if (isConnected) {
       try {
@@ -135,7 +110,10 @@ class DioClient implements ApiCalls {
             headers: header,
           ),
         );
-        if (response.statusCode == 204) return {'statusCode': 204};
+        if (response.statusCode == 204)
+          return {
+            'statusCode': 204
+          };
 
         return _validateResponseData(response.data);
       } on DioException catch (e) {
@@ -147,8 +125,7 @@ class DioClient implements ApiCalls {
   }
 
   @override
-  Future<Map<String, dynamic>> delete(String url,
-      {Map<String, dynamic>? header}) async {
+  Future<Map<String, dynamic>> delete(String url, {Map<String, dynamic>? header}) async {
     final isConnected = await ConnectivityHelper.isConnected();
     if (isConnected) {
       try {
@@ -160,7 +137,10 @@ class DioClient implements ApiCalls {
           ),
         );
 
-        if (response.statusCode == 204) return {'statusCode': 204};
+        if (response.statusCode == 204)
+          return {
+            'statusCode': 204
+          };
 
         return _validateResponseData(response.data);
       } on DioException catch (e) {

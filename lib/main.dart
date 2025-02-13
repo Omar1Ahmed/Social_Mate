@@ -15,8 +15,11 @@ Future<void> main() async {
 
   // Run the app with DevicePreview enabled
   runApp(
-    MyApp(
+    BlocProvider(
+      create: (context) => getIt<userMainDetailsCubit>(),
+      child: MyApp(
         appRouter: AppRouts(),
+      ),
     ),
   );
 
@@ -42,15 +45,12 @@ class MyApp extends StatelessWidget {
       statusBarIconBrightness: Brightness.dark,
     ));
 
-    return BlocProvider<userMainDetailsCubit>(
-      create: (context) => getIt<userMainDetailsCubit>(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        color: Colors.white,
-        initialRoute: Routes.splashScreen,
-        onGenerateRoute: appRouter.generateRoute,
-        builder: DevicePreview.appBuilder, 
-      ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      color: Colors.white,
+      initialRoute: Routes.splashScreen,
+      onGenerateRoute: appRouter.generateRoute,
+      builder: DevicePreview.appBuilder,
     );
   }
 }
