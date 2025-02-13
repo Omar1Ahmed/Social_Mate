@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
+import 'package:social_media/core/helper/extantions.dart';
 import 'package:social_media/features/authentication/presentation/logic/auth_cubit.dart';
 import 'package:social_media/features/authentication/presentation/logic/auth_state.dart';
 import 'package:social_media/features/authentication/presentation/ui/auth_screen/sign_up_screen.dart';
@@ -25,6 +26,7 @@ class _AuthScreenState extends State<AuthScreen> {
   void initState() {
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(child: InfoWidget(builder: (context, info) {
@@ -33,7 +35,6 @@ class _AuthScreenState extends State<AuthScreen> {
           Navigator.pushNamed(context, Routes.homePage);
         }
         if (state is AuthRegisterSuccessState) {
-
           CherryToast.success(
             title: Text(
               "Success",
@@ -104,12 +105,11 @@ class _AuthScreenState extends State<AuthScreen> {
                         text: "Join Now",
                         onPressed: () async {
                           if (context.read<AuthCubit>().IsSignIn) {
-
                             context.read<AuthCubit>().isRememberMe = true;
-                            context.read<AuthCubit>().logIn(context,);
-
+                            context.read<AuthCubit>().logIn(
+                                  context,
+                                );
                           } else {
-
                             context.read<AuthCubit>().signUp(context);
                           }
                         }),
@@ -142,11 +142,10 @@ class AuthHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.white, // Transparent to show SafeArea effect
-      statusBarIconBrightness: Brightness.dark, // Use Brightness.light for white icons
-
+      statusBarIconBrightness:
+          Brightness.dark, // Use Brightness.light for white icons
     ));
 
     return InfoWidget(builder: (context, info) {

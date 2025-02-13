@@ -9,156 +9,127 @@ class PostDetailsRemoteDataSourceImpl implements PostDetailsRemoteDataSource {
   final DioClient dio;
   final userMainDetailsCubit userMainDetails;
 
-  PostDetailsRemoteDataSourceImpl({required this.dio, required this.userMainDetails});
+  PostDetailsRemoteDataSourceImpl(
+      {required this.dio, required this.userMainDetails});
 
   @override
   Future<PostData> getPostDetails(int postId) async {
-
-
     try {
-      final response = await dio.get("/posts/$postId", header: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${userMainDetails.state.token}',
-      },);
+      final response = await dio.get(
+        "/posts/$postId",
+        header: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${userMainDetails.state.token}',
+        },
+      );
 
       print(response);
       print('base Url : ${dio.baseUrl}');
       print('base Url : ${dio.dio.options.baseUrl}');
       return PostData.fromJson(response);
     } catch (e) {
-
       throw Exception("Error fetching posts: ${e.toString()}");
-
     }
-
-
   }
 
   @override
   Future<PostCommentsModel> getPostComments(int postId) async {
+    try {
+      final response = await dio.get(
+        "/posts/$postId/comments",
+        header: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${userMainDetails.state.token}',
+        },
+      );
 
-try {
-      final response = await dio.get("/posts/$postId/comments", header: {
-
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${userMainDetails.state.token}',
-      },);
-
-      print(response);
+      print('comments response in datasource : $response');
       print('base Url : ${dio.baseUrl}');
       print('base Url : ${dio.dio.options.baseUrl}');
       return PostCommentsModel.fromJson(response);
     } catch (e) {
-
       throw Exception("Error fetching Comments: ${e.toString()}");
-
     }
-
   }
 
   @override
   Future<int?> getPostCommentsCount(int postId) async {
-
-    try{
-      final response = await dio.get('/posts/$postId/comments/count',
-      header: {
+    try {
+      final response = await dio.get('/posts/$postId/comments/count', header: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ${userMainDetails.state.token}',
-      }
-      );
+      });
 
-    return response['data'];
-    }catch(e){
+      return response['data'];
+    } catch (e) {
       throw Exception("Error fetching Comments Count: ${e.toString()}");
     }
   }
 
   @override
   Future<double?> getPostRateAverage(int postId) async {
-
-
-    try{
-      final response = await dio.get('/posts/$postId/rates/average',
-          header: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ${userMainDetails.state.token}',
-          }
-      );
+    try {
+      final response = await dio.get('/posts/$postId/rates/average', header: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${userMainDetails.state.token}',
+      });
 
       return response['data'].toString().isEmpty ? 0 : response['data'];
-    }catch(e){
+    } catch (e) {
       throw Exception("Error fetching Rate Average: ${e.toString()}");
     }
-
   }
 
   @override
   Future<dynamic> RatePost(int postId, int rate) async {
-
-    try{
-
-      final response = await dio.put('/posts/$postId/rate',
-           {
-             "value": rate
-          },
-          header: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ${userMainDetails.state.token}',
-          }
-      );
+    try {
+      final response = await dio.put('/posts/$postId/rate', {
+        "value": rate
+      }, header: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${userMainDetails.state.token}',
+      });
 
       return response;
-    }catch(e){
+    } catch (e) {
       throw Exception("Error fetching Rate Average: ${e.toString()}");
     }
-
-
   }
 
   @override
-  Future GiveReaction(int postId, int commentId, ReactionType reactionType) async {
-
-
-      final response = await dio.post('/posts/$postId/comments/$commentId/${reactionType.name}',
-          header: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ${userMainDetails.state.token}',
-          }
-      );
-
-      return response;
-
+  Future GiveReaction(
+      int postId, int commentId, ReactionType reactionType) async {
+    final response = await dio.post(
+        '/posts/$postId/comments/$commentId/${reactionType.name}',
+        header: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${userMainDetails.state.token}',
+        });
+    print('give reaction response : $response');
+    return response;
   }
 
   @override
   Future deleteComment(int postId, int commentId) async {
-
-    final response = await dio.delete('/posts/$postId/comments/$commentId',
-        header: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${userMainDetails.state.token}',
-        }
-    );
+    final response =
+        await dio.delete('/posts/$postId/comments/$commentId', header: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${userMainDetails.state.token}',
+    });
 
     return response;
-
   }
 
   @override
   Future createComment(int postId, String comment) async {
-
-    final response = await dio.post('/posts/$postId/comments',
-        header: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${userMainDetails.state.token}',
-        },
-      body: {
-        "content": comment
-      }
-    );
+    final response = await dio.post('/posts/$postId/comments', header: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${userMainDetails.state.token}',
+    }, body: {
+      "content": comment
+    });
+    print('create comment response : $response');
 
     return response;
-
   }
-
 }

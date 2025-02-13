@@ -42,7 +42,7 @@ final class CommentsError extends PostDetailsState {
 }
 
 
-// Give Reaction
+//Give Reaction
 // final class GiveReactionLoading extends PostDetailsState {}
 // final class GiveReactionSuccess extends PostDetailsState {}
 // final class GiveReactionFail extends PostDetailsState {

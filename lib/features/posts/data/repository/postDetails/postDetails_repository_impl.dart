@@ -55,9 +55,9 @@ class PostDetailsRepositoryImpl implements PostDetailsRepository {
   }
 
   @override
-  Future GiveReaction(int postId, int commentId, ReactionType reactionType) {
+  Future GiveReaction(int postId, int commentId, ReactionType reactionType) async {
 
-    final response = postDetailsRemoteDataSource.GiveReaction(postId, commentId, reactionType);
+    final response = await postDetailsRemoteDataSource.GiveReaction(postId, commentId, reactionType);
 
     return response;
   }
@@ -72,12 +72,11 @@ class PostDetailsRepositoryImpl implements PostDetailsRepository {
   }
 
   @override
-  Future createComment(int postId, String comment) {
+  Future createComment(int postId, String comment) async {
+  final response = await postDetailsRemoteDataSource.createComment(postId, comment);
+  return response;
+}
 
-    final response = postDetailsRemoteDataSource.createComment(postId, comment);
-
-    return response;
-  }
 
 
 }

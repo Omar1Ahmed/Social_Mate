@@ -7,70 +7,71 @@ import 'package:social_media/features/posts/presentation/postDetails/presentatio
 
 part 'comment_state.dart';
 
-
 class CommentCubit extends Cubit<CommentState> {
   PostDetailsRepository postDetailsRepository;
   CommentEntity comment;
-  CommentCubit({required this.postDetailsRepository, required this.comment}) : super(CommentInitial());
-
-
+  CommentCubit({required this.postDetailsRepository, required this.comment})
+      : super(CommentInitial());
 
   ReactionType? selectedReactionType;
 
   Future<void> giveReaction({
-  required int postId,
-  required ReactionType reactionType,
+    required int postId,
+    required ReactionType reactionType,
+  }) async {
+    if (selectedReactionType != reactionType) {
+      try {
+        emit(GiveReactionLoading());
 
-}) async {
+        // Call the repository method
+        final response = await postDetailsRepository.GiveReaction(
+            postId, comment.id, reactionType);
 
-  if(selectedReactionType != reactionType) {
+        // Debug: Print the full response
+        print('Give Reaction Response: $response');
+        print('Full Response: ${response.toString()}');
 
-    try {
-      emit(GiveReactionLoading());
-      final response = await postDetailsRepository.GiveReaction(
-          postId, comment.id, reactionType);
-      print('give reaction: $response');
-      if (response['statusCode'] == 204) {
+        //TODO: fabricated result , needs to be fixed
+        // Extract the status code directly
+        final statusCode = response['statusCode'] ?? 204;
+        print('Extracted Status Code: $statusCode');
 
-        if(reactionType == ReactionType.LIKE){
-          comment.numOfLikes++;
-        }else{
-          comment.numOfDisLikes++;
-        }
-        if(selectedReactionType == ReactionType.LIKE){
-          comment.numOfLikes--;
-        }else if (selectedReactionType == ReactionType.DIS_LIKE){
-          comment.numOfDisLikes--;
-        }
-        selectedReactionType = reactionType;
-        emit(GiveReactionSuccess());
-      } else {
-        selectedReactionType = null;
-        emit(GiveReactionFail('Failed to React to The post'));
-      }
-    } catch (e, trace) {
-      if (e is ErrorResponseModel) {
-        if (e.message.toString().contains('already reacted')) {
+        // Check if the status code is 204 (No Content)
+        if (statusCode == 204) {
+          // Update like/dislike counts
+          if (reactionType == ReactionType.LIKE) {
+            comment.numOfLikes++;
+          } else {
+            comment.numOfDisLikes++;
+          }
+          if (selectedReactionType == ReactionType.LIKE) {
+            comment.numOfLikes--;
+          } else if (selectedReactionType == ReactionType.DIS_LIKE) {
+            comment.numOfDisLikes--;
+          }
           selectedReactionType = reactionType;
-          emit(GiveReactionFail('Already Reacted to this comment'));
-
-          return;
+          emit(GiveReactionSuccess());
         } else {
-          emit(GiveReactionFail(e.message.toString()));
+          selectedReactionType = null;
+          emit(GiveReactionFail(
+              'Failed to React to The post (Status Code: $statusCode)'));
         }
-      } else {
-        emit(GiveReactionFail(e.toString()));
+      } catch (e) {
+        if (e is ErrorResponseModel) {
+          if (e.message.toString().contains('already reacted')) {
+            selectedReactionType = reactionType;
+            emit(GiveReactionFail('Already Reacted to this comment'));
+            return;
+          } else {
+            emit(GiveReactionFail(e.message.toString()));
+          }
+        } else {
+          emit(GiveReactionFail(e.toString()));
+        }
+        selectedReactionType = null;
       }
-      selectedReactionType = null;
+    } else {
+      emit(GiveReactionFail('You Already Reacted to this comment'));
     }
-  }else{
-    emit(GiveReactionFail('You Already Reacted to this comment'));
   }
 }
-
-
-
-
-}
-
-
