@@ -37,7 +37,7 @@ class AuthenticationRemoteDataSourceImp implements AuthenticationRemoteDataSourc
         "email": "$email",
         "gender": "$selectedGender"}''');
 
-    final response = await dioNetworkClient.post('auth/register', body: {
+    final response = await dioNetworkClient.post('/auth/register', body: {
       "firstName": firstName,
       "lastName": lastName,
       "mobileNumber": phone,
