@@ -1,5 +1,6 @@
 // ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
+import 'package:social_media/core/helper/Connectivity/connectivity_helper.dart';
 //import 'package:social_media/core/helper/Connectivity/connectivity_helper.dart';
 import 'package:social_media/core/shared/entities/post_entity.dart';
 //import 'package:social_media/features/filtering/domain/entities/filtering_post_entity.dart';
@@ -17,11 +18,13 @@ class FilteringCubit extends Cubit<FilteringState> {
 
   Future<void> getFilteredPosts(
       {Map<String, dynamic>? queryParameters, required String token}) async {
-    //final bool isConnected = await ConnectivityHelper.isConnected();
-    // if (isConnected) {
-    //   emit(FilteredPostsNetworkError());
-    //   return;
-    // }
+    print('the cubit state now is : $isClosed');
+    bool isConnected = await ConnectivityHelper.isConnected();
+    if (!isConnected) {
+      emit(FilteredPostsNetworkError());
+      print(state);
+      return;
+    }
     if (state is FilteredPostsIsLoading) return;
     _pageOffset = 0;
     _hasMore = true;
@@ -56,11 +59,11 @@ class FilteringCubit extends Cubit<FilteringState> {
     Map<String, dynamic>? queryParameters,
     required String token,
   }) async {
-    //final bool isConnected = await ConnectivityHelper.isConnected();
-    // if (isConnected) {
-    //   emit(FilteredPostsNetworkError());
-    //   return;
-    // }
+    bool isConnected = await ConnectivityHelper.isConnected();
+    if (!isConnected) {
+      emit(FilteredPostsNetworkError());
+      return;
+    }
     if (state is! FilteredPostsIsLoaded || !_hasMore) return;
 
     final currentState = state as FilteredPostsIsLoaded;

@@ -202,17 +202,17 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
 
         // Debug: Print the full response
         print('Create Comment Response: $response');
+        commentfocusNode.unfocus();
+        createCommentController.clear();
+        emit(CommentsCreated());
 
         // Check the status code directly
-        if (response.containsKey('statusCode') &&
-            response['statusCode'] == 200) {
-          commentfocusNode.unfocus();
-          createCommentController.clear();
-          emit(CommentsCreated());
-        } else {
-          emit(CommentsError(
-              'Failed to send Your Comment (Status Code: ${response['statusCode']})'));
-        }
+        // if (response.containsKey('statusCode') &&
+        //     response['statusCode'] == 200) {
+        // } else {
+        //   emit(CommentsError(
+        //       'Failed to send Your Comment (Status Code: ${response['statusCode']})'));
+        // }
       } catch (e) {
         if (e is ErrorResponseModel) {
           emit(CommentsError(e.message.toString()));

@@ -73,7 +73,6 @@ class _FilteringTileState extends State<FilteringTile> {
     sortedByNode.dispose();
     noNode.dispose();
     postOwnerController.dispose();
-    filteringCubit.close();
     homeCubit.close();
 
     super.dispose();
@@ -162,12 +161,12 @@ class _FilteringTileState extends State<FilteringTile> {
     return () {};
   }
 
-  void _onFilterButtonPressed() {
+  void _onFilterButtonPressed() async {
     FocusScope.of(context).unfocus();
 
     final token = getIt<userMainDetailsCubit>().state.token;
 
-    print(token);
+    print('Token: $token');
     if (_formKey.currentState!.validate()) {
       queryParameters = {
         if (titleController.text.isNotEmpty) 'title': titleController.text,
@@ -180,25 +179,18 @@ class _FilteringTileState extends State<FilteringTile> {
           'createdOnTo': createdToController.text,
         if (orderedByValue.isNotEmpty && orderedByValue != 'None')
           'orderDir': orderedByValue,
-        // 'pageOffset': 0, // Keep mandatory values
-        // 'pageSize': 10, // Keep mandatory values
       };
+
       context.read<SharingDataCubit>().updateQueryParams(queryParameters);
       context.read<SharingDataCubit>().updatePosts([]);
       print('Query Parameters: $queryParameters');
       filteringCubit.getFilteredPosts(
-          queryParameters: queryParameters, token: token!);
+        queryParameters: queryParameters,
+        token: token!,
+      );
       print('Form is valid');
-      print('Title: ${titleController.text}');
-      print('Post Owner: ${postOwnerController.text}');
-      print('Created From: ${createdFromController.text}');
-      print('Created To: ${createdToController.text}');
-      print('Sorted By: $sortedByValue');
-      print('Ordered By: $orderedByValue');
     } else {
       print('Form is invalid');
-      print('Created From: ${createdFromController.text}');
-      print('Created To: ${createdToController.text}');
     }
   }
 
@@ -360,7 +352,7 @@ class _FilteringTileState extends State<FilteringTile> {
               Flexible(
                 flex: 2,
                 child: SizedBox(
-                  height: deviceInfo.screenHeight * 0.1,
+                  height: deviceInfo.screenHeight * 0.2,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -368,7 +360,7 @@ class _FilteringTileState extends State<FilteringTile> {
                       Expanded(
                         flex: 0,
                         child: Text(
-                          'Sorted by :',
+                          'Sorted By :',
                           style: TextStyles.inter14Regular,
                         ),
                       ),
@@ -390,9 +382,9 @@ class _FilteringTileState extends State<FilteringTile> {
                             DropdownMenuEntry(value: 'None', label: 'None'),
                             DropdownMenuEntry(value: 'TITLE', label: 'Title'),
                             DropdownMenuEntry(
-                                value: 'POST_OWNER', label: 'Post owner'),
+                                value: 'POST_OWNER', label: 'Post Owner'),
                             DropdownMenuEntry(
-                                value: 'CREATION_DATE', label: 'Creation date'),
+                                value: 'CREATION_DATE', label: 'Creation Date'),
                           ],
                         ),
                       ),
@@ -412,7 +404,7 @@ class _FilteringTileState extends State<FilteringTile> {
                       Expanded(
                         flex: 0,
                         child: Text(
-                          'Ordered by :',
+                          'Ordered By :',
                           style: TextStyles.inter14Regular,
                         ),
                       ),

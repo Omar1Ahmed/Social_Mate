@@ -35,7 +35,13 @@ class FormTextInput extends StatelessWidget {
       controller: controller,
       focusNode: focusNode,
       minLines: 1,
-      decoration: formInputStyle(hintText: hintText, label: label),
+      decoration: formInputStyle(
+          hintText: hintText,
+          label: label,
+          onPressed: () {
+            controller.clear();
+          },
+          controller: controller),
       onTap: onTap,
       onTapOutside: (event) {
         FocusScope.of(context).unfocus();

@@ -66,7 +66,11 @@ class _PostOwnerDialogState extends State<PostOwnerDialog> {
                   child: TextField(
                     controller: widget.dialogController,
                     decoration: formInputStyle(
-                        label: 'Post Owner', hintText: 'Enter a name'),
+                        label: 'Post Owner',
+                        hintText: 'Enter a name',
+                        onPressed: () {
+                          widget.dialogController.clear();
+                        }, controller: widget.dialogController),
                     onChanged: (value) {
                       debounceTimer?.cancel();
                       debounceTimer = Timer(const Duration(seconds: 1), () {

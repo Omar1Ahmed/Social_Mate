@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 class ConnectivityHelper {
@@ -7,7 +9,18 @@ class ConnectivityHelper {
   static Future<bool> isConnected() async {
     try {
       final connectivityResult = await _connectivity.checkConnectivity();
-      return connectivityResult != ConnectivityResult.none;
+      print('Connectivity Result: $connectivityResult');
+
+      // If not connected to any network
+      if (connectivityResult == ConnectivityResult.none) {
+        print('No network interface is active.');
+        return false;
+      }
+
+      // Additional check by pinging Google
+      final result = await InternetAddress.lookup('google.com');
+      print('Ping Result: $result');
+      return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
     } catch (e) {
       print('Error checking connectivity: $e');
       return false;

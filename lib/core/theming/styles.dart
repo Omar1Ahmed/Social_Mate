@@ -116,8 +116,9 @@ class TextFieldStyles {
 
 // created by Marwan for filtering
 InputDecoration formInputStyle(
-    {required String label, required String hintText}) {
+    {required String label, required String hintText , required VoidCallback onPressed , required TextEditingController controller}) {
   return InputDecoration(
+    suffixIcon:controller.text.isNotEmpty ? IconButton(onPressed: onPressed, icon: Icon(Icons.clear_rounded , color: ColorsManager.redColor,),) : null,
     isDense: true,
     hintText: hintText,
     hintStyle: TextStyles.inter16RegularBlack.copyWith(color: Colors.grey),

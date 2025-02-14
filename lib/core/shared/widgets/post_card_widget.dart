@@ -32,7 +32,8 @@ class PostCardWidget extends StatefulWidget {
   _PostCardWidgetState createState() => _PostCardWidgetState();
 }
 
-class _PostCardWidgetState extends State<PostCardWidget> with SingleTickerProviderStateMixin {
+class _PostCardWidgetState extends State<PostCardWidget>
+    with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return SlideTransitionWidget(
@@ -56,7 +57,8 @@ class _PostCardWidgetState extends State<PostCardWidget> with SingleTickerProvid
                 offset: const Offset(0, 3),
               ),
             ],
-            borderRadius: BorderRadius.circular(widget.deviceInfo.screenWidth * 0.03),
+            borderRadius:
+                BorderRadius.circular(widget.deviceInfo.screenWidth * 0.03),
           ),
           child: Padding(
             padding: EdgeInsets.all(widget.deviceInfo.screenWidth * 0.05),
@@ -71,7 +73,8 @@ class _PostCardWidgetState extends State<PostCardWidget> with SingleTickerProvid
                         widget.post.title,
                         overflow: TextOverflow.ellipsis,
                         softWrap: true,
-                        style: TextStyles.inter18BoldBlack.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.05),
+                        style: TextStyles.inter18BoldBlack.copyWith(
+                            fontSize: widget.deviceInfo.screenWidth * 0.05),
                       ),
                     ),
                     widget.idNotMatch
@@ -82,7 +85,11 @@ class _PostCardWidgetState extends State<PostCardWidget> with SingleTickerProvid
                               if (postId == 0) {
                                 return;
                               }
-                              showDialog(context: context, builder: (context) => ShowDeleteDialogWidget(onPressed: widget.onPressedDelete, deviceInfo: widget.deviceInfo));
+                              showDialog(
+                                  context: context,
+                                  builder: (context) => ShowDeleteDialogWidget(
+                                      onPressed: widget.onPressedDelete,
+                                      deviceInfo: widget.deviceInfo));
 
                               getIt.get<HomeCubit>().onRefresh();
                             },
@@ -104,7 +111,8 @@ class _PostCardWidgetState extends State<PostCardWidget> with SingleTickerProvid
                     Expanded(
                       child: Text(
                         widget.post.createdBy.fullName,
-                        style: TextStyles.inter18BoldBlack.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.04),
+                        style: TextStyles.inter18BoldBlack.copyWith(
+                            fontSize: widget.deviceInfo.screenWidth * 0.04),
                       ),
                     ),
                     IconButton(
@@ -114,7 +122,8 @@ class _PostCardWidgetState extends State<PostCardWidget> with SingleTickerProvid
                         showDialog(
                           context: context,
                           builder: (context) => BlocProvider(
-                            create: (context) => getIt<HomeCubit>()..reportCategories(),
+                            create: (context) =>
+                                getIt<HomeCubit>()..reportCategories(),
                             child: ShowReportPostDialogWidget(
                               deviceInfo: widget.deviceInfo,
                               onPressedReport: (categoryId, reason) async {
@@ -141,7 +150,8 @@ class _PostCardWidgetState extends State<PostCardWidget> with SingleTickerProvid
                 ),
                 Text(
                   widget.post.FormattedDate,
-                  style: TextStyles.inter18Regularblack.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.03),
+                  style: TextStyles.inter18Regularblack
+                      .copyWith(fontSize: widget.deviceInfo.screenWidth * 0.03),
                 ),
                 SizedBox(height: widget.deviceInfo.localHeight * 0.01),
                 Text(
@@ -150,7 +160,8 @@ class _PostCardWidgetState extends State<PostCardWidget> with SingleTickerProvid
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.justify,
                   softWrap: true,
-                  style: TextStyles.inter18RegularWithOpacity.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.04),
+                  style: TextStyles.inter18RegularWithOpacity
+                      .copyWith(fontSize: widget.deviceInfo.screenWidth * 0.04),
                 ),
               ],
             ),
