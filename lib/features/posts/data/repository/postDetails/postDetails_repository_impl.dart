@@ -37,9 +37,9 @@ class PostDetailsRepositoryImpl implements PostDetailsRepository {
   }
 
   @override
-  Future<List<CommentEntity>> getPostComments(int postId) async {
+  Future<List<CommentEntity>> getPostComments({required int postId, required int pageOffset, required int pageSize}) async {
 
-    final response = await postDetailsRemoteDataSource.getPostComments(postId);
+    final response = await postDetailsRemoteDataSource.getPostComments(postId: postId, pageOffset: pageOffset, pageSize: pageSize);
 
     return response.toEntities();
 

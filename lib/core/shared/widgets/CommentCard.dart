@@ -112,7 +112,7 @@ class CommentCard extends StatelessWidget {
                   IconButton(
                       onPressed: () {
                         // context.read<PostDetailsCubit>().giveReaction(commentId: comment.id,index: index, reactionType: ReactionType.LIKE);
-                        context.read<CommentCubit>().giveReaction(postId: context.read<PostDetailsCubit>().post!.id, reactionType: ReactionType.LIKE);
+                        context.read<CommentCubit>().giveReaction(context: context,postId: context.read<PostDetailsCubit>().post!.id, reactionType: ReactionType.LIKE);
                       },
                       icon: Icon(
                         context.read<CommentCubit>().selectedReactionType == ReactionType.LIKE ? Icons.thumb_up_alt_rounded :
@@ -128,7 +128,7 @@ class CommentCard extends StatelessWidget {
                       onPressed: () {
 
                         // context.read<PostDetailsCubit>().giveReaction(commentId: comment.id,index: index, reactionType: ReactionType.DIS_LIKE);
-                        context.read<CommentCubit>().giveReaction(postId: context.read<PostDetailsCubit>().post!.id, reactionType: ReactionType.DIS_LIKE);
+                        context.read<CommentCubit>().giveReaction(context: context,postId: context.read<PostDetailsCubit>().post!.id, reactionType: ReactionType.DIS_LIKE);
 
                         },
                       icon: Icon(

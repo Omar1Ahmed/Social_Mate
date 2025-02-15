@@ -6,7 +6,7 @@ import 'package:social_media/features/posts/presentation/postDetails/presentatio
 
 abstract class PostDetailsRepository {
    Future<PostEntity> getPostDetails(int postId);
-   Future<List<CommentEntity>> getPostComments(int postId);
+   Future<List<CommentEntity>> getPostComments({required int postId, required int pageOffset, required int pageSize});
    Future<int?> getPostCommentsCount(int postId);
    Future<double?> getPostRateAverage(int postId);
 

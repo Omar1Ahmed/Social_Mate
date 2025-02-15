@@ -45,7 +45,8 @@ class DioClient implements ApiCalls {
           ),
         );
 
-        return _validateResponseData(response.data);
+
+        return _validateResponseData(response);
       } on DioException catch (e) {
         throw DioExceptionHandler.handleError(e);
       }
@@ -66,25 +67,13 @@ class DioClient implements ApiCalls {
           options: Options(headers: header),
         );
         print('lololololo ${response.data}');
+        print('lololololo ${response.data.runtimeType}');
         print('lololololo ${response.statusCode}');
         print('lololololo ${response.statusMessage}');
 
-        // if (response.statusCode == 201)
-        //   return {
-        //     'statusCode': 201
-        //   };
 
-        // if (response.statusCode == 204)
-        //   return {
-        //     'statusCode': 204
-        //   };
 
-        // if (response.statusCode == 200)
-        //   return {
-        //     'statusCode': 200
-        //   };
-
-        return _validateResponseData(response.data);
+        return _validateResponseData(response);
       } on DioException catch (e) {
         print('lololololo222222222 ${e.error}');
         print('lololololo2222222 ${e.response!.statusCode}');
@@ -110,12 +99,9 @@ class DioClient implements ApiCalls {
             headers: header,
           ),
         );
-        if (response.statusCode == 204)
-          return {
-            'statusCode': 204
-          };
 
-        return _validateResponseData(response.data);
+
+        return _validateResponseData(response);
       } on DioException catch (e) {
         throw DioExceptionHandler.handleError(e);
       }
@@ -137,12 +123,9 @@ class DioClient implements ApiCalls {
           ),
         );
 
-        if (response.statusCode == 204)
-          return {
-            'statusCode': 204
-          };
 
-        return _validateResponseData(response.data);
+
+        return _validateResponseData(response);
       } on DioException catch (e) {
         throw DioExceptionHandler.handleError(e);
       }
@@ -151,21 +134,33 @@ class DioClient implements ApiCalls {
     }
   }
 
-  Map<String, dynamic> _validateResponseData(dynamic data) {
-    if (data is Map<String, dynamic>) {
-      return data;
-    } else if (data == null) {
+  Map<String, dynamic> _validateResponseData(Response response) {
+
+    print('response data ${response.data}');
+    print('response data ${response.data == null}');
+    print('response data ${response.data.toString().isEmpty}');
+    print('response data ${response.data is Map<String, dynamic>}');
+
+    if (response.data is Map<String, dynamic>) {
+      return response.data;
+    }else if(response.data.toString().isEmpty && (response.statusCode == 204 || response.statusCode == 201 || response.statusCode == 200) ){
+
+        return {
+          'statusCode': response.statusCode
+        };
+
+    } else if (response.data == null) {
       throw Exception('Response data is null');
-    } else if (data is int ||
-        data is String ||
-        data is double ||
-        data is bool ||
-        data is List ||
-        data is Map<String, dynamic>) {
-      return {'data': data};
+    } else if (response.data is int ||
+        response.data is String ||
+        response.data is double ||
+        response.data is bool ||
+        response.data is List ||
+        response.data is Map<String, dynamic>) {
+      return {'data': response.data};
     } else {
       throw Exception(
-          'Invalid response format: Expected Map<String, dynamic>, but got ${data.runtimeType}');
+          'Invalid response format: Expected Map<String, dynamic>, but got ${response.runtimeType}');
     }
   }
 }

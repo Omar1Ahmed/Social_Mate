@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
 import 'package:social_media/core/shared/entities/post_entity.dart';
@@ -10,7 +11,7 @@ import 'package:social_media/features/posts/domain/repository/postDetails/postDe
 
 part 'post_details_state.dart';
 
-enum ReactionType { LIKE, DIS_LIKE }
+enum ReactionType {LIKE,DIS_LIKE}
 
 class PostDetailsCubit extends Cubit<PostDetailsState> {
   PostDetailsRepository postDetailsRepository;
@@ -19,14 +20,23 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
 
   TextEditingController createCommentController = TextEditingController();
 
+  FocusNode commentfocusNode = FocusNode();
+
   PostEntity? post;
   List<CommentEntity>? comments;
   static int _postId = 0;
-  int? commentsCount;
   double? rateAverage;
   double selectedRatingValue = 0;
-  FocusNode commentfocusNode = FocusNode();
-  ReactionType? selectedReactionType;
+
+  // Pagination
+  int? commentsCount;
+  int _currentPage = 0;
+  int _pageSize = 3;
+  bool hasMoreComments = true;
+  bool isLoading = false;
+
+
+
 
   static void setSelectedPost(int postId) {
     _postId = postId;
@@ -35,7 +45,7 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
   Future<void> setRateAverage(int value) async {
     selectedRatingValue = value.toDouble();
     emit(SetPostRateLoading());
-    try {
+    try{
       final response = await postDetailsRepository.RatePost(_postId, value);
       if (response['statusCode'] == 204) {
         emit(SuccessPostRate());
@@ -43,19 +53,17 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
         selectedRatingValue = rateAverage ?? 0;
         emit(FailPostRate());
       }
-    } catch (e) {
+    }catch(e){
       selectedRatingValue = rateAverage ?? 0;
       emit(FailPostRate());
     }
   }
 
   Future<void> getPostDetails() async {
-    bool isConnected = await ConnectivityHelper.isConnected();
-
-    print('Is connected : ${isConnected}');
 
     try {
       emit(PostDetailsLoading());
+
       post = await postDetailsRepository.getPostDetails(_postId);
 
       emit(PostDetailsLoaded(post!));
@@ -65,13 +73,14 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
     }
   }
 
+
   Future<void> getPostCommentsCount() async {
-    print('commentsCount ');
+
 
     try {
       emit(CommentsCountLoading());
       commentsCount = await postDetailsRepository.getPostCommentsCount(_postId);
-      print('commentsCount: $commentsCount');
+
       emit(CommentsCountLoaded());
     } catch (e, trace) {
       print(trace);
@@ -79,13 +88,16 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
     }
   }
 
-  Future<void> getPostRateAverage() async {
-    bool isConnected = await ConnectivityHelper.isConnected();
 
-    print('Is connected Rate: ${isConnected}');
+  Future<void> getPostRateAverage() async {
+
     try {
       emit(RatePostAverageLoading());
       rateAverage = await postDetailsRepository.getPostRateAverage(_postId);
+
+      print('rate Average ${rateAverage}');
+
+      rateAverage ??= 0;
 
       selectedRatingValue = rateAverage!;
 
@@ -102,85 +114,99 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
     }
   }
 
-  Future<void> getPostComments() async {
+
+  Future<void> getPostComments({int? pageOffset = null, int? pageSize = null }) async {
+  print('get comments');
+
+    if (!hasMoreComments || isLoading) return;
+
+    isLoading = true;
     try {
       emit(CommentsLoading());
-      comments = await postDetailsRepository.getPostComments(_postId);
+      final newComments = await postDetailsRepository.getPostComments(postId: _postId, pageOffset: pageOffset?? _currentPage, pageSize: pageSize??_pageSize);
+
+
+
+      print(newComments[0]);
+      // print('comments length ${comments!.length} $_currentPage $commentsCount ${newComments.length}');
+
+      if(newComments.isEmpty) {
+        hasMoreComments = false;
+      }else{
+        comments ??= [];
+        comments!.addAll(newComments);
+
+        _currentPage++;
+        print('has more comments ${(_currentPage * _pageSize) < commentsCount!}');
+        hasMoreComments = (_currentPage * _pageSize) < commentsCount!;
+      }
 
       emit(CommentsLoaded());
     } catch (e, trace) {
       print('rate Error ${e.toString()}');
       print(trace);
       emit(PostDetailsError(e.toString()));
+    }finally{
+      isLoading = false;
     }
   }
-
-//  Future<void> giveReaction({
-//   required int commentId,
-//   required ReactionType reactionType,
-//   required int index,
-// }) async {
-//   // Prevent duplicate reactions
-//   if (selectedReactionType != reactionType) {
-//     try {
-//       emit(GiveReactionLoading());
-
-//       // Call the repository method
-//       final response = await postDetailsRepository.GiveReaction(
-//           commentId, commentId, reactionType);
-
-//       // Debug: Print the full response
-//       print('Give Reaction Response: $response');
-
-//       // Check the status code directly
-//       if (response.containsKey('statusCode') && response['statusCode'] == 204) {
-//         // Update the selected reaction type
-//         selectedReactionType = reactionType;
-
-//         // Update the UI for like/dislike count
-//         if (reactionType == ReactionType.LIKE) {
-//           comments![index].numOfLikes++;
-//         } else {
-//           comments![index].numOfDisLikes++;
-//         }
-//         emit(GiveReactionSuccess());
-//       } else {
-//         // Reset reaction type on failure
-//         selectedReactionType = null;
-//         emit(GiveReactionFail(
-//             'Failed to React to The post (Status Code: ${response['statusCode']})'));
-//       }
-//     } catch (e) {
-//       if (e is ErrorResponseModel) {
-//         // Handle the "already reacted" case
-//         if (e.message.toString().contains('already reacted')) {
-//           selectedReactionType = reactionType;
-//           emit(GiveReactionFail('You Already Reacted to this comment'));
-//         } else {
-//           emit(GiveReactionFail(e.message.toString()));
-//         }
-//       } else {
-//         emit(GiveReactionFail(e.toString()));
-//       }
-//     }
-//   } else {
-//     emit(GiveReactionFail('You Already Reacted to this comment'));
-//   }
-// }
-
+  //
+  // Future<void> giveReaction({
+  //   required int commentId,
+  //   required ReactionType reactionType,
+  //   required int index
+  // }) async {
+  //
+  //   if(selectedReactionType != reactionType) {
+  //
+  //    try {
+  //     emit(GiveReactionLoading());
+  //     final response = await postDetailsRepository.GiveReaction(
+  //         _PostId, commentId, reactionType);
+  //     print('give reaction: $response');
+  //     if (response['statusCode'] == 204) {
+  //       selectedReactionType = reactionType;
+  //       if (reactionType == ReactionType.LIKE) {
+  //         comments![index].numOfLikes++;
+  //       } else {
+  //         comments![index].numOfDisLikes++;
+  //       }
+  //       emit(GiveReactionSuccess());
+  //     } else {
+  //       selectedReactionType = null;
+  //       emit(GiveReactionFail('Failed to React to The post'));
+  //     }
+  //   } catch (e, trace) {
+  //     if (e is ErrorResponseModel) {
+  //       if (e.message.toString().contains(' already reacted')) {
+  //         selectedReactionType = reactionType;
+  //         emit(GiveReactionFail('Already Reacted to this comment'));
+  //       } else {
+  //         emit(GiveReactionFail(e.message.toString()));
+  //       }
+  //     } else {
+  //       emit(GiveReactionFail(e.toString()));
+  //     }
+  //   }
+  // }else{
+  //     emit(GiveReactionFail('You Already Reacted to this comment'));
+  //   }
+  // }
   //
   //
   Future<void> deleteComment(int commentId) async {
     commentfocusNode.unfocus();
     try {
       emit(deleteCommentLoading());
-      final response =
-          await postDetailsRepository.deleteComment(_postId, commentId);
+      final response = await postDetailsRepository.deleteComment(
+          _postId, commentId);
       print('give reaction: $response');
 
       if (response['statusCode'] == 204) {
-        emit(deleteCommentSuccess());
+        comments!.removeWhere((comment) => comment.id == commentId);
+        emit(deleteCommentSuccess(commentId));
       } else {
+
         emit(deleteCommentFail('Failed to Delete to The post'));
       }
     } catch (e, trace) {
@@ -192,27 +218,22 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
     }
   }
 
+
   Future<void> createComment(BuildContext context) async {
     if (createCommentController.text.isNotEmpty) {
       try {
         emit(CommentsCreationLoading());
-
         final response = await postDetailsRepository.createComment(
             _postId, createCommentController.text);
 
-        // Debug: Print the full response
-        print('Create Comment Response: $response');
-        commentfocusNode.unfocus();
-        createCommentController.clear();
-        emit(CommentsCreated());
+        if (response['data'] is int ) {
+          commentfocusNode.unfocus();
+          createCommentController.clear();
+          emit(CommentsCreated());
+        } else {
 
-        // Check the status code directly
-        // if (response.containsKey('statusCode') &&
-        //     response['statusCode'] == 200) {
-        // } else {
-        //   emit(CommentsError(
-        //       'Failed to send Your Comment (Status Code: ${response['statusCode']})'));
-        // }
+          emit(CommentsError('Failed to send Your Comment'));
+        }
       } catch (e) {
         if (e is ErrorResponseModel) {
           emit(CommentsError(e.message.toString()));
@@ -224,4 +245,25 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
       emit(CommentsError('Please Enter Your Comment'));
     }
   }
+
+
+  Future<void> refreshPostDetails() async {
+    try {
+
+
+      _currentPage = 0;
+      comments = null;
+      commentsCount = null;
+      rateAverage = null;
+      hasMoreComments = true;
+      post = null;
+      selectedRatingValue= 0;
+
+
+      await getPostDetails();
+    } catch (e) {
+      emit(PostDetailsError(e.toString()));
+    }
+  }
+
 }

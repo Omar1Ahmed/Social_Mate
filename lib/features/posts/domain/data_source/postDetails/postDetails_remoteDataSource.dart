@@ -6,7 +6,7 @@ import 'package:social_media/features/posts/presentation/postDetails/presentatio
 
 abstract class PostDetailsRemoteDataSource {
   Future<PostData> getPostDetails(int postId);
-  Future<PostCommentsModel> getPostComments(int postId);
+  Future<PostCommentsModel> getPostComments({required int postId, required int pageOffset, required int pageSize});
   Future<int?> getPostCommentsCount(int postId);
   Future<double?> getPostRateAverage(int postId);
 

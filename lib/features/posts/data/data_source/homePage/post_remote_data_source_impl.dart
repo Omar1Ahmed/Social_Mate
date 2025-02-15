@@ -32,6 +32,7 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
         'pageOffset': pageOffset,
         'pageSize': pageSize
       });
+      print('response : $response');
       return PostResponse.fromJson(response);
     } catch (e) {
       throw Exception("Error fetching posts: ${e.toString()}");

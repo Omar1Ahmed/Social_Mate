@@ -33,14 +33,19 @@ class PostDetailsRemoteDataSourceImpl implements PostDetailsRemoteDataSource {
   }
 
   @override
-  Future<PostCommentsModel> getPostComments(int postId) async {
+  Future<PostCommentsModel> getPostComments({required int postId, required int pageOffset, required int pageSize}) async {
     try {
+      print('post id : $postId page offset : $pageOffset  page size : $pageSize');
       final response = await dio.get(
-        "/posts/$postId/comments",
+        "/posts/$postId/comments?",
         header: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ${userMainDetails.state.token}',
         },
+        queryParameters: {
+          'pageOffset' : pageOffset,
+          'pageSize' : pageSize
+        }
       );
 
       print('comments response in datasource : $response');

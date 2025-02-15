@@ -34,12 +34,28 @@ class post_details_screen extends StatefulWidget {
 
 class _post_details_screenState extends State<post_details_screen> {
 
+  late ScrollController _scrollController;
+
   @override
   void initState() {
 
-    super.initState();
     print('initState');
+
+    super.initState();
     context.read<PostDetailsCubit>().getPostDetails();
+    _scrollController = ScrollController()..addListener(_onScroll);
+  }
+  void _onScroll() {
+
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 100  && context.read<PostDetailsCubit>().hasMoreComments) {
+      context.read<PostDetailsCubit>().getPostComments();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -96,10 +112,12 @@ class _post_details_screenState extends State<post_details_screen> {
         // }
 
         if (state is CommentsCreated) {
+
+          context.read<PostDetailsCubit>().hasMoreComments = true;
           Future.wait(
             [
               context.read<PostDetailsCubit>().getPostCommentsCount(),
-              context.read<PostDetailsCubit>().getPostComments(),
+              context.read<PostDetailsCubit>().getPostComments(pageOffset: 0,pageSize: 1),
             ],
           );
           CherryToastMsgs.CherryToastSuccess(
@@ -120,6 +138,14 @@ class _post_details_screenState extends State<post_details_screen> {
         }
 
         if(state is deleteCommentSuccess){
+          context.read<PostDetailsCubit>().comments!.removeWhere((comment) => comment.id == state.deletedCommentId);
+          Future.wait([
+          context.read<PostDetailsCubit>().getPostCommentsCount(),
+          ]);
+
+          if(context.read<PostDetailsCubit>().comments!.length != context.read<PostDetailsCubit>().commentsCount){
+            context.read<PostDetailsCubit>().getPostComments();
+          }
 
           CherryToastMsgs.CherryToastSuccess(
             info: info,
@@ -129,10 +155,6 @@ class _post_details_screenState extends State<post_details_screen> {
           );
 
           Navigator.pop(context);
-          Future.wait([
-          context.read<PostDetailsCubit>().getPostCommentsCount(),
-          context.read<PostDetailsCubit>().getPostComments(),
-          ]);
           }
 
         if(state is deleteCommentFail){
@@ -151,10 +173,13 @@ class _post_details_screenState extends State<post_details_screen> {
         return Scaffold(
 
           backgroundColor: ColorsManager.whiteColor,
-          body: Column(
+          body: RefreshIndicator(
+              onRefresh: context.read<PostDetailsCubit>().refreshPostDetails,
+            child: Column(
             children: [
               Expanded(
                 child: CustomScrollView(
+                  controller: _scrollController,
                   slivers: [
                     SliverToBoxAdapter(
                       child: Padding(
@@ -239,154 +264,163 @@ class _post_details_screenState extends State<post_details_screen> {
                     ),
                     postDetailsCubit.comments == null || postDetailsCubit.comments == []
                         ? SliverToBoxAdapter(
-                            child: customShimmer(
-                                childWidget: Column(children: [
-                            Container(
-                                width: info.screenWidth * 0.9,
-                                height: info.screenHeight * 0.13,
-                                margin: EdgeInsetsDirectional.only(top: info.screenHeight * 0.02),
-                                padding: EdgeInsetsDirectional.only(start: info.screenWidth * 0.05, end: info.screenWidth * 0.05, top: info.screenHeight * 0.01, bottom: info.screenHeight * 0.01),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(info.screenWidth * 0.07),
-                                    bottomLeft: Radius.circular(info.screenWidth * 0.07),
-                                    bottomRight: Radius.circular(info.screenWidth * 0.07),
-                                  ),
-                                )),
-                            SizedBox(
-                              height: info.screenHeight * 0.01,
-                            ),
-                            Row(
-                              children: [
-                                Container(margin: EdgeInsetsDirectional.only(start: info.screenWidth * 0.04), width: info.screenWidth * 0.05, height: info.screenHeight * 0.015, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.025))),
-                                Container(
-                                  width: info.screenWidth * 0.08,
-                                  height: info.screenHeight * 0.035,
-                                  margin: EdgeInsetsDirectional.only(start: info.screenWidth * 0.02),
-                                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.09)),
-                                ),
-                                Container(margin: EdgeInsetsDirectional.only(start: info.screenWidth * 0.02), width: info.screenWidth * 0.05, height: info.screenHeight * 0.015, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.025))),
-                                Container(
-                                  width: info.screenWidth * 0.08,
-                                  height: info.screenHeight * 0.035,
-                                  margin: EdgeInsetsDirectional.only(start: info.screenWidth * 0.02),
-                                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.09)),
-                                )
-                              ],
-                            ),
-                            Container(
-                                width: info.screenWidth * 0.9,
-                                height: info.screenHeight * 0.13,
-                                margin: EdgeInsetsDirectional.only(top: info.screenHeight * 0.02),
-                                padding: EdgeInsetsDirectional.only(start: info.screenWidth * 0.05, end: info.screenWidth * 0.05, top: info.screenHeight * 0.01, bottom: info.screenHeight * 0.01),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(info.screenWidth * 0.07),
-                                    bottomLeft: Radius.circular(info.screenWidth * 0.07),
-                                    bottomRight: Radius.circular(info.screenWidth * 0.07),
-                                  ),
-                                )),
-                            SizedBox(
-                              height: info.screenHeight * 0.01,
-                            ),
-                            Row(
-                              children: [
-                                Container(margin: EdgeInsetsDirectional.only(start: info.screenWidth * 0.04), width: info.screenWidth * 0.05, height: info.screenHeight * 0.015, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.025))),
-                                Container(
-                                  width: info.screenWidth * 0.08,
-                                  height: info.screenHeight * 0.035,
-                                  margin: EdgeInsetsDirectional.only(start: info.screenWidth * 0.02),
-                                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.09)),
-                                ),
-                                Container(margin: EdgeInsetsDirectional.only(start: info.screenWidth * 0.02), width: info.screenWidth * 0.05, height: info.screenHeight * 0.015, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.025))),
-                                Container(
-                                  width: info.screenWidth * 0.08,
-                                  height: info.screenHeight * 0.035,
-                                  margin: EdgeInsetsDirectional.only(start: info.screenWidth * 0.02),
-                                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.09)),
-                                )
-                              ],
-                            ),
-                            Container(
-                                width: info.screenWidth * 0.9,
-                                height: info.screenHeight * 0.13,
-                                margin: EdgeInsetsDirectional.only(top: info.screenHeight * 0.02),
-                                padding: EdgeInsetsDirectional.only(start: info.screenWidth * 0.05, end: info.screenWidth * 0.05, top: info.screenHeight * 0.01, bottom: info.screenHeight * 0.01),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(info.screenWidth * 0.07),
-                                    bottomLeft: Radius.circular(info.screenWidth * 0.07),
-                                    bottomRight: Radius.circular(info.screenWidth * 0.07),
-                                  ),
-                                )),
-                            SizedBox(
-                              height: info.screenHeight * 0.01,
-                            ),
-                            Row(
-                              children: [
-                                Container(margin: EdgeInsetsDirectional.only(start: info.screenWidth * 0.04), width: info.screenWidth * 0.05, height: info.screenHeight * 0.015, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.025))),
-                                Container(
-                                  width: info.screenWidth * 0.08,
-                                  height: info.screenHeight * 0.035,
-                                  margin: EdgeInsetsDirectional.only(start: info.screenWidth * 0.02),
-                                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.09)),
-                                ),
-                                Container(margin: EdgeInsetsDirectional.only(start: info.screenWidth * 0.02), width: info.screenWidth * 0.05, height: info.screenHeight * 0.015, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.025))),
-                                Container(
-                                  width: info.screenWidth * 0.08,
-                                  height: info.screenHeight * 0.035,
-                                  margin: EdgeInsetsDirectional.only(start: info.screenWidth * 0.02),
-                                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.09)),
-                                )
-                              ],
-                            ),
-                          ])))
-                        : SliverList(
-                            delegate: SliverChildBuilderDelegate(
-                              childCount: postDetailsCubit.comments!.length == 0 ? 1 : postDetailsCubit.comments!.length,
-                              (context, index) => postDetailsCubit.comments!.length > 0
-                                  ? TweenAnimationWidget(
-                                      index: index,
-                                      deviceInfo: info,
-                                      child: SlideTransitionWidget(
-                                          child: BlocProvider(create: (_) => CommentCubit(postDetailsRepository: getIt(),comment: postDetailsCubit.comments![index]),
-                                              child: BlocConsumer<CommentCubit, CommentState>(
-                                                listener: (context, state) {
-                                                  if(state is GiveReactionSuccess){
-                                                      CherryToastMsgs.CherryToastSuccess(
-                                                        info: info,
-                                                        context: context,
-                                                        title: 'Success!!',
-                                                        description: 'You Reacted To The Comment Successfully',
-                                                      );
-                                                  }
 
-                                                  if(state is GiveReactionFail){
-                                                    CherryToastMsgs.CherryToastError(
-                                                            info: info,
-                                                            context: context,
-                                                            title: 'Failed!!',
-                                                            description: state.message,
-                                                          );
-                                                  }
-                                                },
-                                                  builder: (context, state) => CommentCard(
-                                                index: index,
-                                                comment: postDetailsCubit.comments![index],
-                                                info: info,
-                                              )))),
-                                    )
-                                  : Container(
-                                      margin: EdgeInsetsDirectional.only(top: info.screenHeight * 0.07),
-                                      width: info.screenWidth * 0.6,
-                                      height: info.screenHeight * 0.3,
-                                      child: Image.asset('assets/images/noComments.png'),
+                        child: customShimmer(
+                            childWidget: Column(children: [
+                              Container(
+                                  width: info.screenWidth * 0.9,
+                                  height: info.screenHeight * 0.13,
+                                  margin: EdgeInsetsDirectional.only(top: info.screenHeight * 0.02),
+                                  padding: EdgeInsetsDirectional.only(start: info.screenWidth * 0.05, end: info.screenWidth * 0.05, top: info.screenHeight * 0.01, bottom: info.screenHeight * 0.01),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(info.screenWidth * 0.07),
+                                      bottomLeft: Radius.circular(info.screenWidth * 0.07),
+                                      bottomRight: Radius.circular(info.screenWidth * 0.07),
                                     ),
-                            ),
-                          ),
+                                  )),
+                              SizedBox(
+                                height: info.screenHeight * 0.01,
+                              ),
+                              Row(
+                                children: [
+                                  Container(margin: EdgeInsetsDirectional.only(start: info.screenWidth * 0.04), width: info.screenWidth * 0.05, height: info.screenHeight * 0.015, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.025))),
+                                  Container(
+                                    width: info.screenWidth * 0.08,
+                                    height: info.screenHeight * 0.035,
+                                    margin: EdgeInsetsDirectional.only(start: info.screenWidth * 0.02),
+                                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.09)),
+                                  ),
+                                  Container(margin: EdgeInsetsDirectional.only(start: info.screenWidth * 0.02), width: info.screenWidth * 0.05, height: info.screenHeight * 0.015, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.025))),
+                                  Container(
+                                    width: info.screenWidth * 0.08,
+                                    height: info.screenHeight * 0.035,
+                                    margin: EdgeInsetsDirectional.only(start: info.screenWidth * 0.02),
+                                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.09)),
+                                  )
+                                ],
+                              ),
+                              Container(
+                                  width: info.screenWidth * 0.9,
+                                  height: info.screenHeight * 0.13,
+                                  margin: EdgeInsetsDirectional.only(top: info.screenHeight * 0.02),
+                                  padding: EdgeInsetsDirectional.only(start: info.screenWidth * 0.05, end: info.screenWidth * 0.05, top: info.screenHeight * 0.01, bottom: info.screenHeight * 0.01),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(info.screenWidth * 0.07),
+                                      bottomLeft: Radius.circular(info.screenWidth * 0.07),
+                                      bottomRight: Radius.circular(info.screenWidth * 0.07),
+                                    ),
+                                  )),
+                              SizedBox(
+                                height: info.screenHeight * 0.01,
+                              ),
+                              Row(
+                                children: [
+                                  Container(margin: EdgeInsetsDirectional.only(start: info.screenWidth * 0.04), width: info.screenWidth * 0.05, height: info.screenHeight * 0.015, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.025))),
+                                  Container(
+                                    width: info.screenWidth * 0.08,
+                                    height: info.screenHeight * 0.035,
+                                    margin: EdgeInsetsDirectional.only(start: info.screenWidth * 0.02),
+                                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.09)),
+                                  ),
+                                  Container(margin: EdgeInsetsDirectional.only(start: info.screenWidth * 0.02), width: info.screenWidth * 0.05, height: info.screenHeight * 0.015, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.025))),
+                                  Container(
+                                    width: info.screenWidth * 0.08,
+                                    height: info.screenHeight * 0.035,
+                                    margin: EdgeInsetsDirectional.only(start: info.screenWidth * 0.02),
+                                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.09)),
+                                  )
+                                ],
+                              ),
+                              Container(
+                                  width: info.screenWidth * 0.9,
+                                  height: info.screenHeight * 0.13,
+                                  margin: EdgeInsetsDirectional.only(top: info.screenHeight * 0.02),
+                                  padding: EdgeInsetsDirectional.only(start: info.screenWidth * 0.05, end: info.screenWidth * 0.05, top: info.screenHeight * 0.01, bottom: info.screenHeight * 0.01),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(info.screenWidth * 0.07),
+                                      bottomLeft: Radius.circular(info.screenWidth * 0.07),
+                                      bottomRight: Radius.circular(info.screenWidth * 0.07),
+                                    ),
+                                  )),
+                              SizedBox(
+                                height: info.screenHeight * 0.01,
+                              ),
+                              Row(
+                                children: [
+                                  Container(margin: EdgeInsetsDirectional.only(start: info.screenWidth * 0.04), width: info.screenWidth * 0.05, height: info.screenHeight * 0.015, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.025))),
+                                  Container(
+                                    width: info.screenWidth * 0.08,
+                                    height: info.screenHeight * 0.035,
+                                    margin: EdgeInsetsDirectional.only(start: info.screenWidth * 0.02),
+                                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.09)),
+                                  ),
+                                  Container(margin: EdgeInsetsDirectional.only(start: info.screenWidth * 0.02), width: info.screenWidth * 0.05, height: info.screenHeight * 0.015, decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.025))),
+                                  Container(
+                                    width: info.screenWidth * 0.08,
+                                    height: info.screenHeight * 0.035,
+                                    margin: EdgeInsetsDirectional.only(start: info.screenWidth * 0.02),
+                                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.09)),
+                                  )
+                                ],
+                              ),
+                            ])))
+                        : SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        childCount: postDetailsCubit.comments!.length == 0 ? 1 : postDetailsCubit.comments!.length,
+                            (context, index) => postDetailsCubit.comments!.length > 0
+                            ? TweenAnimationWidget(
+                          index: index,
+                          deviceInfo: info,
+                          child: SlideTransitionWidget(
+
+                              child: BlocProvider(
+                                  key: ValueKey(postDetailsCubit.comments![index].id),
+                                  create: (_) => CommentCubit(
+                                      postDetailsRepository: getIt(),
+                                      comment: postDetailsCubit.comments![index]),
+                                  child: BlocConsumer<CommentCubit, CommentState>(
+                                      listener: (context, state) {
+                                        if(state is GiveReactionSuccess){
+                                          CherryToastMsgs.CherryToastSuccess(
+                                            info: info,
+                                            context: context,
+                                            title: 'Success!!',
+                                            description: 'You Reacted To The Comment Successfully',
+                                          );
+                                        }
+
+                                        if(state is GiveReactionFail){
+                                          CherryToastMsgs.CherryToastError(
+                                            info: info,
+                                            context: context,
+                                            title: 'Failed!!',
+                                            description: state.message,
+                                          );
+                                        }
+                                      },
+                                      builder: (context, state) => CommentCard(
+                                        key: ValueKey(postDetailsCubit.comments![index].id),
+                                        index: index,
+                                        comment: postDetailsCubit.comments![index],
+                                        info: info,
+                                      )))),
+                        )
+                            : Container(
+                          margin: EdgeInsetsDirectional.only(top: info.screenHeight * 0.07),
+                          width: info.screenWidth * 0.6,
+                          height: info.screenHeight * 0.3,
+                          child: Image.asset('assets/images/noComments.png'),
+                        ),
+
+
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -430,7 +464,7 @@ class _post_details_screenState extends State<post_details_screen> {
                 ),
               )
             ],
-          ),
+          ), ),
         );
       }));
     });
@@ -460,12 +494,17 @@ class _post_details_screenState extends State<post_details_screen> {
               shadowColor: Colors.transparent,
             ),
           ),
-          Image.asset(
-            'assets/images/Title_img.png',
-            width: deviceInfo.localWidth * 0.48,
-            height: deviceInfo.localHeight * 0.06,
-            fit: BoxFit.contain,
-          ),
+          InkWell(
+            child: Image.asset(
+          'assets/images/Title_img.png',
+    width: deviceInfo.localWidth * 0.48,
+    height: deviceInfo.localHeight * 0.06,
+    fit: BoxFit.contain,
+    ),
+              onTap: () {
+              context.read<PostDetailsCubit>().getPostComments();
+            }
+          )
         ],
       ),
     );

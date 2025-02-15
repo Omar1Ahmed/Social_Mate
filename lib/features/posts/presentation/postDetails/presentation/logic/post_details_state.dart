@@ -51,7 +51,10 @@ final class CommentsError extends PostDetailsState {
 // }
 
 final class deleteCommentLoading extends PostDetailsState {}
-final class deleteCommentSuccess extends PostDetailsState {}
+final class deleteCommentSuccess extends PostDetailsState {
+  int deletedCommentId = 0;
+  deleteCommentSuccess(this.deletedCommentId);
+}
 final class deleteCommentFail extends PostDetailsState {
    final String message;
   deleteCommentFail(this.message);

@@ -33,7 +33,8 @@ class HomeCubit extends Cubit<HomeState> {
       hasMorePosts = (_currentPage * _pageSize) < total;
 
       emit(PostLoaded(posts, total));
-    } catch (e) {
+    } catch (e,trace) {
+      print(trace);
       emit(
         PostError(e.toString()),
       );
@@ -62,7 +63,8 @@ class HomeCubit extends Cubit<HomeState> {
         hasMorePosts = (_currentPage * _pageSize) < total;
         emit(PostLoaded(updatedPosts, total));
       }
-    } catch (e) {
+    } catch (e,trace) {
+      print(trace);
       emit(PostError(e.toString()));
     } finally {
       isLoadingMore = false;

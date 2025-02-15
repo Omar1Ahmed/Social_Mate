@@ -1,4 +1,6 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:social_media/core/error/errorResponseModel.dart';
 import 'package:social_media/features/posts/data/model/entities/commentEntity.dart';
@@ -7,60 +9,65 @@ import 'package:social_media/features/posts/presentation/postDetails/presentatio
 
 part 'comment_state.dart';
 
+
 class CommentCubit extends Cubit<CommentState> {
   PostDetailsRepository postDetailsRepository;
   CommentEntity comment;
-  CommentCubit({required this.postDetailsRepository, required this.comment})
-      : super(CommentInitial());
+  CommentCubit({required this.postDetailsRepository, required this.comment}) : super(CommentInitial());
+
+
 
   ReactionType? selectedReactionType;
 
   Future<void> giveReaction({
+    required BuildContext context,
     required int postId,
     required ReactionType reactionType,
+
   }) async {
-    if (selectedReactionType != reactionType) {
+
+    print('reactionType: $reactionType');
+    print('reactionType: $selectedReactionType');
+    if(selectedReactionType != reactionType) {
+
       try {
         emit(GiveReactionLoading());
-
-        // Call the repository method
         final response = await postDetailsRepository.GiveReaction(
             postId, comment.id, reactionType);
+        print('give reaction: $response');
+        if (response['statusCode'] == 204) {
 
-        // Debug: Print the full response
-        print('Give Reaction Response: $response');
-        print('Full Response: ${response.toString()}');
-
-        //TODO: fabricated result , needs to be fixed
-        // Extract the status code directly
-        final statusCode = response['statusCode'] ?? 204;
-        print('Extracted Status Code: $statusCode');
-
-        // Check if the status code is 204 (No Content)
-        if (statusCode == 204) {
-          // Update like/dislike counts
-          if (reactionType == ReactionType.LIKE) {
+          if(reactionType == ReactionType.LIKE){
             comment.numOfLikes++;
-          } else {
+          }else if (reactionType == ReactionType.DIS_LIKE){
             comment.numOfDisLikes++;
           }
-          if (selectedReactionType == ReactionType.LIKE) {
+          if(selectedReactionType == ReactionType.LIKE){
             comment.numOfLikes--;
-          } else if (selectedReactionType == ReactionType.DIS_LIKE) {
+          }else if (selectedReactionType == ReactionType.DIS_LIKE){
             comment.numOfDisLikes--;
           }
           selectedReactionType = reactionType;
+
+
+          int commentIndex = context.read<PostDetailsCubit>().comments!.indexWhere((comment) => comment.id == this.comment.id);
+          context.read<PostDetailsCubit>().comments![commentIndex].numOfLikes = comment.numOfLikes;
+          context.read<PostDetailsCubit>().comments![commentIndex].numOfDisLikes = comment.numOfDisLikes;
+
           emit(GiveReactionSuccess());
         } else {
           selectedReactionType = null;
-          emit(GiveReactionFail(
-              'Failed to React to The post (Status Code: $statusCode)'));
+          emit(GiveReactionFail('Failed to React to The post'));
         }
-      } catch (e) {
+      } catch (e, trace) {
+        print('reaction Error');
+        print(trace);
+        print(e);
         if (e is ErrorResponseModel) {
           if (e.message.toString().contains('already reacted')) {
             selectedReactionType = reactionType;
             emit(GiveReactionFail('Already Reacted to this comment'));
+
             return;
           } else {
             emit(GiveReactionFail(e.message.toString()));
@@ -70,8 +77,14 @@ class CommentCubit extends Cubit<CommentState> {
         }
         selectedReactionType = null;
       }
-    } else {
+    }else{
       emit(GiveReactionFail('You Already Reacted to this comment'));
     }
   }
+
+
+
+
 }
+
+
