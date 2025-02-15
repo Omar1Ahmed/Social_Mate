@@ -40,7 +40,6 @@ class _PostCardWidgetState extends State<PostCardWidget>
       child: InkWell(
         onTap: () {
           PostDetailsCubit.setSelectedPost(widget.post.id);
-
           context.pushNamed(
             Routes.postDetailsScreen,
           );

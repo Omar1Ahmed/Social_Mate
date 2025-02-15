@@ -1,152 +1,239 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
 import 'package:social_media/core/helper/extantions.dart';
-import 'package:social_media/core/shared/widgets/animation/tween_animation_widget.dart';
 import 'package:social_media/core/theming/colors.dart';
+import 'package:social_media/features/admin/presentation/report_details/logic/report_details_cubit.dart';
 import 'package:social_media/features/admin/presentation/report_details/ui/widgets/related_report_widget.dart';
 import 'package:social_media/features/admin/presentation/report_details/ui/widgets/report_detials_widget.dart';
+import 'package:social_media/features/posts/presentation/homePage/ui/widgets/build_error_widget.dart';
 import '../../../../../core/Responsive/Models/device_info.dart';
+import '../../../../../core/routing/routs.dart';
 import '../../../../../core/shared/widgets/animation/slide_Transition__widget.dart';
 import '../../../../../core/shared/widgets/header_widget.dart';
 import '../../../../../core/shared/widgets/postDetailsPostCard.dart';
 import '../../../../../core/theming/styles.dart';
+import '../../../../posts/presentation/postDetails/presentation/logic/post_details_cubit.dart';
+import '../../../data/models/main_report_model.dart';
 
-class ReportDetailsScreen extends StatelessWidget {
+class ReportDetailsScreen extends StatefulWidget {
   const ReportDetailsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return InfoWidget(builder: (context, info) {
-      return SafeArea(
-        child: Scaffold(
-          backgroundColor: ColorsManager.whiteColor,
-          body: CustomScrollView(
-            slivers: [
-              // Header Section
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.all(info.screenWidth * 0.05),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      HeaderWidget(
-                        info: info,
-                        onBackPressed: () {
-                          context.pop();
-                        },
-                        titleImageAsset: 'assets/images/Title_img.png',
-                      ),
-                      SizedBox(height: info.screenHeight * 0.02),
-                      ReportDetialsWidget(
-                        info: info,
-                      ),
-                      SizedBox(height: info.screenHeight * 0.02),
-                      SlideTransitionWidget(
-                        child: PostDetailsPostCard(
-                          info: info,
-                          showStars: false,
-                          titleText: 'Post Details',
-                          isTitleShimmer: false,
-                          showDeleteButton: false,
-                          isNameAndDateShimmer: false,
-                          showReportButton: false,
-                          isContentShimmer: false,
-                          isCommentsCountShimmer: false,
-                          isRateAverageShimmer: false,
-                          fullNameText: 'Abdullah Ahmed',
-                          formattedDateText: '2023-05-12 9:00 AM',
-                          contentText: 'loram ipsum dolor sit amet consectetur adipiscing elit. ',
-                          commentsCountText: 'Comments 19',
-                          rateAverageText: 'Rate 5',
-                          SelectedRatingValue: 5,
-                          disableStars: true,
-                        ),
-                      ),
-                      SizedBox(height: info.screenHeight * 0.02),
-                    ],
-                  ),
-                ),
-              ),
+  State<ReportDetailsScreen> createState() => _ReportDetailsScreenState();
+}
 
-              // Related Reports Section
-              _buildRelatedReports(info),
-            ],
-          ),
-        ),
-      );
+class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ReportDetailsCubit>().getReportDetails();
+      context.read<ReportDetailsCubit>().getCommentsCount();
+      context.read<ReportDetailsCubit>().getAvrageRating();
     });
   }
 
-  Widget _buildRelatedReports(DeviceInfo deviceInfo) {
-    const int relatedReportsCount = 10;
-
-    return SliverToBoxAdapter(
-      child: Center(
-        // Use Center to horizontally center the container
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: deviceInfo.screenWidth * 0.9, // Restrict the width to 90% of the screen
-          ),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(deviceInfo.screenWidth * 0.03),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: deviceInfo.screenWidth * 0.01,
-                  blurRadius: deviceInfo.screenWidth * 0.02,
-                  offset: const Offset(0, 3),
+  @override
+  Widget build(BuildContext context) {
+    return InfoWidget(
+      builder: (context, info) {
+        return SafeArea(
+          child: Scaffold(
+            backgroundColor: ColorsManager.whiteColor,
+            body: CustomScrollView(
+              slivers: [
+                _buildHeader(info),
+                _buildReportDetailsSection(info),
+                SliverToBoxAdapter(
+                  child: SizedBox(height: info.screenHeight * 0.02),
                 ),
+                _buildPostDetailsSection(info),
+                SliverToBoxAdapter(
+                  child: SizedBox(height: info.screenHeight * 0.02),
+                ),
+                _buildRelatedReportsSection(info),
               ],
             ),
-            child: Padding(
-              padding: EdgeInsets.all(deviceInfo.screenWidth * 0.03),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Related Reports',
-                    style: TextStyles.inter18BoldBlack.copyWith(fontSize: deviceInfo.screenWidth * 0.045),
-                  ),
-                  Divider(
-                    thickness: 2,
-                    height: deviceInfo.screenHeight * 0.02,
-                    color: ColorsManager.blackColor.withOpacity(0.6),
-                  ),
-                  SizedBox(height: deviceInfo.screenHeight * 0.02),
-                  TweenAnimationWidget(
-                    deviceInfo: deviceInfo,
-                    index: 0,
-                    child: _buildScrollableRelatedReportsList(deviceInfo, relatedReportsCount),
-                  ),
-                ],
-              ),
-            ),
           ),
+        );
+      },
+    );
+  }
+
+  /// Builds the header section with back button and title image.
+  SliverToBoxAdapter _buildHeader(DeviceInfo info) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: EdgeInsets.all(info.screenWidth * 0.05),
+        child: HeaderWidget(
+          info: info,
+          onBackPressed: () => context.pop(),
+          titleImageAsset: 'assets/images/Title_img.png',
         ),
       ),
     );
   }
 
-  Widget _buildScrollableRelatedReportsList(DeviceInfo deviceInfo, int count) {
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(), // Prevents scrolling inside the list
-      itemCount: count,
-      itemBuilder: (context, index) {
-        return Column(
-          children: [
-            RelatedReportWidget(
-              deviceInfo: deviceInfo,
-              fullName: 'User ${index + 1}',
-              createdAt: '2023-05-12 9:00 AM',
-              state: 'pending',
+  /// Builds the report details section.
+  SliverToBoxAdapter _buildReportDetailsSection(DeviceInfo info) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: info.screenWidth * 0.05),
+        child: BlocBuilder<ReportDetailsCubit, ReportDetailsState>(
+          builder: (context, state) {
+            if (state is ReportDetailsLoading) {
+              return ReportDetialsWidget(
+                info: info,
+                isLoading: true,
+                createdOn: '',
+                reportedBy: '',
+                lastModifiedBy: '',
+                status: '',
+                reportReason: '',
+                lastModifiedOn: '',
+                category: '',
+              );
+            } else if (state is ReportDetailsError) {
+              return BuildErrorWidget(deviceInfo: info, message: state.message);
+            } else if (state is ReportDetailsLoaded) {
+              return ReportDetialsWidget(
+                info: info,
+                createdOn: state.report.reportDetails.createdOn,
+                reportedBy: state.report.reportDetails.createdBy.fullName,
+                lastModifiedBy: state.report.reportDetails.lastModifiedBy.fullName,
+                status: state.report.reportDetails.status.titleEn,
+                reportReason: state.report.reportDetails.reason,
+                lastModifiedOn: state.report.reportDetails.lastModifiedOn,
+                category: state.report.reportDetails.category.titleEn,
+              );
+            }
+            return const SizedBox.shrink(); // Placeholder for initial state
+          },
+        ),
+      ),
+    );
+  }
+
+  /// Builds the post details section.
+  SliverToBoxAdapter _buildPostDetailsSection(DeviceInfo info) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: info.screenWidth * 0.05),
+        child: BlocBuilder<ReportDetailsCubit, ReportDetailsState>(
+          builder: (context, state) {
+            bool isLoading = state is ReportDetailsLoading || state is CommentsCountRepLoading || state is GetAvrageRatingLoading;
+            if (isLoading) {
+              return SlideTransitionWidget(
+                child: PostDetailsPostCard(
+                  titleText: '',
+                  contentText: '',
+                  fullNameText: '',
+                  commentsCountText: '',
+                  rateAverageText: '',
+                  formattedDateText: '',
+                  SelectedRatingValue: 5,
+                  info: info,
+                  showStars: false,
+                  isTitleShimmer: true,
+                  isNameAndDateShimmer: true,
+                  isContentShimmer: true,
+                  isCommentsCountShimmer: true,
+                  isRateAverageShimmer: true,
+                  disableStars: true,
+                  showDeleteButton: false,
+                  showReportButton: false,
+                ),
+              );
+            }
+
+            if (state is ReportDetailsLoaded) {
+              final reportState = context.read<ReportDetailsCubit>().state;
+              final report = (reportState is ReportDetailsLoaded) ? reportState.report.reportDetails.post : null;
+              final commentsCount = context.read<ReportDetailsCubit>().getComCount ?? 0;
+              final averageRating = context.read<ReportDetailsCubit>().getRateAverage ?? 0.0;
+              return SlideTransitionWidget(
+                child: InkWell(
+                  onTap: () {
+                    PostDetailsCubit.setSelectedPost(report.id);
+                    context.pushNamed(
+                      Routes.postDetailsScreen,
+                    );
+                  },
+                  child: PostDetailsPostCard(
+                    info: info,
+                    showStars: false,
+                    titleText: report!.title,
+                    fullNameText: report.createdBy.fullName,
+                    formattedDateText: report.createdOn,
+                    contentText: report.content,
+                    commentsCountText: 'Comments $commentsCount',
+                    rateAverageText: 'Rate ${averageRating.toStringAsFixed(1)}', // Format rating to 1 decimal place
+                    SelectedRatingValue: 5,
+                    disableStars: true,
+                    isTitleShimmer: false,
+                    showDeleteButton: false,
+                    isNameAndDateShimmer: false,
+                    showReportButton: false,
+                    isContentShimmer: false,
+                    isCommentsCountShimmer: false,
+                    isRateAverageShimmer: false,
+                  ),
+                ),
+              );
+            }
+            return const SizedBox.shrink();
+          },
+        ),
+      ),
+    );
+  }
+
+  /// Builds the related reports section.
+  Widget _buildRelatedReportsSection(DeviceInfo info) {
+    return BlocBuilder<ReportDetailsCubit, ReportDetailsState>(
+      builder: (context, state) {
+        if (state is ReportDetailsLoaded) {
+          return SliverPadding(
+            padding: EdgeInsets.all(info.screenWidth * 0.03),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate([
+                Text(
+                  'Related Reports',
+                  style: TextStyles.inter18BoldBlack.copyWith(fontSize: info.screenWidth * 0.045),
+                ),
+                Divider(
+                  thickness: 2,
+                  height: info.screenHeight * 0.02,
+                  color: ColorsManager.blackColor.withOpacity(0.6),
+                ),
+                SizedBox(height: info.screenHeight * 0.02),
+                ..._buildScrollableRelatedReportsList(info, state.report.relatedReports),
+              ]),
             ),
-            if (index != count - 1) SizedBox(height: deviceInfo.screenHeight * 0.02),
-          ],
-        );
+          );
+        }
+        return const SliverToBoxAdapter(child: SizedBox.shrink());
       },
     );
+  }
+
+  /// Builds the scrollable list of related reports as a list of widgets.
+  List<Widget> _buildScrollableRelatedReportsList(DeviceInfo info, List<RelatedReport> relatedReports) {
+    return relatedReports.map((report) {
+      return Column(
+        children: [
+          RelatedReportWidget(
+            reportId: report.id,
+            deviceInfo: info,
+            fullName: report.createdBy.fullName,
+            createdAt: report.category.titleEn,
+            state: report.status.titleEn,
+          ),
+          if (relatedReports.indexOf(report) != relatedReports.length - 1) SizedBox(height: info.screenHeight * 0.02),
+        ],
+      );
+    }).toList();
   }
 }

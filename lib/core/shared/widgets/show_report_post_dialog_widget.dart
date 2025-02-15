@@ -4,7 +4,6 @@ import 'package:social_media/core/helper/extantions.dart';
 import 'package:social_media/core/shared/widgets/Shimmer/ShimmerStyle.dart';
 import 'package:social_media/core/shared/widgets/build_category_selection_field.dart';
 import 'package:social_media/core/shared/widgets/cherryToast/CherryToastMsgs.dart';
-import 'package:social_media/core/theming/styles.dart';
 import 'package:social_media/features/admin/data/models/main_report_model.dart';
 import '../../../features/posts/presentation/homePage/logic/cubit/home_cubit_cubit.dart';
 import '../../../features/posts/presentation/homePage/ui/widgets/build_error_widget.dart';
@@ -35,10 +34,9 @@ class _ShowReportPostDialogWidgetState extends State<ShowReportPostDialogWidget>
   Widget build(BuildContext context) {
     return BlocConsumer<HomeCubit, HomeState>(
       listener: (context, state) {
-
         print('state22222: $state');
-         if(state is PostReported){
-        // Future.delayed( Duration(seconds: 2), () => Navigator.pop(context));
+        if (state is PostReported) {
+          // Future.delayed( Duration(seconds: 2), () => Navigator.pop(context));
           print('reporteeeeeeeeeeeed');
         }
       },
@@ -48,8 +46,8 @@ class _ShowReportPostDialogWidgetState extends State<ShowReportPostDialogWidget>
           return _buildReportDialog(context, state.categories);
         } else if (state is PostReportedLoading) {
           return _buildShimmerEffect(); // Display shimmer effect while loading
-        }else{
-          return BuildErrorWidget(deviceInfo: widget.deviceInfo);
+        } else {
+          return BuildErrorWidget(deviceInfo: widget.deviceInfo, message: "Something went wrong");
         }
       },
     );

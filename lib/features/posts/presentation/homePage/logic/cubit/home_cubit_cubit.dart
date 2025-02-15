@@ -33,7 +33,7 @@ class HomeCubit extends Cubit<HomeState> {
       hasMorePosts = (_currentPage * _pageSize) < total;
 
       emit(PostLoaded(posts, total));
-    } catch (e,trace) {
+    } catch (e, trace) {
       print(trace);
       emit(
         PostError(e.toString()),
@@ -63,7 +63,7 @@ class HomeCubit extends Cubit<HomeState> {
         hasMorePosts = (_currentPage * _pageSize) < total;
         emit(PostLoaded(updatedPosts, total));
       }
-    } catch (e,trace) {
+    } catch (e, trace) {
       print(trace);
       emit(PostError(e.toString()));
     } finally {
@@ -105,10 +105,9 @@ class HomeCubit extends Cubit<HomeState> {
     print('report');
     try {
       await postRepository.reportPost(postId, createReportModel);
-    print('report2');
+      print('report2');
       emit(PostReported());
-    print('report3');
-
+      print('report3');
     } catch (e) {
       emit(PostReportedFailed(e.toString()));
     }
