@@ -125,13 +125,16 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
       emit(CommentsLoading());
       final newComments = await postDetailsRepository.getPostComments(postId: _postId, pageOffset: pageOffset?? _currentPage, pageSize: pageSize??_pageSize);
 
+        print('has more comments ${(_currentPage * _pageSize) < commentsCount!}');
+        print('has more comments ${commentsCount!}');
+        print('has more comments ${_currentPage }');
 
 
-      print(newComments[0]);
       // print('comments length ${comments!.length} $_currentPage $commentsCount ${newComments.length}');
 
       if(newComments.isEmpty) {
         hasMoreComments = false;
+        comments ??= [];
       }else{
         comments ??= [];
         comments!.addAll(newComments);
