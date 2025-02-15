@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       color: Colors.white,
-      initialRoute: Routes.reportsHomeScreen,
+      initialRoute: Routes.splashScreen,
       onGenerateRoute: appRouter.generateRoute,
       builder: DevicePreview.appBuilder,
     );
