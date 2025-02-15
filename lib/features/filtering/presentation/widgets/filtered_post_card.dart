@@ -10,7 +10,6 @@ import 'package:social_media/core/userMainDetails/jwt_token_decode/data/model/jw
 import 'package:social_media/core/userMainDetails/jwt_token_decode/data/repository/jwt_token_decode_repository_imp.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 import 'package:social_media/features/filtering/presentation/cubit/filtering_cubit.dart';
-import 'package:social_media/features/filtering/presentation/cubit/sharing_data/sharing_data_cubit.dart';
 import 'package:social_media/features/filtering/presentation/widgets/report_dialog_marwan.dart';
 import 'package:social_media/features/posts/presentation/homePage/logic/cubit/home_cubit_cubit.dart';
 //import 'package:social_media/features/posts/presentation/postDetails/presentation/logic/post_details_cubit.dart';
@@ -53,25 +52,23 @@ class _FilteredPostCardState extends State<FilteredPostCard> {
     super.initState();
   }
 
-  void _deletePost(BuildContext context, int postId, String token,
-      Map<String, dynamic> params) {
-    widget.homeCubit.deletePost(postId).then((_) {
-      if (widget.onPostDeleted != null) {
-        widget.onPostDeleted!(postId);
-      }
-      widget.filteringCubit
-          .getFilteredPosts(token: token, queryParameters: params);
-    }).catchError((error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Failed to delete post")),
-      );
-    });
-  }
+  // void _deletePost(BuildContext context, int postId, String token,
+  //     Map<String, dynamic> params) {
+  //   widget.homeCubit.deletePost(postId).then((_) {
+  //     if (widget.onPostDeleted != null) {
+  //       widget.onPostDeleted!(postId);
+  //     }
+  //     widget.filteringCubit
+  //         .getFilteredPosts(token: token, queryParameters: params);
+  //   }).catchError((error) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text("Failed to delete post")),
+  //     );
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
-    final token = context.read<userMainDetailsCubit>().state.token;
-    final query = context.read<SharingDataCubit>().state.queryParams;
     return InfoWidget(builder: (context, deviceInfo) {
       return Card(
         color: Colors.white,

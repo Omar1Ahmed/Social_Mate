@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../../../core/Responsive/Models/device_info.dart';
 import '../../../../../../core/theming/colors.dart';
 
+// ignore: must_be_immutable
 class ReportDialogMarwan extends StatelessWidget {
   ReportDialogMarwan({super.key, required this.deviceInfo});
   final DeviceInfo deviceInfo;

@@ -37,3 +37,4 @@ class AllReportsError extends AllReportsState {
 }
 
 class AllReportsConnectionError extends AllReportsState {}
+class AllReportsStatusCodeError extends AllReportsState {}

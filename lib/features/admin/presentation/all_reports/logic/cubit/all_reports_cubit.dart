@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:social_media/core/helper/Connectivity/connectivity_helper.dart';
 import 'package:social_media/features/admin/domain/entities/main_report_entity.dart';
 import 'package:social_media/features/admin/domain/repositories/main_report_repo.dart';
 
@@ -10,43 +11,53 @@ class AllReportsCubit extends Cubit<AllReportsState> {
   final int _pageSize = 5;
   bool _hasMore = true;
 
-  AllReportsCubit(this.mainReportRepo) : super(AllReportsInitial());
+  AllReportsCubit({required this.mainReportRepo}) : super(AllReportsInitial());
 
   Future<void> getAllReports(Map<String, dynamic> queryParams,
       {required String token}) async {
-    if (state is AllReportsLoading) return;
-    _pageOffset = 0;
-    _hasMore = true;
-    emit(AllReportsLoading());
+    bool isConnected = await ConnectivityHelper.isConnected();
+    if (!isConnected) {
+      emit(AllReportsConnectionError());
+      print(state);
+      return;
+    } else {
+      if (state is AllReportsLoading) return;
+      _pageOffset = 0;
+      _hasMore = true;
+      emit(AllReportsLoading());
 
-    try {
-      final allReports = await mainReportRepo.getAllReports(
-        {...queryParams, 'pageOffset': _pageOffset, 'pageSize': _pageSize},
-        token: token,
-      );
+      try {
+        final result = await mainReportRepo.getAllReports(
+          {...queryParams, 'pageOffset': _pageOffset, 'pageSize': _pageSize},
+          token: token,
+        );
 
-      print("reports retrived: ${allReports.length} items"); // Debug log
-      if (allReports.isEmpty) {
-        emit(AllReportsEmpty(allReports));
-      } else {
-        _hasMore = allReports.length == _pageSize;
-        emit(AllReportsLoaded(
-          allReports,
-          _hasMore,
-        ));
+        final statusCode = result['statusCode'] as int;
+        print('all reports staus code: $statusCode');
+        if (statusCode != 200) {
+          emit(AllReportsStatusCodeError());
+          return;
+        }
+        final reports = result['reports'] as List<MainReportEntity>;
+
+        print("reports retrived: ${reports.length} items"); // Debug log
+        if (reports.isEmpty) {
+          emit(AllReportsEmpty(reports));
+        } else {
+          _hasMore = reports.length == _pageSize;
+          emit(AllReportsLoaded(
+            reports,
+            _hasMore,
+          ));
+        }
+      } catch (e) {
+        emit(AllReportsError(e.toString()));
       }
-    } catch (e) {
-      emit(AllReportsError(e.toString()));
     }
   }
 
   Future<void> loadMoreReports(Map<String, dynamic> queryParams,
       {required String token}) async {
-    //final bool isConnected = await ConnectivityHelper.isConnected();
-    // if (isConnected) {
-    //   emit(FilteredPostsNetworkError());
-    //   return;
-    // }
     if (state is! AllReportsLoading || !_hasMore) return;
 
     final currentState = state as AllReportsLoaded;
@@ -55,7 +66,7 @@ class AllReportsCubit extends Cubit<AllReportsState> {
 
     try {
       _pageOffset += _pageSize;
-      final newReports = await mainReportRepo.getAllReports(
+      final result = await mainReportRepo.getAllReports(
         {
           ...queryParams,
           'pageOffset': _pageOffset,
@@ -63,6 +74,15 @@ class AllReportsCubit extends Cubit<AllReportsState> {
         },
         token: token,
       );
+
+      final statusCode = result['statusCode'] as int;
+      print('pagination status code: $statusCode');
+      if(statusCode != 200){
+        emit(AllReportsStatusCodeError());
+        return;
+      }
+
+      final newReports = result['reports'] as List<MainReportEntity>;
 
       _hasMore = newReports.length == _pageSize;
       final updatedPosts = [...currentState.allReports, ...newReports];
