@@ -1,5 +1,4 @@
 // core/network/dio_client.dart
-import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:social_media/core/error/dio_exception_handler.dart';
@@ -12,13 +11,9 @@ class DioClient implements ApiCalls {
   String baseUrl;
 
   DioClient({required this.baseUrl}) {
-    dio = Dio(BaseOptions(
-        baseUrl: baseUrl,
-        connectTimeout: const Duration(seconds: 5),
-        receiveTimeout: const Duration(seconds: 5),
-        headers: {
-          'Content-Type': 'application/json',
-        }));
+    dio = Dio(BaseOptions(baseUrl: baseUrl, connectTimeout: const Duration(seconds: 5), receiveTimeout: const Duration(seconds: 5), headers: {
+      'Content-Type': 'application/json',
+    }));
 
     dio.interceptors.add(LogInterceptor(
       request: true,
@@ -31,9 +26,7 @@ class DioClient implements ApiCalls {
   }
 
   @override
-  Future<Map<String, dynamic>> get(String url,
-      {Map<String, dynamic>? queryParameters,
-      Map<String, dynamic>? header}) async {
+  Future<Map<String, dynamic>> get(String url, {Map<String, dynamic>? queryParameters, Map<String, dynamic>? header}) async {
     final isConnected = await ConnectivityHelper.isConnected();
     if (isConnected) {
       try {
@@ -44,7 +37,10 @@ class DioClient implements ApiCalls {
             headers: header,
           ),
         );
-
+        print('API Response: ${response.data}');
+        print('Response Type: ${response.data.runtimeType}');
+        print('Status Code: ${response.statusCode}');
+        print('Status Message: ${response.statusMessage}');
 
         return _validateResponseData(response);
       } on DioException catch (e) {
@@ -56,8 +52,7 @@ class DioClient implements ApiCalls {
   }
 
   @override
-  Future<Map<String, dynamic>> post(String url,
-      {Map<String, dynamic>? body, Map<String, dynamic>? header}) async {
+  Future<Map<String, dynamic>> post(String url, {Map<String, dynamic>? body, Map<String, dynamic>? header}) async {
     final isConnected = await ConnectivityHelper.isConnected();
     if (isConnected) {
       try {
@@ -70,8 +65,6 @@ class DioClient implements ApiCalls {
         print('lololololo ${response.data.runtimeType}');
         print('lololololo ${response.statusCode}');
         print('lololololo ${response.statusMessage}');
-
-
 
         return _validateResponseData(response);
       } on DioException catch (e) {
@@ -100,7 +93,6 @@ class DioClient implements ApiCalls {
           ),
         );
 
-
         return _validateResponseData(response);
       } on DioException catch (e) {
         throw DioExceptionHandler.handleError(e);
@@ -123,8 +115,6 @@ class DioClient implements ApiCalls {
           ),
         );
 
-
-
         return _validateResponseData(response);
       } on DioException catch (e) {
         throw DioExceptionHandler.handleError(e);
@@ -135,32 +125,22 @@ class DioClient implements ApiCalls {
   }
 
   Map<String, dynamic> _validateResponseData(Response response) {
-
-    print('response data ${response.data}');
-    print('response data ${response.data == null}');
-    print('response data ${response.data.toString().isEmpty}');
-    print('response data ${response.data is Map<String, dynamic>}');
-
-    if (response.data is Map<String, dynamic>) {
-      return response.data;
-    }else if(response.data.toString().isEmpty && (response.statusCode == 204 || response.statusCode == 201 || response.statusCode == 200) ){
-
+    if (response.statusCode == 204 || response.statusCode == 201 || response.statusCode == 200) {
+      if (response.data == null || response.data.toString().isEmpty) {
         return {
           'statusCode': response.statusCode
         };
+      }
+    }
 
-    } else if (response.data == null) {
-      throw Exception('Response data is null');
-    } else if (response.data is int ||
-        response.data is String ||
-        response.data is double ||
-        response.data is bool ||
-        response.data is List ||
-        response.data is Map<String, dynamic>) {
-      return {'data': response.data};
+    if (response.data is Map<String, dynamic>) {
+      return response.data;
+    } else if (response.data != null) {
+      return {
+        'data': response.data
+      };
     } else {
-      throw Exception(
-          'Invalid response format: Expected Map<String, dynamic>, but got ${response.runtimeType}');
+      throw Exception('Invalid response format: Expected Map<String, dynamic>, but got ${response.runtimeType}');
     }
   }
 }

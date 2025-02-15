@@ -35,17 +35,6 @@ Map<String, dynamic> _$PostDataToJson(PostData instance) => <String, dynamic>{
       'createdOn': instance.createdOn.toIso8601String(),
     };
 
-CreatePostData _$CreatePostDataFromJson(Map<String, dynamic> json) =>
-    CreatePostData(
-      title: json['title'] as String,
-      content: json['content'] as String,
-    );
-
-Map<String, dynamic> _$CreatePostDataToJson(CreatePostData instance) =>
-    <String, dynamic>{
-      'title': instance.title,
-      'content': instance.content,
-    };
 
 User _$UserFromJson(Map<String, dynamic> json) => User(
       id: (json['id'] as num).toInt(),

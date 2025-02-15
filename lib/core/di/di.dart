@@ -29,7 +29,9 @@ import 'package:social_media/features/posts/domain/data_source/postDetails/postD
 import 'package:social_media/features/posts/domain/repository/postDetails/postDetails_repository.dart';
 import 'package:social_media/features/posts/presentation/postDetails/presentation/logic/post_details_cubit.dart';
 import '../../features/admin/data/datasources/report_details/report_details_remote_data_sourc_impl.dart';
-import '../../features/admin/domain/datasources/report_remote_data_source.dart';
+import '../../features/admin/data/repositories/report_details/report_repository_impl.dart';
+import '../../features/admin/domain/repositories/report_details/report_repository.dart';
+import '../../features/admin/presentation/report_details/logic/report_details_cubit.dart';
 import '../../features/filtering/could_be_shared/network_clients/real_dio_client.dart';
 import '../../features/posts/data/data_source/homePage/post_remote_data_source_impl.dart';
 import '../../features/posts/data/repository/post_repository_impl.dart' as impl;
@@ -113,9 +115,8 @@ Future<void> initDependencies() async {
         userMainDetails: getIt<userMainDetailsCubit>()),
   );
 // report data source
-  getIt.registerFactory<ReportDetailsRemoteDataSource>(
-    () => ReportDetailsRemoteDataSourceImpl(getIt<userMainDetailsCubit>(),
-        dio: getIt<DioClient>(instanceName: diInstancesHelper.ReportDioClient)),
+  getIt.registerFactory<ReportDetailsRemoteDataSourceImpl>(
+    () => ReportDetailsRemoteDataSourceImpl(getIt<userMainDetailsCubit>(), postsDio: getIt<DioClient>(instanceName: diInstancesHelper.PostsDioClient), reportDio: getIt<DioClient>(instanceName: diInstancesHelper.ReportDioClient)),
   );
 
   // all reports data source
@@ -158,26 +159,23 @@ Future<void> initDependencies() async {
     () => PostDetailsRepositoryImpl(
         postDetailsRemoteDataSource: getIt<PostDetailsRemoteDataSource>()),
   );
-
-  getIt.registerLazySingleton<AuthenticationRepository>(
-      () => AuthenticationRepositoryImp(
-          // networkInfo: getIt(),
-          logInRemoteDataSource: getIt()));
-  // all reports repository
-  getIt.registerLazySingleton<MainReportRepo>(() => MainReportRepoImpl(
-        allReportsRemoteSource: getIt<AllReportsRemoteSource>(),
-      ));
-  // users & post repository
-  getIt.registerLazySingleton<FilteredPostRepo>(
-      () => FilteredPostRepoImp(filteredPostsRemoteSource: getIt()));
-  getIt.registerLazySingleton<FilteredUsersRepo>(
-      () => FilteredUsersRepoImpl(filteredUsersRemoteSource: getIt()));
+  // report Details repository
+  getIt.registerFactory<ReportDetailsRepository>(
+    () => ReportDetailsRepositoryImpl(dataSource: getIt<ReportDetailsRemoteDataSourceImpl>()),
+  );
+  getIt.registerLazySingleton<AuthenticationRepository>(() => AuthenticationRepositoryImp(
+      // networkInfo: getIt(),
+      logInRemoteDataSource: getIt()));
+  getIt.registerLazySingleton<FilteredPostRepo>(() => FilteredPostRepoImp(
+      // networkInfo: getIt(),
+      filteredPostsRemoteSource: getIt()));
+  getIt.registerLazySingleton<FilteredUsersRepo>(() => FilteredUsersRepoImpl(
+      // networkInfo: getIt(),
+      filteredUsersRemoteSource: getIt()));
 
   // |------------------------------------------------------------------\
   // |-------------------------- Cubits ------------------------------\
   // |------------------------------------------------------------------\
-
-  // token Decoder Cubit
 
   // main User Details Cubit
   getIt.registerSingleton<userMainDetailsCubit>(
@@ -188,7 +186,10 @@ Future<void> initDependencies() async {
   getIt.registerFactory<AuthCubit>(
     () => AuthCubit(getIt()),
   );
-
+  // report Details Cubit
+  getIt.registerFactory<ReportDetailsCubit>(
+    () => ReportDetailsCubit(getIt<ReportDetailsRepository>()),
+  );
   // home Cubit
   getIt.registerFactory<HomeCubit>(
     () => HomeCubit(getIt<repo.PostRepository>()),

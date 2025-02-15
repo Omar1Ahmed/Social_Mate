@@ -1,5 +1,4 @@
 // data/models/post_response.dart
-import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 import '../../helper/format_time_ago.dart';
 import '../entities/post_entity.dart';

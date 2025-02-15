@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/routing/routs.dart';
 import 'package:social_media/features/admin/presentation/all_reports/ui/pages/reports_home_screen.dart';
+import 'package:social_media/features/admin/presentation/report_details/logic/report_details_cubit.dart';
 import 'package:social_media/features/authentication/presentation/logic/auth_cubit.dart';
 import 'package:social_media/features/authentication/presentation/ui/auth_screen/auth_screen.dart';
 import 'package:social_media/features/filtering/presentation/cubit/filtered_users/filtered_users_cubit.dart';
@@ -25,9 +26,7 @@ class AppRouts {
       case Routes.onBordingScreen:
         return MaterialPageRoute(builder: (context) => OnboardingScreen());
       case Routes.AuthScreen:
-        return MaterialPageRoute(
-            builder: (context) => BlocProvider(
-                create: (context) => getIt<AuthCubit>(), child: AuthScreen()));
+        return MaterialPageRoute(builder: (context) => BlocProvider(create: (context) => getIt<AuthCubit>(), child: AuthScreen()));
       case Routes.homePage:
         return MaterialPageRoute(
             builder: (context) => BlocProvider(
@@ -43,8 +42,7 @@ class AppRouts {
                   BlocProvider<SharingDataCubit>(
                     create: (context) => SharingDataCubit(),
                   ),
-                  BlocProvider<HomeCubit>(
-                      create: (context) => getIt<HomeCubit>()),
+                  BlocProvider<HomeCubit>(create: (context) => getIt<HomeCubit>()),
                   BlocProvider<FilteredUsersCubit>(
                     create: (context) => getIt<FilteredUsersCubit>(),
                   )
@@ -56,14 +54,19 @@ class AppRouts {
             child: post_details_screen(),
           ),
         );
+        // admin
       case Routes.adminReportScreen:
         return MaterialPageRoute(
             builder: (context) => BlocProvider(
-                  create: (context) => getIt<PostDetailsCubit>(),
+                  create: (context) => getIt<ReportDetailsCubit>(),
                   child: ReportDetailsScreen(),
                 ));
       case Routes.reportsHomeScreen:
-        return MaterialPageRoute(builder: (context) => ReportsHomeScreen());
+        return MaterialPageRoute(
+            builder: (context) => BlocProvider(
+                  create: (context) => getIt<ReportDetailsCubit>(),
+                  child: ReportsHomeScreen(),
+                ));
       default:
         return null;
     }

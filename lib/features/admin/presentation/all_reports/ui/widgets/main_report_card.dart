@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:social_media/core/Responsive/Models/device_info.dart';
+import 'package:social_media/core/helper/extantions.dart';
 import 'package:social_media/core/shared/widgets/animation/slide_Transition__widget.dart';
 import 'package:social_media/core/theming/colors.dart';
 import 'package:social_media/core/theming/styles.dart';
 import 'package:social_media/features/admin/presentation/all_reports/ui/widgets/tags_widget.dart';
+
+import '../../../../../../core/routing/routs.dart';
+import '../../../report_details/logic/report_details_cubit.dart';
 
 class MainReportCard extends StatelessWidget {
   final DeviceInfo deviceInfo;

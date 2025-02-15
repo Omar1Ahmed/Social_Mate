@@ -16,8 +16,18 @@ class ReportDetailsRepositoryImpl implements ReportDetailsRepository {
   }
   
   @override
-  Future<ReportData> getReportDetails(int reportId) {
+  Future<DetailedReportModel> getReportDetails(int reportId) {
     return dataSource.getReportDetails(reportId);
+  }
+  
+  @override
+  Future<double> getAvgRate(int reportId) {
+return dataSource.getAvgRate(reportId);
+  }
+  
+  @override
+  Future<int> getCommentsCount(int reportId) {
+    return dataSource.getCommentsCount(reportId);
   }
 
 }
