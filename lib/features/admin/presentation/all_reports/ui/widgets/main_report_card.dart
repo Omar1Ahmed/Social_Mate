@@ -33,7 +33,10 @@ class MainReportCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        ReportDetailsCubit.setSelectedReport(5); // report id
+            context.pushNamed(Routes.adminReportScreen);
+      },
       child: SlideTransitionWidget(
         child: Padding(
           padding: EdgeInsets.symmetric(

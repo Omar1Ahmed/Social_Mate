@@ -6,8 +6,6 @@ import 'package:social_media/core/helper/dotenv/dot_env_helper.dart';
 import 'package:social_media/core/userMainDetails/jwt_token_decode/data/repository/jwt_token_decode_repository_imp.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 import 'package:social_media/features/admin/data/datasources/all_reports_remote_source.dart';
-import 'package:social_media/features/admin/data/repositories/main_report_repo_impl.dart';
-import 'package:social_media/features/admin/domain/repositories/main_report_repo.dart';
 import 'package:social_media/features/admin/presentation/all_reports/logic/cubit/all_reports_cubit.dart';
 import 'package:social_media/features/authentication/data/data_source/AuthenticaionRemoteDataSource.dart';
 import 'package:social_media/features/authentication/data/data_source/authentication_remote_data_source.dart';
