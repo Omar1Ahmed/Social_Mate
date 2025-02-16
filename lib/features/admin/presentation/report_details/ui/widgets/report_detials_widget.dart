@@ -6,7 +6,6 @@ import '../../../../../../core/shared/widgets/animation/slide_Transition__widget
 import '../../../../../../core/theming/colors.dart';
 import '../../../../../../core/theming/styles.dart';
 
-// Assuming customShimmer is in the same file or imported
 class ReportDetialsWidget extends StatelessWidget {
   final DeviceInfo info;
   final String category;
@@ -16,7 +15,7 @@ class ReportDetialsWidget extends StatelessWidget {
   final String createdOn;
   final String? lastModifiedOn;
   final String lastModifiedBy;
-  final bool isLoading; // New parameter to control shimmer effect
+  final bool isLoading;
 
   const ReportDetialsWidget({
     super.key,
@@ -28,12 +27,21 @@ class ReportDetialsWidget extends StatelessWidget {
     required this.createdOn,
     this.lastModifiedOn,
     required this.lastModifiedBy,
-    this.isLoading = false, // Default value is false
+    this.isLoading = false,
   });
+  Color getStateColor(String state) {
+    switch (state.toLowerCase()) {
+      case 'approved' || 'cascaded approval':
+        return Colors.green;
+      case 'rejected':
+        return Colors.red;
+      default:
+        return ColorsManager.orangeColor;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Wrap with shimmer only if isLoading is true
     Widget child = Container(
       width: info.screenWidth * 0.9,
       padding: EdgeInsets.all(info.screenWidth * 0.03),
@@ -93,7 +101,7 @@ class ReportDetialsWidget extends StatelessWidget {
                 Container(
                   width: info.screenWidth * 0.4,
                   decoration: BoxDecoration(
-                    color: ColorsManager.orangeColor,
+                    color: getStateColor(status),
                     borderRadius: BorderRadius.circular(info.screenWidth * 0.02),
                     boxShadow: [
                       BoxShadow(
@@ -114,28 +122,28 @@ class ReportDetialsWidget extends StatelessWidget {
               ],
             ),
             SizedBox(height: info.screenHeight * 0.02),
-            Container(
-              width: info.screenWidth * 0.75,
-              alignment: Alignment.centerLeft,
-              decoration: BoxDecoration(
-                color: ColorsManager.lightGreyColor,
-                borderRadius: BorderRadius.circular(info.screenWidth * 0.02),
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: info.screenWidth * 0.02),
-                child: Text(
-                  'Reported By: $reportedBy',
-                  style: TextStyles.inter18RegularWithOpacity.copyWith(fontSize: info.screenWidth * 0.04),
+            Row(
+              children: [
+                Container(
+                  alignment: Alignment.centerLeft,
+                  decoration: BoxDecoration(
+                    color: ColorsManager.lightGreyColor,
+                    borderRadius: BorderRadius.circular(info.screenWidth * 0.02),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: info.screenWidth * 0.02),
+                    child: Text(
+                      'Reported By: $reportedBy',
+                      style: TextStyles.inter18RegularWithOpacity.copyWith(fontSize: info.screenWidth * 0.036),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            SizedBox(height: info.screenHeight * 0.01),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: info.screenWidth * 0.02),
-              child: Text(
-                "Reported On: $createdOn",
-                style: TextStyles.inter18RegularWithOpacity.copyWith(fontSize: info.screenWidth * 0.04),
-              ),
+                Spacer(),
+                Text(
+                  createdOn,
+                  style: TextStyles.inter18RegularWithOpacity.copyWith(fontSize: info.screenWidth * 0.026),
+                ),
+              ],
             ),
             SizedBox(height: info.screenHeight * 0.01),
             Text(
@@ -153,7 +161,7 @@ class ReportDetialsWidget extends StatelessWidget {
             ),
             SizedBox(
               height: info.screenHeight * 0.02,
-            ),
+            ), 
             Text(
               "Actions",
               style: TextStyles.inter18Bold.copyWith(fontSize: info.screenWidth * 0.044),
@@ -191,32 +199,21 @@ class ReportDetialsWidget extends StatelessWidget {
                         ),
                       ),
                       Spacer(),
-                      Container(
-                        width: info.screenWidth * 0.3,
-                        decoration: BoxDecoration(
-                          color: status == "Pending" ? ColorsManager.orangeColor : ColorsManager.redColor,
-                          borderRadius: BorderRadius.circular(info.screenWidth * 0.01),
-                        ),
-                        child: Center(
-                          child: Text(
-                            status,
-                            style: TextStyles.inter18RegularWithOpacity.copyWith(fontSize: info.screenWidth * 0.04),
-                          ),
-                        ),
+                      Text(
+                        lastModifiedOn ?? '',
+                        style: TextStyles.inter18RegularWithOpacity.copyWith(fontSize: info.screenWidth * 0.045),
                       ),
                     ],
                   ),
             SizedBox(height: info.screenHeight * 0.02),
-            lastModifiedBy.isEmpty ? Container() : ActionButtonsWidget(info: info),
+            lastModifiedBy.isEmpty ? ActionButtonsWidget(info: info) : Container(),
           ],
         ),
       ),
     );
 
     return SlideTransitionWidget(
-      child: isLoading
-          ? customShimmer(childWidget: child) // Apply shimmer if isLoading is true
-          : child, // Otherwise, show the actual content
+      child: isLoading ? customShimmer(childWidget: child) : child,
     );
   }
 }

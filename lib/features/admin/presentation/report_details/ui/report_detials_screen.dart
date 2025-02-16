@@ -114,35 +114,39 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
     );
   }
 
-  /// Builds the post details section.
   SliverToBoxAdapter _buildPostDetailsSection(DeviceInfo info) {
     return SliverToBoxAdapter(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: info.screenWidth * 0.05),
         child: BlocBuilder<ReportDetailsCubit, ReportDetailsState>(
           builder: (context, state) {
-
             bool isLoading = state is ReportDetailsLoading || state is CommentsCountRepLoading || state is GetAvrageRatingLoading;
             if (isLoading) {
               return SlideTransitionWidget(
-                child: PostDetailsPostCard(
-                  titleText: '',
-                  contentText: '',
-                  fullNameText: '',
-                  commentsCountText: '',
-                  rateAverageText: '',
-                  formattedDateText: '',
-                  SelectedRatingValue: 5,
-                  info: info,
-                  showStars: false,
-                  isTitleShimmer: true,
-                  isNameAndDateShimmer: true,
-                  isContentShimmer: true,
-                  isCommentsCountShimmer: true,
-                  isRateAverageShimmer: true,
-                  disableStars: true,
-                  showDeleteButton: false,
-                  showReportButton: false,
+                child: Column(
+                  children: [
+                    Text("Post Details", style: TextStyles.inter18BoldBlack.copyWith(fontSize: info.screenWidth * 0.045)),
+                    PostDetailsPostCard(
+                      isReportScreen: true,
+                      titleText: '',
+                      contentText: '',
+                      fullNameText: '',
+                      commentsCountText: '',
+                      rateAverageText: '',
+                      formattedDateText: '',
+                      SelectedRatingValue: 5,
+                      info: info,
+                      showStars: false,
+                      isTitleShimmer: true,
+                      isNameAndDateShimmer: true,
+                      isContentShimmer: true,
+                      isCommentsCountShimmer: true,
+                      isRateAverageShimmer: true,
+                      disableStars: true,
+                      showDeleteButton: false,
+                      showReportButton: false,
+                    ),
+                  ],
                 ),
               );
             }
@@ -158,6 +162,7 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
                     );
                   },
                   child: PostDetailsPostCard(
+                    isReportScreen: true,
                     info: info,
                     showStars: false,
                     titleText: report!.title,
@@ -190,7 +195,6 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
   Widget _buildRelatedReportsSection(DeviceInfo info) {
     return BlocBuilder<ReportDetailsCubit, ReportDetailsState>(
       builder: (context, state) {
-
         if (state is ReportDetailsLoaded) {
           return SliverPadding(
             padding: EdgeInsets.all(info.screenWidth * 0.03),

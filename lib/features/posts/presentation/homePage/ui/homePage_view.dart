@@ -59,8 +59,8 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.white, // Transparent to show SafeArea effect
-      statusBarIconBrightness: Brightness.dark, // Use Brightness.light for white icons
+      statusBarColor: Colors.white, 
+      statusBarIconBrightness: Brightness.dark, 
     ));
     return InfoWidget(
       builder: (context, deviceInfo) {
