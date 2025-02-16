@@ -32,8 +32,7 @@ class PostCardWidget extends StatefulWidget {
   _PostCardWidgetState createState() => _PostCardWidgetState();
 }
 
-class _PostCardWidgetState extends State<PostCardWidget>
-    with SingleTickerProviderStateMixin {
+class _PostCardWidgetState extends State<PostCardWidget> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return SlideTransitionWidget(
@@ -56,8 +55,7 @@ class _PostCardWidgetState extends State<PostCardWidget>
                 offset: const Offset(0, 3),
               ),
             ],
-            borderRadius:
-                BorderRadius.circular(widget.deviceInfo.screenWidth * 0.03),
+            borderRadius: BorderRadius.circular(widget.deviceInfo.screenWidth * 0.03),
           ),
           child: Padding(
             padding: EdgeInsets.all(widget.deviceInfo.screenWidth * 0.05),
@@ -72,8 +70,7 @@ class _PostCardWidgetState extends State<PostCardWidget>
                         widget.post.title,
                         overflow: TextOverflow.ellipsis,
                         softWrap: true,
-                        style: TextStyles.inter18BoldBlack.copyWith(
-                            fontSize: widget.deviceInfo.screenWidth * 0.05),
+                        style: TextStyles.inter18BoldBlack.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.05),
                       ),
                     ),
                     widget.idNotMatch
@@ -84,11 +81,7 @@ class _PostCardWidgetState extends State<PostCardWidget>
                               if (postId == 0) {
                                 return;
                               }
-                              showDialog(
-                                  context: context,
-                                  builder: (context) => ShowDeleteDialogWidget(
-                                      onPressed: widget.onPressedDelete,
-                                      deviceInfo: widget.deviceInfo));
+                              showDialog(context: context, builder: (context) => ShowDeleteDialogWidget(onPressed: widget.onPressedDelete, deviceInfo: widget.deviceInfo));
 
                               getIt.get<HomeCubit>().onRefresh();
                             },
@@ -110,47 +103,14 @@ class _PostCardWidgetState extends State<PostCardWidget>
                     Expanded(
                       child: Text(
                         widget.post.createdBy.fullName,
-                        style: TextStyles.inter18BoldBlack.copyWith(
-                            fontSize: widget.deviceInfo.screenWidth * 0.04),
+                        style: TextStyles.inter18BoldBlack.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.04),
                       ),
                     ),
-                    IconButton(
-                      onPressed: () async {
-                        // Handle report action
-                        // getIt.get<HomeCubit>().reportPost(widget.post.id);
-                        showDialog(
-                          context: context,
-                          builder: (context) => BlocProvider(
-                            create: (context) =>
-                                getIt<HomeCubit>()..reportCategories(),
-                            child: ShowReportPostDialogWidget(
-                              deviceInfo: widget.deviceInfo,
-                              onPressedReport: (categoryId, reason) async {
-                                await getIt.get<HomeCubit>().reportPost(
-                                      widget.post.id,
-                                      CreateReportModel(
-                                        categoryId: categoryId,
-                                        reason: reason,
-                                      ),
-                                    );
-                                context.pop();
-                              },
-                            ),
-                          ),
-                        );
-                      },
-                      icon: Icon(
-                        Icons.flag,
-                        color: ColorsManager.redColor,
-                        size: widget.deviceInfo.screenWidth * 0.06,
-                      ),
+                    Text(
+                      widget.post.FormattedDate,
+                      style: TextStyles.inter18Regularblack.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.03),
                     ),
                   ],
-                ),
-                Text(
-                  widget.post.FormattedDate,
-                  style: TextStyles.inter18Regularblack
-                      .copyWith(fontSize: widget.deviceInfo.screenWidth * 0.03),
                 ),
                 SizedBox(height: widget.deviceInfo.localHeight * 0.01),
                 Text(
@@ -159,8 +119,39 @@ class _PostCardWidgetState extends State<PostCardWidget>
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.justify,
                   softWrap: true,
-                  style: TextStyles.inter18RegularWithOpacity
-                      .copyWith(fontSize: widget.deviceInfo.screenWidth * 0.04),
+                  style: TextStyles.inter18RegularWithOpacity.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.04),
+                ),
+                Align(
+                  alignment: AlignmentDirectional.bottomEnd,
+                  child: IconButton(
+                    onPressed: () async {
+                      // Handle report action
+                      showDialog(
+                        context: context,
+                        builder: (context) => BlocProvider(
+                          create: (context) => getIt<HomeCubit>()..reportCategories(),
+                          child: ShowReportPostDialogWidget(
+                            deviceInfo: widget.deviceInfo,
+                            onPressedReport: (categoryId, reason) async {
+                              await getIt.get<HomeCubit>().reportPost(
+                                    widget.post.id,
+                                    CreateReportModel(
+                                      categoryId: categoryId,
+                                      reason: reason,
+                                    ),
+                                  );
+                              context.pop();
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                    icon: Icon(
+                      Icons.flag,
+                      color: ColorsManager.redColor,
+                      size: widget.deviceInfo.screenWidth * 0.06,
+                    ),
+                  ),
                 ),
               ],
             ),

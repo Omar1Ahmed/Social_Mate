@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
-import 'package:social_media/core/helper/extantions.dart';
 import 'package:social_media/features/authentication/presentation/logic/auth_cubit.dart';
 import 'package:social_media/features/authentication/presentation/logic/auth_state.dart';
 import 'package:social_media/features/authentication/presentation/ui/auth_screen/sign_up_screen.dart';

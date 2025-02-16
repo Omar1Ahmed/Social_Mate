@@ -24,7 +24,6 @@ class CustomTextField extends StatelessWidget {
       child: InfoWidget(builder: (context, info) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-
           children: [
             BlocBuilder<PasswordVisibilityCubit, bool>(
               builder: (context, isHidden) {

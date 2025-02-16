@@ -114,6 +114,12 @@ class _ShowReportPostDialogWidgetState extends State<ShowReportPostDialogWidget>
                 description: 'Please provide a reason for the report.',
               );
             } else {
+              CherryToastMsgs.CherryToastSuccess(
+                info: widget.deviceInfo,
+                context: context,
+                title: 'Report Sent',
+                description: 'Your report has been sent successfully.',
+              );
               await widget.onPressedReport!(categories[selectedCategory].id, reasonController.text);
               print('reporteeeeeeeeeeeed55555555555555 ${context.read<HomeCubit>().state} ');
             }

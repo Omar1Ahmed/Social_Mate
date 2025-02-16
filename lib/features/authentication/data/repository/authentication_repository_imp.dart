@@ -1,6 +1,5 @@
 import 'package:social_media/features/authentication/data/data_source/AuthenticaionRemoteDataSource.dart';
 import 'package:social_media/features/authentication/domain/repository/authentication_repository.dart';
-import 'package:social_media/features/filtering/could_be_shared/network_info/network_info.dart';
 
 class AuthenticationRepositoryImp implements AuthenticationRepository {
   final AuthenticationRemoteDataSource logInRemoteDataSource;

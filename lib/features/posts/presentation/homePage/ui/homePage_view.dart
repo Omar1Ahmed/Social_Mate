@@ -5,6 +5,7 @@ import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/helper/extantions.dart';
 import 'package:social_media/core/shared/widgets/animation/slide_Transition__widget.dart';
 import 'package:social_media/core/shared/widgets/cherryToast/CherryToastMsgs.dart';
+import 'package:social_media/core/shared/widgets/show_create_post_dialog_widget.dart';
 import 'package:social_media/core/theming/colors.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 import 'package:social_media/features/posts/presentation/homePage/ui/widgets/log_out_dialog.dart';
@@ -114,7 +115,14 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
                 heroTag: 'adminReportButton',
                 backgroundColor: Colors.white,
                 foregroundColor: ColorsManager.primaryColor,
-                onPressed: () => context.pushNamed(Routes.adminReportScreen),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => ShowCreatePostDialogWidget(
+                      deviceInfo: deviceInfo,
+                    ),
+                  );
+                },
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(deviceInfo.screenWidth * 0.08),
                 ),
@@ -204,6 +212,7 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
             onPressed: () {
               logOutDialog(context, deviceInfo);
             },
+            iconSize: deviceInfo.screenWidth * 0.07,
             icon: Icon(
               Icons.logout_outlined,
               color: ColorsManager.primaryColor,
