@@ -81,7 +81,6 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
         padding: EdgeInsets.symmetric(horizontal: info.screenWidth * 0.05),
         child: BlocBuilder<ReportDetailsCubit, ReportDetailsState>(
           builder: (context, state) {
-            print("state: $state");
             if (state is ReportDetailsLoading) {
               return ReportDetialsWidget(
                 info: info,
@@ -122,7 +121,6 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
         padding: EdgeInsets.symmetric(horizontal: info.screenWidth * 0.05),
         child: BlocBuilder<ReportDetailsCubit, ReportDetailsState>(
           builder: (context, state) {
-            print("state: $state");
 
             bool isLoading = state is ReportDetailsLoading || state is CommentsCountRepLoading || state is GetAvrageRatingLoading;
             if (isLoading) {
@@ -148,7 +146,6 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
                 ),
               );
             }
-
             if (state is ReportDetailsLoaded) {
               final reportState = context.read<ReportDetailsCubit>().state;
               final report = (reportState is ReportDetailsLoaded) ? reportState.report.reportDetails.post : null;
@@ -193,7 +190,6 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
   Widget _buildRelatedReportsSection(DeviceInfo info) {
     return BlocBuilder<ReportDetailsCubit, ReportDetailsState>(
       builder: (context, state) {
-        print("state: $state");
 
         if (state is ReportDetailsLoaded) {
           return SliverPadding(

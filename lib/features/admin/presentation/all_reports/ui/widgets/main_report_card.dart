@@ -34,7 +34,7 @@ class MainReportCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {
-        ReportDetailsCubit.setSelectedReport(5);
+        ReportDetailsCubit.setSelectedReport(21);
         context.pushNamed(Routes.adminReportScreen);
       },
       child: SlideTransitionWidget(

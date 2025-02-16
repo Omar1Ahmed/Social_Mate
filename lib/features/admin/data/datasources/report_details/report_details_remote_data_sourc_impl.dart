@@ -34,7 +34,9 @@ class ReportDetailsRemoteDataSourceImpl implements ReportDetailsRemoteDataSource
         'Authorization': 'Bearer $token'
       },
     );
-    print("avg rate $response");
+    if (response['data'] == null) {
+      return 0;
+    }
     return response['data'];
   }
 
@@ -46,9 +48,10 @@ class ReportDetailsRemoteDataSourceImpl implements ReportDetailsRemoteDataSource
         'Authorization': 'Bearer $token'
       },
     );
-    print("comments count $response");
+    if (response['data'] == null) {
+      return 0;
+    }
     return response['data'];
-    
   }
 
   @override
