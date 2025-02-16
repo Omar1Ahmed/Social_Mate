@@ -38,7 +38,7 @@ class ReportDetailsCubit extends Cubit<ReportDetailsState> {
 
     try {
       final report = await _repository.getReportDetails(_reportId);
-      if (!isClosed && report != null) {
+      if (!isClosed) {
         setSelectedPost(report.reportDetails.post.id);
 
         // Fetch comments count and average rating
