@@ -30,6 +30,17 @@ class MainReportCard extends StatelessWidget {
     required this.reportId,
   });
 
+  Color getStateColor(String state) {
+    switch (state.toLowerCase()) {
+      case 'approved' || 'cascaded approval':
+        return Colors.green;
+      case 'rejected':
+        return Colors.red;
+      default:
+        return ColorsManager.orangeColor;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -110,7 +121,7 @@ class MainReportCard extends StatelessWidget {
                     TagsWidget(
                       deviceInfo: deviceInfo,
                       tagName: reportStatus,
-                      tileColor: ColorsManager.orangeColor,
+                      tileColor: getStateColor(reportStatus),
                       textColor: Colors.white,
                     ),
                   ],
