@@ -15,7 +15,8 @@ class MainReportModel {
     required this.total,
   });
 
-  factory MainReportModel.fromJson(Map<String, dynamic> json) => _$MainReportModelFromJson(json);
+  factory MainReportModel.fromJson(Map<String, dynamic> json) =>
+      _$MainReportModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$MainReportModelToJson(this);
 
@@ -24,11 +25,19 @@ class MainReportModel {
       return MainReportEntity(
         reportId: reportData.id,
         postId: reportData.post.id,
-        postTitle: reportData.post.title.isNotEmpty ? reportData.post.title : 'No Title',
-        reportedBy: reportData.createdBy.fullName.isNotEmpty ? reportData.createdBy.fullName : 'Unknown',
+        postTitle: reportData.post.title.isNotEmpty
+            ? reportData.post.title
+            : 'No Title',
+        reportedBy: reportData.createdBy.fullName.isNotEmpty
+            ? reportData.createdBy.fullName
+            : 'Unknown',
         reportedOn: formatTimeAgo(reportData.createdOn),
-        status: reportData.status.titleEn.isNotEmpty ? reportData.status.titleEn : 'Unknown',
-        category: reportData.category.titleEn.isNotEmpty ? reportData.category.titleEn : 'Uncategorized',
+        status: reportData.status.titleEn.isNotEmpty
+            ? reportData.status.titleEn
+            : 'Unknown',
+        category: reportData.category.titleEn.isNotEmpty
+            ? reportData.category.titleEn
+            : 'Uncategorized',
         total: total,
       );
     }).toList();
@@ -43,8 +52,8 @@ class ReportData {
   final Category category;
   final Status status;
   final String createdOn;
-  final String lastModifiedOn;
-  final String reason;
+  final String? lastModifiedOn;
+  final String? reason;
 
   const ReportData({
     required this.id,
@@ -57,7 +66,8 @@ class ReportData {
     required this.reason,
   });
 
-  factory ReportData.fromJson(Map<String, dynamic> json) => _$ReportDataFromJson(json);
+  factory ReportData.fromJson(Map<String, dynamic> json) =>
+      _$ReportDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$ReportDataToJson(this);
 }
@@ -92,7 +102,9 @@ class Post {
     return Post(
       id: (json['id'] as num?)?.toInt() ?? -1,
       title: json['title'] as String? ?? 'No Title',
-      createdBy: (json['createdBy'] as Map<String, dynamic>?) != null ? User.fromJson(json['createdBy'] as Map<String, dynamic>) : User(id: -1, fullName: 'Unknown'),
+      createdBy: (json['createdBy'] as Map<String, dynamic>?) != null
+          ? User.fromJson(json['createdBy'] as Map<String, dynamic>)
+          : User(id: -1, fullName: 'Unknown'),
       createdOn: formatTimeAgo(json['createdOn'].toString()) as String? ?? '',
       content: json['content'] as String? ?? '',
     );
@@ -111,7 +123,8 @@ class Category {
     required this.titleEn,
   });
 
-  factory Category.fromJson(Map<String, dynamic> json) => _$CategoryFromJson(json);
+  factory Category.fromJson(Map<String, dynamic> json) =>
+      _$CategoryFromJson(json);
 
   Map<String, dynamic> toJson() => _$CategoryToJson(this);
 }
@@ -170,13 +183,32 @@ class DetailedReportModel {
 
     return DetailedReportModel(
       reportDetails: ReportDetails(
-        createdBy: (json['reportDetails']['createdBy'] as Map<String, dynamic>?) != null ? User.fromJson(json['reportDetails']['createdBy'] as Map<String, dynamic>) : User(id: -1, fullName: 'Unknown'),
+        createdBy:
+            (json['reportDetails']['createdBy'] as Map<String, dynamic>?) !=
+                    null
+                ? User.fromJson(
+                    json['reportDetails']['createdBy'] as Map<String, dynamic>)
+                : User(id: -1, fullName: 'Unknown'),
         reason: json['reportDetails']['reason'] as String? ?? 'No Reason',
-        category: (json['reportDetails']['category'] as Map<String, dynamic>?) != null ? Category.fromJson(json['reportDetails']['category'] as Map<String, dynamic>) : Category(id: -1, titleEn: 'Uncategorized'),
-        status: (json['reportDetails']['status'] as Map<String, dynamic>?) != null ? Status.fromJson(json['reportDetails']['status'] as Map<String, dynamic>) : Status(id: -1, titleEn: 'Unknown'),
-        lastModifiedBy: (json['reportDetails']['lastModifiedBy'] as Map<String, dynamic>?) != null ? User.fromJson(json['reportDetails']['lastModifiedBy'] as Map<String, dynamic>) : User(id: -1, fullName: ''),
+        category:
+            (json['reportDetails']['category'] as Map<String, dynamic>?) != null
+                ? Category.fromJson(
+                    json['reportDetails']['category'] as Map<String, dynamic>)
+                : Category(id: -1, titleEn: 'Uncategorized'),
+        status:
+            (json['reportDetails']['status'] as Map<String, dynamic>?) != null
+                ? Status.fromJson(
+                    json['reportDetails']['status'] as Map<String, dynamic>)
+                : Status(id: -1, titleEn: 'Unknown'),
+        lastModifiedBy: (json['reportDetails']['lastModifiedBy']
+                    as Map<String, dynamic>?) !=
+                null
+            ? User.fromJson(
+                json['reportDetails']['lastModifiedBy'] as Map<String, dynamic>)
+            : User(id: -1, fullName: ''),
         createdOn: formatTimeAgo(json['reportDetails']['createdOn'].toString()),
-        lastModifiedOn: json['reportDetails']['lastModifiedOn'] as String? ?? '',
+        lastModifiedOn:
+            json['reportDetails']['lastModifiedOn'] as String? ?? '',
         post: post,
       ),
       relatedReports: List<RelatedReport>.from(
@@ -214,11 +246,19 @@ class ReportDetails {
 
   factory ReportDetails.fromJson(Map<String, dynamic> json) {
     return ReportDetails(
-      createdBy: (json['createdBy'] as Map<String, dynamic>?) != null ? User.fromJson(json['createdBy'] as Map<String, dynamic>) : User(id: -1, fullName: 'Unknown'),
+      createdBy: (json['createdBy'] as Map<String, dynamic>?) != null
+          ? User.fromJson(json['createdBy'] as Map<String, dynamic>)
+          : User(id: -1, fullName: 'Unknown'),
       reason: json['reason'] as String? ?? 'No Reason',
-      category: (json['category'] as Map<String, dynamic>?) != null ? Category.fromJson(json['category'] as Map<String, dynamic>) : Category(id: -1, titleEn: 'Uncategorized'),
-      status: (json['status'] as Map<String, dynamic>?) != null ? Status.fromJson(json['status'] as Map<String, dynamic>) : Status(id: -1, titleEn: 'Unknown'),
-      lastModifiedBy: (json['lastModifiedBy'] as Map<String, dynamic>?) != null ? User.fromJson(json['lastModifiedBy'] as Map<String, dynamic>) : User(id: -1, fullName: ''),
+      category: (json['category'] as Map<String, dynamic>?) != null
+          ? Category.fromJson(json['category'] as Map<String, dynamic>)
+          : Category(id: -1, titleEn: 'Uncategorized'),
+      status: (json['status'] as Map<String, dynamic>?) != null
+          ? Status.fromJson(json['status'] as Map<String, dynamic>)
+          : Status(id: -1, titleEn: 'Unknown'),
+      lastModifiedBy: (json['lastModifiedBy'] as Map<String, dynamic>?) != null
+          ? User.fromJson(json['lastModifiedBy'] as Map<String, dynamic>)
+          : User(id: -1, fullName: ''),
       createdOn: formatTimeAgo(json['createdOn'].toString()),
       lastModifiedOn: formatTimeAgo(json['lastModifiedOn'].toString()),
       post: (json['post'] as Map<String, dynamic>?) != null
@@ -249,7 +289,8 @@ class RelatedReport {
     required this.status,
   });
 
-  factory RelatedReport.fromJson(Map<String, dynamic> json) => _$RelatedReportFromJson(json);
+  factory RelatedReport.fromJson(Map<String, dynamic> json) =>
+      _$RelatedReportFromJson(json);
 
   Map<String, dynamic> toJson() => _$RelatedReportToJson(this);
 }

@@ -147,15 +147,19 @@ class _ReportsHomeScreenState extends State<ReportsHomeScreen> {
                           if (index == allReports.length && state.hasMore) {
                             return Center(child: CircularProgressIndicator());
                           }
-                          return MainReportCard(
-                            deviceInfo: deviceInfo,
-                            postTitle: allReports[index].postTitle,
-                            reportedBy: allReports[index].reportedBy,
-                            postId: allReports[index].postId,
-                            reportDate: allReports[index].reportedOn,
-                            reportCategory: allReports[index].category,
-                            reportStatus: allReports[index].status,
-                            reportId: allReports[index].reportId,
+                          return Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: deviceInfo.screenWidth * 0.04),
+                            child: MainReportCard(
+                              deviceInfo: deviceInfo,
+                              postTitle: allReports[index].postTitle,
+                              reportedBy: allReports[index].reportedBy,
+                              postId: allReports[index].postId,
+                              reportDate: allReports[index].reportedOn,
+                              reportCategory: allReports[index].category,
+                              reportStatus: allReports[index].status,
+                              reportId: allReports[index].reportId,
+                            ),
                           );
                         },
                       );
