@@ -140,6 +140,7 @@ class _PostCardWidgetState extends State<PostCardWidget> with SingleTickerProvid
                                       reason: reason,
                                     ),
                                   );
+                              // ignore: use_build_context_synchronously
                               context.pop();
                             },
                           ),

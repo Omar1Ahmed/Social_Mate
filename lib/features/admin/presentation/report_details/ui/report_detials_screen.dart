@@ -30,8 +30,6 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ReportDetailsCubit>().getReportDetails();
-      context.read<ReportDetailsCubit>().getCommentsCount();
-      context.read<ReportDetailsCubit>().getAvrageRating();
     });
   }
 
@@ -83,6 +81,7 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
         padding: EdgeInsets.symmetric(horizontal: info.screenWidth * 0.05),
         child: BlocBuilder<ReportDetailsCubit, ReportDetailsState>(
           builder: (context, state) {
+            print("state: $state");
             if (state is ReportDetailsLoading) {
               return ReportDetialsWidget(
                 info: info,
@@ -123,6 +122,8 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
         padding: EdgeInsets.symmetric(horizontal: info.screenWidth * 0.05),
         child: BlocBuilder<ReportDetailsCubit, ReportDetailsState>(
           builder: (context, state) {
+            print("state: $state");
+
             bool isLoading = state is ReportDetailsLoading || state is CommentsCountRepLoading || state is GetAvrageRatingLoading;
             if (isLoading) {
               return SlideTransitionWidget(
@@ -151,8 +152,6 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
             if (state is ReportDetailsLoaded) {
               final reportState = context.read<ReportDetailsCubit>().state;
               final report = (reportState is ReportDetailsLoaded) ? reportState.report.reportDetails.post : null;
-              final commentsCount = context.read<ReportDetailsCubit>().getComCount ?? 0;
-              final averageRating = context.read<ReportDetailsCubit>().getRateAverage ?? 0.0;
               return SlideTransitionWidget(
                 child: InkWell(
                   onTap: () {
@@ -168,8 +167,8 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
                     fullNameText: report.createdBy.fullName,
                     formattedDateText: report.createdOn,
                     contentText: report.content,
-                    commentsCountText: 'Comments $commentsCount',
-                    rateAverageText: 'Rate ${averageRating.toStringAsFixed(1)}', // Format rating to 1 decimal place
+                    commentsCountText: 'Comments ${state.commentsCount}',
+                    rateAverageText: 'Rate ${state.avrageRating.toStringAsFixed(1)}', // Format rating to 1 decimal place
                     SelectedRatingValue: 5,
                     disableStars: true,
                     isTitleShimmer: false,
@@ -194,6 +193,8 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
   Widget _buildRelatedReportsSection(DeviceInfo info) {
     return BlocBuilder<ReportDetailsCubit, ReportDetailsState>(
       builder: (context, state) {
+        print("state: $state");
+
         if (state is ReportDetailsLoaded) {
           return SliverPadding(
             padding: EdgeInsets.all(info.screenWidth * 0.03),

@@ -32,19 +32,30 @@ class ReportDetailsCubit extends Cubit<ReportDetailsState> {
   }
 
   Future<void> getReportDetails() async {
-    if (isClosed) return; // Exit if the cubit is already closed
+    if (isClosed) return;
+
     emit(ReportDetailsLoading());
+
     try {
       final report = await _repository.getReportDetails(_reportId);
-      if (!isClosed) {
-        // Check again before emitting
+      if (!isClosed && report != null) {
         setSelectedPost(report.reportDetails.post.id);
-        emit(ReportDetailsLoaded(report: report));
+
+        // Fetch comments count and average rating
+        final commentsCount = await _repository.getCommentsCount(_postId);
+        final avrageRating = await _repository.getAvgRate(_postId);
+
+        emit(ReportDetailsLoaded(
+          report: report,
+          commentsCount: commentsCount,
+          avrageRating: avrageRating,
+        ));
+      } else {
+        emit(ReportDetailsError(message: 'No data available'));
       }
     } catch (e, trace) {
       if (!isClosed) {
-        // Check again before emitting
-        print("state error Trace : $trace");
+        print("Error fetching report details: $e\nTrace: $trace");
         emit(ReportDetailsError(message: e.toString()));
       }
     }
@@ -58,11 +69,9 @@ class ReportDetailsCubit extends Cubit<ReportDetailsState> {
       if (!isClosed) {
         this.commentsCount = commentsCount;
         print("data in cubit : $commentsCount");
-        emit(CommentsCountLoaded(commentsCount: commentsCount));
       }
     } catch (e, trace) {
       if (!isClosed) {
-        // Check again before emitting
         print("state error Trace : $trace");
         emit(ReportDetailsError(message: e.toString()));
       }
@@ -70,13 +79,12 @@ class ReportDetailsCubit extends Cubit<ReportDetailsState> {
   }
 
   Future<void> getAvrageRating() async {
-    if (isClosed) return; // Exit if the cubit is already closed
+    if (isClosed) return;
     emit(GetAvrageRatingLoading());
     try {
       final avrageRating = await _repository.getAvgRate(_postId);
       if (!isClosed) {
         this.rateAverage = avrageRating;
-        emit(GetAvrageRatingLoaded(avrageRating: avrageRating));
       }
     } catch (e, trace) {
       if (!isClosed) {

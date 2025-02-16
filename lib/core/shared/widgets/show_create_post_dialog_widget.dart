@@ -66,7 +66,9 @@ class ShowCreatePostDialogWidget extends StatelessWidget {
             }
             CherryToastMsgs.CherryToastSuccess(info: deviceInfo, context: context, title: "post created", description: "post created successfully.");
             await getIt.get<HomeCubit>().createPost(title, content);
-            context.pushReplacementNamed(Routes.homePage);
+            if (context.mounted) {
+              context.pushReplacementNamed(Routes.homePage);
+            }
             titleController.clear();
             contentController.clear();
           },

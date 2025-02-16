@@ -7,7 +7,9 @@ sealed class ReportDetailsState extends Equatable {
   List<Object> get props => [];
 }
 
-final class ReportDetailsInitial extends ReportDetailsState {}
+final class ReportDetailsInitial extends ReportDetailsState {
+  
+}
 
 final class ReportDetailsLoading extends ReportDetailsState {}
 
@@ -18,7 +20,14 @@ final class ReportDetailsError extends ReportDetailsState {
 
 final class ReportDetailsLoaded extends ReportDetailsState {
   final DetailedReportModel report;
-  const ReportDetailsLoaded({required this.report});
+  final int commentsCount;
+  final double avrageRating;
+
+  const ReportDetailsLoaded({
+    required this.report,
+    required this.commentsCount,
+    required this.avrageRating,
+  });
 }
 final class CommentsCountLoaded extends ReportDetailsState {
   final int commentsCount;
