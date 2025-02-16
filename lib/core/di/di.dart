@@ -6,6 +6,8 @@ import 'package:social_media/core/helper/dotenv/dot_env_helper.dart';
 import 'package:social_media/core/userMainDetails/jwt_token_decode/data/repository/jwt_token_decode_repository_imp.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 import 'package:social_media/features/admin/data/datasources/all_reports_remote_source.dart';
+import 'package:social_media/features/admin/data/repositories/main_report_repo_impl.dart';
+import 'package:social_media/features/admin/domain/repositories/main_report_repo.dart';
 import 'package:social_media/features/admin/presentation/all_reports/logic/cubit/all_reports_cubit.dart';
 import 'package:social_media/features/authentication/data/data_source/AuthenticaionRemoteDataSource.dart';
 import 'package:social_media/features/authentication/data/data_source/authentication_remote_data_source.dart';
@@ -114,7 +116,11 @@ Future<void> initDependencies() async {
   );
 // report data source
   getIt.registerFactory<ReportDetailsRemoteDataSourceImpl>(
-    () => ReportDetailsRemoteDataSourceImpl(getIt<userMainDetailsCubit>(), postsDio: getIt<DioClient>(instanceName: diInstancesHelper.PostsDioClient), reportDio: getIt<DioClient>(instanceName: diInstancesHelper.ReportDioClient)),
+    () => ReportDetailsRemoteDataSourceImpl(getIt<userMainDetailsCubit>(),
+        postsDio:
+            getIt<DioClient>(instanceName: diInstancesHelper.PostsDioClient),
+        reportDio:
+            getIt<DioClient>(instanceName: diInstancesHelper.ReportDioClient)),
   );
 
   // all reports data source
@@ -159,11 +165,14 @@ Future<void> initDependencies() async {
   );
   // report Details repository
   getIt.registerFactory<ReportDetailsRepository>(
-    () => ReportDetailsRepositoryImpl(dataSource: getIt<ReportDetailsRemoteDataSourceImpl>()),
+    () => ReportDetailsRepositoryImpl(
+        dataSource: getIt<ReportDetailsRemoteDataSourceImpl>()),
   );
-  getIt.registerLazySingleton<AuthenticationRepository>(() => AuthenticationRepositoryImp(
-      // networkInfo: getIt(),
-      logInRemoteDataSource: getIt()));
+  getIt.registerLazySingleton<AuthenticationRepository>(
+      () => AuthenticationRepositoryImp(
+          // networkInfo: getIt(),
+          logInRemoteDataSource: getIt()));
+  getIt.registerLazySingleton<MainReportRepo>(()=> MainReportRepoImpl(allReportsRemoteSource: getIt()));
   getIt.registerLazySingleton<FilteredPostRepo>(() => FilteredPostRepoImp(
       // networkInfo: getIt(),
       filteredPostsRemoteSource: getIt()));

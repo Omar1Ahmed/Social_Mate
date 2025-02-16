@@ -17,14 +17,14 @@ class AllReportsCubit extends Cubit<AllReportsState> {
       {required String token}) async {
     bool isConnected = await ConnectivityHelper.isConnected();
     if (!isConnected) {
-      emit(AllReportsConnectionError());
+      if (!isClosed) emit(AllReportsConnectionError());
       print(state);
       return;
     } else {
       if (state is AllReportsLoading) return;
       _pageOffset = 0;
       _hasMore = true;
-      emit(AllReportsLoading());
+      if (!isClosed) emit(AllReportsLoading());
 
       try {
         final result = await mainReportRepo.getAllReports(
@@ -33,36 +33,40 @@ class AllReportsCubit extends Cubit<AllReportsState> {
         );
 
         final statusCode = result['statusCode'] as int;
-        print('all reports staus code: $statusCode');
+        print('all reports status code: $statusCode');
         if (statusCode != 200) {
-          emit(AllReportsStatusCodeError());
+          if (!isClosed) emit(AllReportsStatusCodeError());
           return;
         }
         final reports = result['reports'] as List<MainReportEntity>;
 
-        print("reports retrived: ${reports.length} items"); // Debug log
+        print("reports retrieved: ${reports.length} items"); // Debug log
         if (reports.isEmpty) {
-          emit(AllReportsEmpty(reports));
+          if (!isClosed) emit(AllReportsEmpty(reports));
         } else {
           _hasMore = reports.length == _pageSize;
-          emit(AllReportsLoaded(
-            reports,
-            _hasMore,
-          ));
+          if (!isClosed) {
+            emit(AllReportsLoaded(
+              reports,
+              _hasMore,
+            ));
+          }
         }
       } catch (e) {
-        emit(AllReportsError(e.toString()));
+        if (!isClosed) emit(AllReportsError(e.toString()));
       }
     }
   }
 
   Future<void> loadMoreReports(Map<String, dynamic> queryParams,
       {required String token}) async {
-    if (state is! AllReportsLoading || !_hasMore) return;
+    if (state is! AllReportsLoaded || !_hasMore) return;
 
     final currentState = state as AllReportsLoaded;
-    emit(currentState.copyWith(
-        hasMore: false)); // Disable loading more temporarily
+    if (!isClosed) {
+      emit(currentState.copyWith(
+          hasMore: false)); // Disable loading more temporarily
+    }
 
     try {
       _pageOffset += _pageSize;
@@ -77,8 +81,8 @@ class AllReportsCubit extends Cubit<AllReportsState> {
 
       final statusCode = result['statusCode'] as int;
       print('pagination status code: $statusCode');
-      if(statusCode != 200){
-        emit(AllReportsStatusCodeError());
+      if (statusCode != 200) {
+        if (!isClosed) emit(AllReportsStatusCodeError());
         return;
       }
 
@@ -86,12 +90,14 @@ class AllReportsCubit extends Cubit<AllReportsState> {
 
       _hasMore = newReports.length == _pageSize;
       final updatedPosts = [...currentState.allReports, ...newReports];
-      emit(currentState.copyWith(
-        allReports: updatedPosts,
-        hasMore: _hasMore,
-      ));
+      if (!isClosed) {
+        emit(currentState.copyWith(
+          allReports: updatedPosts,
+          hasMore: _hasMore,
+        ));
+      }
     } catch (e) {
-      emit(AllReportsError(e.toString()));
+      if (!isClosed) emit(AllReportsError(e.toString()));
     }
   }
 }
