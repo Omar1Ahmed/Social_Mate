@@ -52,7 +52,20 @@ class _FilteredPostCardState extends State<FilteredPostCard> {
     super.initState();
   }
 
-
+  // void _deletePost(BuildContext context, int postId, String token,
+  //     Map<String, dynamic> params) {
+  //   widget.homeCubit.deletePost(postId).then((_) {
+  //     if (widget.onPostDeleted != null) {
+  //       widget.onPostDeleted!(postId);
+  //     }
+  //     widget.filteringCubit
+  //         .getFilteredPosts(token: token, queryParameters: params);
+  //   }).catchError((error) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text("Failed to delete post")),
+  //     );
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {

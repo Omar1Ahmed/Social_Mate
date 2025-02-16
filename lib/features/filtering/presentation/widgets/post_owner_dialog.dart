@@ -18,7 +18,7 @@ class PostOwnerDialog extends StatefulWidget {
   final FilteredUsersCubit filteredUsersCubit;
   final Function(String)
       onPostOwnerSelected; // Callback to return the selected ID
-  PostOwnerDialog({
+  const PostOwnerDialog({
     super.key,
     required this.width,
     required this.height,
@@ -70,7 +70,8 @@ class _PostOwnerDialogState extends State<PostOwnerDialog> {
                         hintText: 'Enter a name',
                         onPressed: () {
                           widget.dialogController.clear();
-                        }, controller: widget.dialogController),
+                        },
+                        controller: widget.dialogController),
                     onChanged: (value) {
                       debounceTimer?.cancel();
                       debounceTimer = Timer(const Duration(seconds: 1), () {
@@ -124,7 +125,7 @@ class _PostOwnerDialogState extends State<PostOwnerDialog> {
                         ),
                       );
                     } else if (state is FilteredUsersLoading) {
-                      return const LinearProgressIndicator(
+                      return const CircularProgressIndicator(
                         color: ColorsManager.primaryColor,
                       );
                     } else if (state is FilteredUsersError) {

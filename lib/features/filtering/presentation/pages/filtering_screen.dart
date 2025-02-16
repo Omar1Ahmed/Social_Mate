@@ -5,9 +5,10 @@ import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/routing/routs.dart';
 import 'package:social_media/core/shared/entities/post_entity.dart';
 import 'package:social_media/core/helper/extantions.dart';
+import 'package:social_media/core/shared/widgets/animation/tween_animation_widget.dart';
+import 'package:social_media/core/shared/widgets/header_widget.dart';
 import 'package:social_media/core/shared/widgets/post_card_widget.dart';
 import 'package:social_media/core/theming/colors.dart';
-import 'package:social_media/core/theming/styles.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 //import 'package:social_media/features/filtering/domain/entities/filtering_post_entity.dart';
 import 'package:social_media/features/filtering/presentation/cubit/filtered_users/filtered_users_cubit.dart';
@@ -77,39 +78,36 @@ class _FilteringScreenState extends State<FilteringScreen> {
   Widget build(BuildContext context) {
     return InfoWidget(builder: (context, deviceInfo) {
       return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            onPressed: () => context.pop(),
-            icon: Icon(
-              Icons.arrow_back,
-              color: ColorsManager.primaryColor,
-              size: deviceInfo.screenWidth * 0.08,
-            ),
-          ),
-          actions: [
-            IconButton(
-              onPressed: () => context.pushNamed(Routes.reportsHomeScreen),
-              icon: Icon(
-                Icons.report_gmailerrorred_outlined,
-                color: ColorsManager.primaryColor,
-                size: deviceInfo.screenWidth * 0.08,
-              ),
-            ),
-          ],
-          title: Text(
-            'Filtering',
-            style: TextStyles.inter18BoldBlack,
-          ),
-          centerTitle: true,
-        ),
+        // appBar: AppBar(
+        //   leading: IconButton(
+        //     onPressed: () => context.pop(),
+        //     icon: Icon(
+        //       Icons.arrow_back,
+        //       color: ColorsManager.primaryColor,
+        //       size: deviceInfo.screenWidth * 0.08,
+        //     ),
+        //   ),
+        //   actions: [
+        //     IconButton(
+        //       onPressed: () => context.pushNamed(Routes.reportsHomeScreen),
+        //       icon: Icon(
+        //         Icons.report_gmailerrorred_outlined,
+        //         color: ColorsManager.primaryColor,
+        //         size: deviceInfo.screenWidth * 0.08,
+        //       ),
+        //     ),
+        //   ],
+        //   title: Text(
+        //     'Filtering',
+        //     style: TextStyles.inter18BoldBlack,
+        //   ),
+        //   centerTitle: true,
+        // ),
         body: SafeArea(
           child: SingleChildScrollView(
             controller: scrollController,
             scrollDirection: Axis.vertical,
             clipBehavior: Clip.antiAlias,
-            padding: EdgeInsets.symmetric(
-                horizontal: deviceInfo.screenWidth * 0.04,
-                vertical: deviceInfo.screenHeight * 0.02),
             child: BlocListener<SharingDataCubit, SharingDataState>(
               listener: (context, sharingState) {
                 if (sharingState.posts.isEmpty) {
@@ -119,11 +117,36 @@ class _FilteringScreenState extends State<FilteringScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  FilteringTile(
-                    homeCubit: context.read<HomeCubit>(),
-                    filteringCubit: context.read<FilteringCubit>(),
-                    sharingDataCubit: context.read<SharingDataCubit>(),
-                    filteredUsersCubit: context.read<FilteredUsersCubit>(),
+                  HeaderWidget(
+                    info: deviceInfo,
+                    onBackPressed: context.pop,
+                    titleImageAsset: 'assets/images/Title_img.png',
+                    extraButtons: [
+                      Padding(
+                        padding: EdgeInsets.only(
+                            left: deviceInfo.screenWidth * 0.19),
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.report,
+                            color: ColorsManager.primaryColor,
+                            size: deviceInfo.screenWidth * 0.08,
+                          ),
+                          onPressed: () =>
+                              context.pushNamed(Routes.reportsHomeScreen),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: deviceInfo.screenWidth * 0.04,
+                        vertical: deviceInfo.screenHeight * 0.01),
+                    child: FilteringTile(
+                      homeCubit: context.read<HomeCubit>(),
+                      filteringCubit: context.read<FilteringCubit>(),
+                      sharingDataCubit: context.read<SharingDataCubit>(),
+                      filteredUsersCubit: context.read<FilteredUsersCubit>(),
+                    ),
                   ),
                   SizedBox(height: deviceInfo.screenHeight * 0.02),
                   BlocBuilder<FilteringCubit, FilteringState>(
@@ -166,60 +189,40 @@ class _FilteringScreenState extends State<FilteringScreen> {
                                             .userId
                                     ? false
                                     : true;
-                                return Column(
-                                  children: [
-                                    // FilteredPostCard(
-                                    //   filteringCubit:
-                                    //       context.read<FilteringCubit>(),
-                                    //   homeCubit: context.read<HomeCubit>(),
-                                    //   postId: posts[index].id,
-                                    //   postOwnerId: posts[index].createdBy.id,
-                                    //   title: posts[index].title,
-                                    //   postOwner: posts[index].createdBy.fullName,
-                                    //   date: posts[index].createdOn.toString(),
-                                    //   content: posts[index].content,
-                                    //   onPostDeleted: (deletedPostId) {
-                                    //     setState(() {
-                                    //       posts.removeWhere((post) =>
-                                    //           post.id == deletedPostId);
-                                    //     });
-                                    //   },
-                                    // ),
-                                    PostCardWidget(
-                                        onPressedDelete: () {
-                                          getIt
-                                              .get<HomeCubit>()
-                                              .deletePost(posts[index].id);
+                                return TweenAnimationWidget(
+                                  deviceInfo: deviceInfo,
+                                  index: index,
+                                  child: PostCardWidget(
+                                      onPressedDelete: () {
+                                        getIt
+                                            .get<HomeCubit>()
+                                            .deletePost(posts[index].id);
 
-                                          setState(() {
-                                            print("${posts.length}");
-                                            posts.removeWhere((post) =>
-                                                post.id == posts[index].id);
+                                        setState(() {
+                                          print("${posts.length}");
+                                          posts.removeWhere((post) =>
+                                              post.id == posts[index].id);
 
-                                            print("${posts.length}");
-                                          });
-                                          // final query = context
-                                          //     .read<SharingDataCubit>()
-                                          //     .state
-                                          //     .queryParams;
-                                          // final token = context
-                                          //     .read<userMainDetailsCubit>()
-                                          //     .state
-                                          //     .token!;
-                                          // context
-                                          //     .read<FilteringCubit>()
-                                          //     .getFilteredPosts(
-                                          //         token: token,
-                                          //         queryParameters: query);
-                                          context.pop();
-                                        },
-                                        deviceInfo: deviceInfo,
-                                        idNotMatch: isNotMatch,
-                                        post: posts[index]),
-                                    SizedBox(
-                                      height: 16,
-                                    )
-                                  ],
+                                          print("${posts.length}");
+                                        });
+                                        // final query = context
+                                        //     .read<SharingDataCubit>()
+                                        //     .state
+                                        //     .queryParams;
+                                        // final token = context
+                                        //     .read<userMainDetailsCubit>()
+                                        //     .state
+                                        //     .token!;
+                                        // context
+                                        //     .read<FilteringCubit>()
+                                        //     .getFilteredPosts(
+                                        //         token: token,
+                                        //         queryParameters: query);
+                                        context.pop();
+                                      },
+                                      deviceInfo: deviceInfo,
+                                      idNotMatch: isNotMatch,
+                                      post: posts[index]),
                                 );
                               },
                             ),
@@ -232,7 +235,22 @@ class _FilteringScreenState extends State<FilteringScreen> {
                         );
                       } else if (state is FilteredPostsNetworkError) {
                         return Center(
-                          child: Text('Connection is lost'),
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: deviceInfo.screenHeight * 0.02),
+                                child: Image.asset(
+                                  'assets/images/no-internet.png',
+                                  height: 100,
+                                ),
+                              ),
+                              Text(
+                                'No Internet Connection',
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ],
+                          ),
                         );
                       } else if (state is FilteredPostsIsEmpty) {
                         return Center(
