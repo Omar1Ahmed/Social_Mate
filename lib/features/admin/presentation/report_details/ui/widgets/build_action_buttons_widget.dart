@@ -21,7 +21,7 @@ class ActionButtonsWidget extends StatelessWidget {
       context: context,
       builder: (context) => CustomDialogWidget(
         deviceInfo: info,
-        title: "${action} Reason",
+        title: "$action Reason",
         fields: [
           _buildTextField(
             controller: reasonController,
@@ -56,13 +56,15 @@ class ActionButtonsWidget extends StatelessWidget {
               }
 
               await getIt<ReportDetailsCubit>().addActionToReport(action, reason);
-              CherryToastMsgs.CherryToastSuccess(
-                info: info,
-                context: context,
-                title: "$action Successful",
-                description: "$action reason submitted successfully.",
-              );
-              Navigator.pop(context);
+              if (context.mounted) {
+                CherryToastMsgs.CherryToastSuccess(
+                  info: info,
+                  context: context,
+                  title: "$action Successful",
+                  description: "$action reason submitted successfully.",
+                );
+                Navigator.pop(context);
+              }
               if (context.mounted) {
                 context.pushReplacementNamed(Routes.adminReportScreen);
               }
