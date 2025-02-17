@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
 import 'package:social_media/core/helper/extantions.dart';
-import 'package:social_media/core/routing/routs.dart';
 import 'package:social_media/core/shared/widgets/animation/tween_animation_widget.dart';
 import 'package:social_media/core/shared/widgets/header_widget.dart';
 import 'package:social_media/core/theming/colors.dart';
@@ -20,6 +19,7 @@ class ReportsHomeScreen extends StatefulWidget {
 }
 
 class _ReportsHomeScreenState extends State<ReportsHomeScreen> {
+  //late AllReportsCubit allReportsCubit;
   // vaiables
   List<MainReportEntity> allReports = [];
   final ScrollController scrollController = ScrollController();
@@ -27,14 +27,19 @@ class _ReportsHomeScreenState extends State<ReportsHomeScreen> {
   @override
   void initState() {
     super.initState();
+    //allReportsCubit = getIt<AllReportsCubit>();
     final token = context.read<userMainDetailsCubit>().state.token;
-    context.read<AllReportsCubit>().getAllReports({}, token: token!);
+
+    context
+        .read<AllReportsCubit>()
+        .getAllReports({'statusId': 1}, token: token!);
     scrollController.addListener(_onScroll);
   }
 
   // dispose
   @override
   void dispose() {
+    scrollController.dispose();
     super.dispose();
   }
 
@@ -42,7 +47,10 @@ class _ReportsHomeScreenState extends State<ReportsHomeScreen> {
     final token = context.read<userMainDetailsCubit>().state.token;
     if (scrollController.position.pixels ==
         scrollController.position.maxScrollExtent) {
-      context.read<AllReportsCubit>().loadMoreReports({}, token: token!);
+      context.read<AllReportsCubit>().loadMoreReports(
+        {'statusId': 1},
+        token: token!,
+      );
     }
   }
 
@@ -50,40 +58,16 @@ class _ReportsHomeScreenState extends State<ReportsHomeScreen> {
   Widget build(BuildContext context) {
     return InfoWidget(builder: (context, deviceInfo) {
       return Scaffold(
-        // appBar: AppBar(
-        //   leading: IconButton(
-        //     onPressed: () => context.pop(),
-        //     icon: Icon(
-        //       Icons.arrow_back,
-        //       color: ColorsManager.primaryColor,
-        //       size: deviceInfo.screenWidth * 0.08,
-        //     ),
-        //   ),
-        //   title: Image.asset(
-        //     'assets/images/Title_img.png',
-        //     width: deviceInfo.screenWidth * 0.4,
-        //     height: deviceInfo.screenHeight * 0.06,
-        //     fit: BoxFit.contain,
-        //   ),
-        //   actions: [
-        //     Padding(
-        //       padding: EdgeInsets.only(right: deviceInfo.screenWidth * 0.02),
-        //       child: IconButton(
-        //         onPressed: () => context.pushNamed(Routes.adminReportScreen),
-        //         icon: Icon(
-        //           Icons.search,
-        //           color: ColorsManager.primaryColor,
-        //           size: deviceInfo.screenWidth * 0.08,
-        //         ),
-        //       ),
-        //     ),
-        //   ],
-        // ),
         body: SafeArea(
             child: RefreshIndicator(
           onRefresh: () async {
-            final token = context.read<userMainDetailsCubit>().state.token;
-            context.read<AllReportsCubit>().getAllReports({}, token: token!);
+            //final token = context.read<userMainDetailsCubit>().state.token;
+            context.read<AllReportsCubit>().onRefresh();
+            // //context.read<AllReportsCubit>()
+            // allReportsCubit.getAllReports(
+            //   {'statusId': 1},
+            //   token: token!,
+            // );
           },
           child: SingleChildScrollView(
             //scroll controller to handle scroll
@@ -100,16 +84,14 @@ class _ReportsHomeScreenState extends State<ReportsHomeScreen> {
                   extraButtons: [
                     Padding(
                       padding:
-                          EdgeInsets.only(left: deviceInfo.screenWidth * 0.19),
+                          EdgeInsets.only(left: deviceInfo.screenWidth * 0.17),
                       child: IconButton(
-                        icon: Icon(
-                          Icons.search,
-                          color: ColorsManager.primaryColor,
-                          size: deviceInfo.screenWidth * 0.08,
-                        ),
-                        onPressed: () =>
-                            context.pushNamed(Routes.adminReportScreen),
-                      ),
+                          icon: Icon(
+                            Icons.search,
+                            color: ColorsManager.primaryColor,
+                            size: deviceInfo.screenWidth * 0.08,
+                          ),
+                          onPressed: () {}),
                     ),
                   ],
                 ),
@@ -132,7 +114,7 @@ class _ReportsHomeScreenState extends State<ReportsHomeScreen> {
                 SizedBox(height: deviceInfo.screenHeight * 0.01),
                 BlocBuilder<AllReportsCubit, AllReportsState>(
                   builder: (context, state) {
-                    if (state is AllReportsLoading) {
+                    if (state is AllReportsLoading && allReports.isEmpty) {
                       return Center(
                         child: CircularProgressIndicator(
                           color: ColorsManager.primaryColor,
@@ -140,7 +122,7 @@ class _ReportsHomeScreenState extends State<ReportsHomeScreen> {
                       );
                     } else if (state is AllReportsLoaded) {
                       allReports = state.allReports;
-                      
+
                       return ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
@@ -198,7 +180,7 @@ class _ReportsHomeScreenState extends State<ReportsHomeScreen> {
                       );
                     } else {
                       return Center(
-                        child: Text('No reports inital state'),
+                        child: CircularProgressIndicator(),
                       );
                     }
                   },

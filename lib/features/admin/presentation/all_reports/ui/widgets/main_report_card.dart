@@ -101,12 +101,14 @@ class MainReportCard extends StatelessWidget {
                   children: [
                     Text(
                       'Reported by: $reportedBy',
-                      style: TextStyles.inter14Regular
-                          .copyWith(color: Colors.black),
+                      style: TextStyles.inter14Regular.copyWith(
+                          color: Colors.black,
+                          fontSize: deviceInfo.screenWidth * 0.035),
                     ),
                     Text(reportDate,
-                        style: TextStyles.inter14Regular
-                            .copyWith(color: ColorsManager.greyColor)),
+                        style: TextStyles.inter14Regular.copyWith().copyWith(
+                            color: ColorsManager.greyColor,
+                            fontSize: deviceInfo.screenWidth * 0.025)),
                   ],
                 ),
                 Row(

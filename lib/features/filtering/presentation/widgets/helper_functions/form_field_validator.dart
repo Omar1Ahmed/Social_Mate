@@ -30,21 +30,26 @@ String? validateSortedBy(String sortedByValue, String orderedByValue) {
   return null;
 }
 
-String? validateDateRange(DateTime? fromDate, DateTime? toDate,
+String? validateDateRange(
     TextEditingController fromController, TextEditingController toController) {
   DateFormat format = DateFormat('yyyy-MM-dd');
 
   // Allow users to select only one date without error
-  if (fromDate == null || toDate == null) {
+  if (fromController.text.isEmpty || toController.text.isEmpty) {
     return null; // No validation needed if one of them is not selected
   }
 
-  String fromDateFormatted = format.format(fromDate);
-  String toDateFormatted = format.format(toDate);
+  DateTime? fromDate;
+  DateTime? toDate;
 
-  if (fromDateFormatted == toDateFormatted &&
-      fromController.text.isNotEmpty &&
-      toController.text.isNotEmpty) {
+  try {
+    fromDate = format.parse(fromController.text);
+    toDate = format.parse(toController.text);
+  } catch (e) {
+    return 'Invalid date format';
+  }
+
+  if (fromDate == toDate) {
     return 'Cannot be the same';
   }
 

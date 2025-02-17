@@ -1,5 +1,7 @@
 import 'package:bloc/bloc.dart';
+import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/helper/Connectivity/connectivity_helper.dart';
+import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 import 'package:social_media/features/admin/domain/entities/main_report_entity.dart';
 import 'package:social_media/features/admin/domain/repositories/main_report_repo.dart';
 
@@ -18,10 +20,9 @@ class AllReportsCubit extends Cubit<AllReportsState> {
     bool isConnected = await ConnectivityHelper.isConnected();
     if (!isConnected) {
       if (!isClosed) emit(AllReportsConnectionError());
-      print(state);
       return;
     } else {
-      if (state is AllReportsLoading) return;
+      // Reset the state
       _pageOffset = 0;
       _hasMore = true;
       if (!isClosed) emit(AllReportsLoading());
@@ -33,14 +34,12 @@ class AllReportsCubit extends Cubit<AllReportsState> {
         );
 
         final statusCode = result['statusCode'] as int;
-        print('all reports status code: $statusCode');
         if (statusCode != 200) {
           if (!isClosed) emit(AllReportsStatusCodeError());
           return;
         }
         final reports = result['reports'] as List<MainReportEntity>;
 
-        print("reports retrieved: ${reports.length} items"); // Debug log
         if (reports.isEmpty) {
           if (!isClosed) emit(AllReportsEmpty(reports));
         } else {
@@ -88,11 +87,12 @@ class AllReportsCubit extends Cubit<AllReportsState> {
 
       final newReports = result['reports'] as List<MainReportEntity>;
 
+      // Update _hasMore based on the length of new reports
       _hasMore = newReports.length == _pageSize;
-      final updatedPosts = [...currentState.allReports, ...newReports];
+      final updatedReports = [...currentState.allReports, ...newReports];
       if (!isClosed) {
         emit(currentState.copyWith(
-          allReports: updatedPosts,
+          allReports: updatedReports,
           hasMore: _hasMore,
         ));
       }
@@ -100,4 +100,16 @@ class AllReportsCubit extends Cubit<AllReportsState> {
       if (!isClosed) emit(AllReportsError(e.toString()));
     }
   }
+
+  void clearState() {
+  emit(AllReportsInitial());
+}
+
+Future<void> onRefresh() async {
+    _pageOffset = 0;
+    _hasMore = true;
+    emit(AllReportsInitial());
+    await getAllReports({'statusId': 1}, token: getIt<userMainDetailsCubit>().state.token!);();
+  }
+
 }

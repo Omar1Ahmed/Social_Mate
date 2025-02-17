@@ -208,7 +208,7 @@ Future<void> initDependencies() async {
   );
 
   // all reports Cubit
-  getIt.registerLazySingleton(() => AllReportsCubit(mainReportRepo: getIt()));
+  getIt.registerFactory(() => AllReportsCubit(mainReportRepo: getIt()));
   // users & post Cubit
   getIt.registerFactory(() => FilteringCubit(getIt()));
   getIt.registerFactory(() => FilteredUsersCubit(filteredUsersRepo: getIt()));

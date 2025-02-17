@@ -166,7 +166,11 @@ class _FilteringTileState extends State<FilteringTile> {
 
     final token = getIt<userMainDetailsCubit>().state.token;
 
-    print('Token: $token');
+    //print('Token: $token');
+    print("from date : $selectedFromDate");
+    print("to date : $selectedToDate");
+    print("from controller date : ${createdFromController.text}");
+    print("to controller date : ${createdToController.text}");
     if (_formKey.currentState!.validate()) {
       queryParameters = {
         if (titleController.text.isNotEmpty) 'title': titleController.text,
@@ -299,10 +303,7 @@ class _FilteringTileState extends State<FilteringTile> {
                           },
                           validator: (value) {
                             return validateDateRange(
-                                selectedFromDate,
-                                selectedToDate,
-                                createdFromController,
-                                createdToController);
+                                createdFromController, createdToController);
                           },
                           screenWidth: deviceInfo.screenWidth,
                           screenHeight: deviceInfo.screenHeight,
@@ -335,10 +336,7 @@ class _FilteringTileState extends State<FilteringTile> {
                           },
                           validator: (value) {
                             return validateDateRange(
-                                selectedFromDate,
-                                selectedToDate,
-                                createdFromController,
-                                createdToController);
+                                createdFromController, createdToController);
                           },
                           screenWidth: deviceInfo.screenWidth,
                           screenHeight: deviceInfo.screenHeight,
