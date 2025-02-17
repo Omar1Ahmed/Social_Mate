@@ -55,7 +55,20 @@ class ReportDetailsRemoteDataSourceImpl implements ReportDetailsRemoteDataSource
   }
 
   @override
-  Future<List<ReportData>> getRelatedReports(int reportId) {
-    throw UnimplementedError();
+  Future addActionToReport(int reportId, String action, String rejectReason) async {
+    final response = await reportDio.put(
+      '/reports/$reportId/actions/$action',
+      action == "APPROVE"
+          ? {
+              'rejectReason': null
+            }
+          : {
+              'rejectReason': rejectReason
+            },
+      header: {
+        'Authorization': 'Bearer $token'
+      },
+    );
+    return response;
   }
 }

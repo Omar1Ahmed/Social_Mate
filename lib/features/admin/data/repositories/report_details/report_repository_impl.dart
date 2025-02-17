@@ -9,12 +9,7 @@ class ReportDetailsRepositoryImpl implements ReportDetailsRepository {
   final ReportDetailsRemoteDataSourceImpl dataSource;
 
   ReportDetailsRepositoryImpl({required this.dataSource});
-  
-  @override
-  Future<List<ReportData>> getRelatedReports(int reportId) {
-    throw UnimplementedError();
-  }
-  
+
   @override
   Future<DetailedReportModel> getReportDetails(int reportId) {
     return dataSource.getReportDetails(reportId);
@@ -28,6 +23,11 @@ return dataSource.getAvgRate(reportId);
   @override
   Future<int> getCommentsCount(int reportId) {
     return dataSource.getCommentsCount(reportId);
+  }
+  
+  @override
+  Future addActionToReport(int reportId, String action, String rejectReason) {
+    return dataSource.addActionToReport(reportId, action, rejectReason  );
   }
 
 }

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/Responsive/Models/device_info.dart';
+import 'package:social_media/features/admin/presentation/report_details/logic/report_details_cubit.dart';
 import 'package:social_media/features/admin/presentation/report_details/ui/widgets/build_action_buttons_widget.dart';
+import '../../../../../../core/di/di.dart';
 import '../../../../../../core/shared/widgets/Shimmer/ShimmerStyle.dart';
 import '../../../../../../core/shared/widgets/animation/slide_Transition__widget.dart';
 import '../../../../../../core/theming/colors.dart';
@@ -161,7 +164,7 @@ class ReportDetialsWidget extends StatelessWidget {
             ),
             SizedBox(
               height: info.screenHeight * 0.02,
-            ), 
+            ),
             Text(
               "Actions",
               style: TextStyles.inter18Bold.copyWith(fontSize: info.screenWidth * 0.044),
@@ -206,7 +209,12 @@ class ReportDetialsWidget extends StatelessWidget {
                     ],
                   ),
             SizedBox(height: info.screenHeight * 0.02),
-            lastModifiedBy.isEmpty ? ActionButtonsWidget(info: info) : Container(),
+            lastModifiedBy.isEmpty
+                ? BlocProvider(
+                    create: (context) => getIt<ReportDetailsCubit>(),
+                    child: ActionButtonsWidget(info: info),
+                  )
+                : Container(),
           ],
         ),
       ),

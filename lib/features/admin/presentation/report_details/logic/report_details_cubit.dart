@@ -41,14 +41,14 @@ class ReportDetailsCubit extends Cubit<ReportDetailsState> {
       if (!isClosed) {
         setSelectedPost(report.reportDetails.post.id);
 
-        // Fetch comments count and average rating
-        final commentsCount = await _repository.getCommentsCount(_postId);
-        final avrageRating = await _repository.getAvgRate(_postId);
+        // // Fetch comments count and average rating
+        // final commentsCount = await _repository.getCommentsCount(_postId);
+        // final avrageRating = await _repository.getAvgRate(_postId);
 
         emit(ReportDetailsLoaded(
           report: report,
-          commentsCount: commentsCount,
-          avrageRating: avrageRating,
+          commentsCount: 0,
+          avrageRating: 0,
         ));
       } else {
         emit(ReportDetailsError(message: 'No data available'));
@@ -61,35 +61,19 @@ class ReportDetailsCubit extends Cubit<ReportDetailsState> {
     }
   }
 
-  Future<void> getCommentsCount() async {
-    if (isClosed) return; // Exit if the cubit is already closed
-    emit(CommentsCountRepLoading());
-    try {
-      final commentsCount = await _repository.getCommentsCount(_postId);
-      if (!isClosed) {
-        this.commentsCount = commentsCount;
-        print("data in cubit : $commentsCount");
-      }
-    } catch (e, trace) {
-      if (!isClosed) {
-        print("state error Trace : $trace");
-        emit(ReportDetailsError(message: e.toString()));
-      }
-    }
-  }
-
-  Future<void> getAvrageRating() async {
+  Future addActionToReport(String action, String rejectReason) async {
     if (isClosed) return;
-    emit(GetAvrageRatingLoading());
+    emit(AddActionToReportLoading());
     try {
-      final avrageRating = await _repository.getAvgRate(_postId);
+      await _repository.addActionToReport(_reportId, action, rejectReason);
       if (!isClosed) {
-        this.rateAverage = avrageRating;
+        emit(AddActionToReportSuccess());
+        await getReportDetails();
       }
     } catch (e, trace) {
       if (!isClosed) {
         print("state error Trace : $trace");
-        emit(ReportDetailsError(message: e.toString()));
+        emit(AddActionToReportError(message: e.toString()));
       }
     }
   }

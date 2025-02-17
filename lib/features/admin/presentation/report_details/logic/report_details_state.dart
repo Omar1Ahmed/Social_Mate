@@ -17,7 +17,13 @@ final class ReportDetailsError extends ReportDetailsState {
   final String message;
   const ReportDetailsError({required this.message});
 }
-
+final class AddActionToReportLoading extends ReportDetailsState {}
+final class AddActionToReportError extends ReportDetailsState {
+  final String message;
+  const AddActionToReportError({required this.message});
+}
+final class AddActionToReportSuccess extends ReportDetailsState {
+}
 final class ReportDetailsLoaded extends ReportDetailsState {
   final DetailedReportModel report;
   final int commentsCount;
