@@ -9,8 +9,8 @@ class reportFilterRepoImpl extends reportFilterRepository {
   reportFilterRepoImpl({required this.reportFilterRemoteDataSource});
 
   @override
-  Future<(List<MainReportEntity>, int)> getReports({required int pageOffset, required int pageSize,Map <String,dynamic>? queryParams}) async {
-    final response = await reportFilterRemoteDataSource.getReports(pageOffset: pageOffset, pageSize: pageSize);
+  Future<(List<MainReportEntity>, int)> getReports({Map <String,dynamic>? queryParams}) async {
+    final response = await reportFilterRemoteDataSource.getReports(queryParams: queryParams);
 
     return (
     response.toReportEntities(),

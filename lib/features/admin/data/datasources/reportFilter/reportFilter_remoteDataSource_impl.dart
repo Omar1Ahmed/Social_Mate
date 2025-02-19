@@ -2,7 +2,6 @@ import 'package:social_media/core/network/dio_client.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 import 'package:social_media/features/admin/data/models/main_report_model.dart';
 import 'package:social_media/features/admin/domain/datasources/reportFilter/reportFilter_remoteDataSource.dart';
-import 'package:social_media/features/admin/domain/entities/main_report_entity.dart';
 
 class reportFilterRemoteDataSourceImpl implements ReportFilterRemoteDataSource {
   final DioClient dio;
@@ -11,7 +10,7 @@ class reportFilterRemoteDataSourceImpl implements ReportFilterRemoteDataSource {
   reportFilterRemoteDataSourceImpl({required this.dio, required this.userMainDetails});
 
   @override
-  Future<MainReportModel> getReports({required int pageOffset, required int pageSize,Map<String, dynamic>? queryParams}) async {
+  Future<MainReportModel> getReports({Map<String, dynamic>? queryParams}) async {
 
     try {
       final response = await dio.get(
@@ -21,8 +20,7 @@ class reportFilterRemoteDataSourceImpl implements ReportFilterRemoteDataSource {
           'Authorization': 'Bearer ${userMainDetails.state.token}',
         },
         queryParameters: {
-          'pageOffset': pageOffset,
-          'pageSize': pageSize,
+
           ...?queryParams
         }
       );
