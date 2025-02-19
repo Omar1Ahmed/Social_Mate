@@ -65,18 +65,6 @@ class ReportDetialsWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "Report details",
-              style: TextStyles.inter18BoldBlack.copyWith(fontSize: info.screenWidth * 0.046),
-            ),
-            Divider(
-              thickness: 2,
-              height: info.screenHeight * 0.02,
-              color: ColorsManager.blackColor.withOpacity(0.6),
-            ),
-            SizedBox(
-              height: info.screenHeight * 0.01,
-            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -175,16 +163,7 @@ class ReportDetialsWidget extends StatelessWidget {
               color: ColorsManager.blackColor.withOpacity(0.6),
             ),
             lastModifiedBy.isEmpty
-                ? Container(
-                    width: info.screenWidth * 0.7,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(info.screenWidth * 0.01),
-                    ),
-                    child: Text(
-                      "No Action Taken yet",
-                      style: TextStyles.inter18RegularWithOpacity.copyWith(fontSize: info.screenWidth * 0.04),
-                    ),
-                  )
+                ? Container()
                 : Row(
                     children: [
                       RichText(

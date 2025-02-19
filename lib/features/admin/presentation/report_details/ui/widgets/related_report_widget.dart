@@ -74,12 +74,13 @@ class RelatedReportWidget extends StatelessWidget {
               Expanded(
                 flex: 2,
                 child: Container(
-                  width: double.infinity,
+                  width: deviceInfo.screenWidth * 0.3,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(deviceInfo.screenWidth * 0.03),
                     color: getStateColor(state),
                   ),
-                  child: Center(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(deviceInfo.screenWidth * 0.02, deviceInfo.screenWidth * 0.01, deviceInfo.screenWidth * 0.02, deviceInfo.screenWidth * 0.01),
                     child: Text(
                       state,
                       style: TextStyles.inter18BoldBlack.copyWith(fontSize: deviceInfo.screenWidth * 0.03),

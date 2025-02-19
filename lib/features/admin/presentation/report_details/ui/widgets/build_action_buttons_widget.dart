@@ -160,6 +160,14 @@ class ActionButtonsWidget extends StatelessWidget {
           onPressed: () async {
             await context.read<ReportDetailsCubit>().addActionToReport('APPROVE', '');
             if (context.mounted) {
+              CherryToastMsgs.CherryToastSuccess(
+                info: info,
+                context: context,
+                title: "Approve Successful",
+                description: "Report approved successfully.",
+              );
+            }
+            if (context.mounted) {
               context.pushReplacementNamed(Routes.adminReportScreen);
             }
           },
