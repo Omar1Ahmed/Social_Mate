@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
 import 'package:social_media/core/di/di.dart';
-import 'package:social_media/core/routing/routs.dart';
 import 'package:social_media/core/shared/entities/post_entity.dart';
 import 'package:social_media/core/helper/extantions.dart';
 import 'package:social_media/core/shared/widgets/animation/tween_animation_widget.dart';
@@ -63,10 +62,13 @@ class _FilteringScreenState extends State<FilteringScreen> {
 
   void _onScroll() {
     final token = context.read<userMainDetailsCubit>().state.token;
-    if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
+    if (scrollController.position.pixels ==
+        scrollController.position.maxScrollExtent) {
       final queryParams = context.read<SharingDataCubit>().state.queryParams;
       print('new queryParams: $queryParams');
-      context.read<FilteringCubit>().loadMoreFilteredPosts(queryParameters: queryParams, token: token!);
+      context
+          .read<FilteringCubit>()
+          .loadMoreFilteredPosts(queryParameters: queryParams, token: token!);
     }
     //print('queryParameters after pagination : $queryParameters');
   }
@@ -96,22 +98,11 @@ class _FilteringScreenState extends State<FilteringScreen> {
                     info: deviceInfo,
                     onBackPressed: context.pop,
                     titleImageAsset: 'assets/images/Title_img.png',
-                    extraButtons: [
-                      Padding(
-                        padding: EdgeInsets.only(left: deviceInfo.screenWidth * 0.19),
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.report,
-                            color: ColorsManager.primaryColor,
-                            size: deviceInfo.screenWidth * 0.08,
-                          ),
-                          onPressed: () => context.pushNamed(Routes.reportsHomeScreen),
-                        ),
-                      ),
-                    ],
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: deviceInfo.screenWidth * 0.04, vertical: deviceInfo.screenHeight * 0.01),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: deviceInfo.screenWidth * 0.04,
+                        vertical: deviceInfo.screenHeight * 0.01),
                     child: FilteringTile(
                       homeCubit: context.read<HomeCubit>(),
                       filteringCubit: context.read<FilteringCubit>(),
@@ -140,7 +131,8 @@ class _FilteringScreenState extends State<FilteringScreen> {
                         if (posts.isEmpty) {
                           print('retrived data is empty ya 3m'); // Debug
                         }
-                        print('this is the filtered ${posts.length.toString()}');
+                        print(
+                            'this is the filtered ${posts.length.toString()}');
                         return Column(
                           children: [
                             ListView.builder(
@@ -150,19 +142,28 @@ class _FilteringScreenState extends State<FilteringScreen> {
                               itemBuilder: (context, index) {
                                 print('Filtering State: $state');
                                 if (index == posts.length && state.hasMore) {
-                                  return Center(child: CircularProgressIndicator());
+                                  return Center(
+                                      child: CircularProgressIndicator());
                                 }
-                                final isNotMatch = posts[index].createdBy.id == getIt<userMainDetailsCubit>().state.userId ? false : true;
+                                final isNotMatch = posts[index].createdBy.id ==
+                                        getIt<userMainDetailsCubit>()
+                                            .state
+                                            .userId
+                                    ? false
+                                    : true;
                                 return TweenAnimationWidget(
                                   deviceInfo: deviceInfo,
                                   index: index,
                                   child: PostCardWidget(
                                       onPressedDelete: () {
-                                        getIt.get<HomeCubit>().deletePost(posts[index].id);
+                                        getIt
+                                            .get<HomeCubit>()
+                                            .deletePost(posts[index].id);
 
                                         setState(() {
                                           print("${posts.length}");
-                                          posts.removeWhere((post) => post.id == posts[index].id);
+                                          posts.removeWhere((post) =>
+                                              post.id == posts[index].id);
 
                                           print("${posts.length}");
                                         });
@@ -199,7 +200,8 @@ class _FilteringScreenState extends State<FilteringScreen> {
                           child: Column(
                             children: [
                               Padding(
-                                padding: EdgeInsets.symmetric(vertical: deviceInfo.screenHeight * 0.02),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: deviceInfo.screenHeight * 0.02),
                                 child: Image.asset(
                                   'assets/images/no-internet.png',
                                   height: 100,
