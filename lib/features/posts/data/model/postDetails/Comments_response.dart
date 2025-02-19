@@ -1,4 +1,3 @@
-import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:social_media/core/helper/format_time_ago.dart';
 import 'package:social_media/features/posts/data/model/entities/commentEntity.dart';

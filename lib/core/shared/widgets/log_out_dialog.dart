@@ -11,6 +11,7 @@ void logOutDialog(BuildContext context, DeviceInfo deviceInfo) {
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
+      backgroundColor: ColorsManager.whiteColor,
       title: Text(
         'Confirm Logout',
         style: TextStyles.inter18BoldBlack.copyWith(fontSize: deviceInfo.screenWidth * 0.05),

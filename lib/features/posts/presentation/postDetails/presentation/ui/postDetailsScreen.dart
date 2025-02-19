@@ -1,9 +1,6 @@
-import 'package:cherry_toast/cherry_toast.dart';
-import 'package:cherry_toast/resources/arrays.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:social_media/core/Responsive/Models/device_info.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
 import 'package:social_media/core/di/di.dart';

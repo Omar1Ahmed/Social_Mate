@@ -1,10 +1,8 @@
 import 'package:bloc/bloc.dart';
-import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
 import 'package:social_media/core/shared/entities/post_entity.dart';
 import 'package:social_media/core/error/errorResponseModel.dart';
-import 'package:social_media/core/helper/Connectivity/connectivity_helper.dart';
 import 'package:social_media/features/posts/data/model/entities/commentEntity.dart';
 
 import 'package:social_media/features/posts/domain/repository/postDetails/postDetails_repository.dart';
@@ -212,7 +210,7 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
 
         emit(deleteCommentFail('Failed to Delete to The post'));
       }
-    } catch (e, trace) {
+    } catch (e) {
       if (e is ErrorResponseModel) {
         emit(deleteCommentFail(e.message.toString()));
       } else {
