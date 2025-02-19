@@ -96,19 +96,6 @@ class _FilteringScreenState extends State<FilteringScreen> {
                     info: deviceInfo,
                     onBackPressed: context.pop,
                     titleImageAsset: 'assets/images/Title_img.png',
-                    extraButtons: [
-                      Padding(
-                        padding: EdgeInsets.only(left: deviceInfo.screenWidth * 0.19),
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.report,
-                            color: ColorsManager.primaryColor,
-                            size: deviceInfo.screenWidth * 0.08,
-                          ),
-                          onPressed: () => context.pushNamed(Routes.reportsHomeScreen),
-                        ),
-                      ),
-                    ],
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: deviceInfo.screenWidth * 0.04, vertical: deviceInfo.screenHeight * 0.01),
