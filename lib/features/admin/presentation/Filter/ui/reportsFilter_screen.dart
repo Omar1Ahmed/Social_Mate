@@ -112,11 +112,10 @@ class _reportsFilterScreenState extends State<reportsFilterScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Container(
-
-                                  width: info.screenWidth * 0.4,
+                                Expanded(
 
                                   child: DropdownButton<int>(
+                                    isExpanded: true,
 
                                     value: cubit.statusId,
                                     hint: Text('Status'),
@@ -132,10 +131,11 @@ class _reportsFilterScreenState extends State<reportsFilterScreen> {
                                   ),
                                 ),
 
-                                Container(
-                                  width: info.screenWidth * 0.4,
+                                Expanded(
+                                  // width: info.screenWidth * 0.4,
                                   child: DropdownButton<int>(
                                     value: cubit.categoryId,
+                                    isExpanded: true,
                                     hint: Text('Category'),
                                     onChanged: (value) {
                                       setState(() => cubit.categoryId = value);
@@ -190,9 +190,9 @@ class _reportsFilterScreenState extends State<reportsFilterScreen> {
                              Row(
                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                children: [
-                                 Container(
-                                   width: info.screenWidth * 0.35,
+                                 Expanded(
                                    child: DropdownButton<String>(
+                                     isExpanded: true,
                                      value: cubit.orderBy,
                                      hint: Text('Order By'),
                                      onChanged: (value) {
@@ -206,9 +206,10 @@ class _reportsFilterScreenState extends State<reportsFilterScreen> {
                                    ),
                                  ),
 
-                                 Container(
-                                   width: info.screenWidth * 0.35,
+                                 Expanded(
+
                                    child: DropdownButton<String>(
+                                     isExpanded: true,
                                      value: cubit.orderDir,
                                      hint: Text('Order Direction'),
                                      onChanged: (value) {

@@ -23,8 +23,8 @@ class ReportFilterCubit extends Cubit<ReportFilterState> {
   int? categoryId;
   String? createdOnFrom;
   String? createdOnTo;
-  String orderBy = 'REPORT_CATEGORY';
-  String orderDir = 'DESC';
+  String? orderBy;
+  String? orderDir;
   int pageOffset = 0;
   int pageSize = 10;
 
@@ -48,6 +48,8 @@ class ReportFilterCubit extends Cubit<ReportFilterState> {
       'createdOnTo': createdOnTo,
       'pageOffset': _currentPage.toString(),
       'pageSize': pageSize.toString(),
+      'orderBy': orderBy,
+      'orderDir': orderDir
     }..removeWhere((key, value) => value == null); // Remove null values
 
     try {
