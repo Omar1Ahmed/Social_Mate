@@ -58,6 +58,7 @@ class _ReportsHomeScreenState extends State<ReportsHomeScreen> {
   Widget build(BuildContext context) {
     return InfoWidget(builder: (context, deviceInfo) {
       return Scaffold(
+        backgroundColor: Colors.white,
         body: SafeArea(
             child: RefreshIndicator(
           onRefresh: () async {

@@ -66,12 +66,12 @@ class _FilteringScreenState extends State<FilteringScreen> {
     if (scrollController.position.pixels ==
         scrollController.position.maxScrollExtent) {
       final queryParams = context.read<SharingDataCubit>().state.queryParams;
-      print('new queryParams: $queryParams');
+      //print('new queryParams: $queryParams');
       context
           .read<FilteringCubit>()
           .loadMoreFilteredPosts(queryParameters: queryParams, token: token!);
     }
-    print('queryParameters after pagination : $queryParameters');
+    //print('queryParameters after pagination : $queryParameters');
   }
 
   @override
