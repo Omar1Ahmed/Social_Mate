@@ -6,8 +6,14 @@ import 'package:social_media/core/helper/dotenv/dot_env_helper.dart';
 import 'package:social_media/core/userMainDetails/jwt_token_decode/data/repository/jwt_token_decode_repository_imp.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 import 'package:social_media/features/admin/data/datasources/all_reports_remote_source.dart';
+import 'package:social_media/features/admin/data/datasources/reportFilter/reportFilter_remoteDataSource_impl.dart';
 import 'package:social_media/features/admin/data/repositories/main_report_repo_impl.dart';
+import 'package:social_media/features/admin/data/repositories/reportFilter/reportFilter_repo_impl.dart';
+import 'package:social_media/features/admin/domain/datasources/reportFilter/reportFilter_remoteDataSource.dart';
+import 'package:social_media/features/admin/domain/datasources/report_remote_data_source.dart';
 import 'package:social_media/features/admin/domain/repositories/main_report_repo.dart';
+import 'package:social_media/features/admin/domain/repositories/reportFilter/reportFilter_repo.dart';
+import 'package:social_media/features/admin/presentation/Filter/logic/report_filter_cubit.dart';
 import 'package:social_media/features/admin/presentation/all_reports/logic/cubit/all_reports_cubit.dart';
 import 'package:social_media/features/authentication/data/data_source/AuthenticaionRemoteDataSource.dart';
 import 'package:social_media/features/authentication/data/data_source/authentication_remote_data_source.dart';
@@ -55,7 +61,7 @@ Future<void> initDependencies() async {
 
   // this is too important
   // getIt.registerSingletonAsync<InternetConnectionChecker>(
-  //   () async => InternetConnectionChecker.createInstance(checkTimeout: const Duration(milliseconds: 300), checkInterval: const Duration(milliseconds: 300)),
+  //   () async => InternetConnectionChecker.createInstaإإnce(checkTimeout: const Duration(milliseconds: 300), checkInterval: const Duration(milliseconds: 300)),
   // );
 
   // shared Preferences
@@ -115,12 +121,19 @@ Future<void> initDependencies() async {
         userMainDetails: getIt<userMainDetailsCubit>()),
   );
 // report data source
-  getIt.registerFactory<ReportDetailsRemoteDataSourceImpl>(
+  getIt.registerFactory<ReportDetailsRemoteDataSource>(
     () => ReportDetailsRemoteDataSourceImpl(getIt<userMainDetailsCubit>(),
         postsDio:
             getIt<DioClient>(instanceName: diInstancesHelper.PostsDioClient),
         reportDio:
             getIt<DioClient>(instanceName: diInstancesHelper.ReportDioClient)),
+  );
+
+  //report Filter data source
+  getIt.registerFactory<ReportFilterRemoteDataSource>(
+    () => reportFilterRemoteDataSourceImpl(
+        userMainDetails: getIt<userMainDetailsCubit>(),
+        dio: getIt<DioClient>(instanceName: diInstancesHelper.ReportDioClient),)
   );
 
   // all reports data source
@@ -180,6 +193,13 @@ Future<void> initDependencies() async {
       // networkInfo: getIt(),
       filteredUsersRemoteSource: getIt()));
 
+  //report Filter repository
+
+  getIt.registerFactory<reportFilterRepository>(
+        () => reportFilterRepoImpl(
+            reportFilterRemoteDataSource: getIt<ReportFilterRemoteDataSource>()),
+  );
+
   // |------------------------------------------------------------------\
   // |-------------------------- Cubits ------------------------------\
   // |------------------------------------------------------------------\
@@ -212,6 +232,10 @@ Future<void> initDependencies() async {
   // users & post Cubit
   getIt.registerFactory(() => FilteringCubit(getIt()));
   getIt.registerFactory(() => FilteredUsersCubit(filteredUsersRepo: getIt()));
+
+  // report Filter Cubit
+  getIt.registerFactory(() => ReportFilterCubit(ReportRepo: getIt<reportFilterRepository>(), userMainDetails: getIt<userMainDetailsCubit>()));
+
 
   // |------------------------------------------------------------------\
   // |-------------------------- Services ------------------------------\

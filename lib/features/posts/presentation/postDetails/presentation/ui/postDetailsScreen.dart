@@ -1,9 +1,6 @@
-import 'package:cherry_toast/cherry_toast.dart';
-import 'package:cherry_toast/resources/arrays.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:social_media/core/Responsive/Models/device_info.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
 import 'package:social_media/core/di/di.dart';
@@ -166,7 +163,6 @@ class _post_details_screenState extends State<post_details_screen> {
         final postDetailsCubit = context.read<PostDetailsCubit>();
         final userMainDetails = context.read<userMainDetailsCubit>();
         return Scaffold(
-          backgroundColor: ColorsManager.whiteColor,
           body: RefreshIndicator(
             onRefresh: context.read<PostDetailsCubit>().refreshPostDetails,
             child: Column(

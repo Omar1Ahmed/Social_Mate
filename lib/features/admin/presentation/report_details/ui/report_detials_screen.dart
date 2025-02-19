@@ -39,7 +39,6 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
       builder: (context, info) {
         return SafeArea(
           child: Scaffold(
-            backgroundColor: ColorsManager.whiteColor,
             body: CustomScrollView(
               slivers: [
                 _buildHeader(info),
@@ -66,6 +65,10 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
       child: Padding(
         padding: EdgeInsets.all(info.screenWidth * 0.05),
         child: HeaderWidget(
+          isAdmin: false,
+          isUser: false,
+          extraButtons: [],
+          isBackButtonVisible: true,
           info: info,
           onBackPressed: () => context.pop(),
           titleImageAsset: 'assets/images/Title_img.png',

@@ -21,3 +21,5 @@ class AuthLogInErrorState extends AuthState {
 
 class changeGenderState extends AuthState {}
 
+class rememberMeState extends AuthState {}
+

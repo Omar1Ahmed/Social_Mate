@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/routing/routs.dart';
+import 'package:social_media/features/admin/presentation/Filter/logic/report_filter_cubit.dart';
+import 'package:social_media/features/admin/presentation/Filter/ui/reportsFilter_screen.dart';
 import 'package:social_media/features/admin/presentation/all_reports/logic/cubit/all_reports_cubit.dart';
 import 'package:social_media/features/admin/presentation/all_reports/ui/pages/reports_home_screen.dart';
 import 'package:social_media/features/admin/presentation/report_details/logic/report_details_cubit.dart';
@@ -64,6 +66,13 @@ class AppRouts {
             builder: (context) => BlocProvider(
                   create: (context) => getIt<ReportDetailsCubit>(),
                   child: ReportDetailsScreen(),
+                ));
+
+        case Routes.reportsFilterScreen:
+          return MaterialPageRoute(
+            builder: (context) => BlocProvider(
+                  create: (context) => getIt<ReportFilterCubit>(),
+                  child: reportsFilterScreen(),
                 ));
       case Routes.reportsHomeScreen:
         return MaterialPageRoute(

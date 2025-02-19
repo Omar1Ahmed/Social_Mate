@@ -1,10 +1,8 @@
 import 'package:bloc/bloc.dart';
-import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
 import 'package:social_media/core/shared/entities/post_entity.dart';
 import 'package:social_media/core/error/errorResponseModel.dart';
-import 'package:social_media/core/helper/Connectivity/connectivity_helper.dart';
 import 'package:social_media/features/posts/data/model/entities/commentEntity.dart';
 
 import 'package:social_media/features/posts/domain/repository/postDetails/postDetails_repository.dart';
@@ -153,50 +151,7 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
       isLoading = false;
     }
   }
-  //
-  // Future<void> giveReaction({
-  //   required int commentId,
-  //   required ReactionType reactionType,
-  //   required int index
-  // }) async {
-  //
-  //   if(selectedReactionType != reactionType) {
-  //
-  //    try {
-  //     emit(GiveReactionLoading());
-  //     final response = await postDetailsRepository.GiveReaction(
-  //         _PostId, commentId, reactionType);
-  //     print('give reaction: $response');
-  //     if (response['statusCode'] == 204) {
-  //       selectedReactionType = reactionType;
-  //       if (reactionType == ReactionType.LIKE) {
-  //         comments![index].numOfLikes++;
-  //       } else {
-  //         comments![index].numOfDisLikes++;
-  //       }
-  //       emit(GiveReactionSuccess());
-  //     } else {
-  //       selectedReactionType = null;
-  //       emit(GiveReactionFail('Failed to React to The post'));
-  //     }
-  //   } catch (e, trace) {
-  //     if (e is ErrorResponseModel) {
-  //       if (e.message.toString().contains(' already reacted')) {
-  //         selectedReactionType = reactionType;
-  //         emit(GiveReactionFail('Already Reacted to this comment'));
-  //       } else {
-  //         emit(GiveReactionFail(e.message.toString()));
-  //       }
-  //     } else {
-  //       emit(GiveReactionFail(e.toString()));
-  //     }
-  //   }
-  // }else{
-  //     emit(GiveReactionFail('You Already Reacted to this comment'));
-  //   }
-  // }
-  //
-  //
+
   Future<void> deleteComment(int commentId) async {
     commentfocusNode.unfocus();
     try {
@@ -212,7 +167,7 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
 
         emit(deleteCommentFail('Failed to Delete to The post'));
       }
-    } catch (e, trace) {
+    } catch (e) {
       if (e is ErrorResponseModel) {
         emit(deleteCommentFail(e.message.toString()));
       } else {

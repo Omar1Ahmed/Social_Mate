@@ -8,13 +8,14 @@ import 'package:social_media/core/shared/widgets/cherryToast/CherryToastMsgs.dar
 import 'package:social_media/core/shared/widgets/show_create_post_dialog_widget.dart';
 import 'package:social_media/core/theming/colors.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
-import 'package:social_media/features/posts/presentation/homePage/ui/widgets/log_out_dialog.dart';
 import '../../../../../core/Responsive/Models/device_info.dart';
 import '../../../../../core/Responsive/ui_component/info_widget.dart';
 import '../../../../../core/routing/routs.dart';
 import '../../../../../core/shared/widgets/Shimmer/ShimmerStyle.dart';
 import '../../../../../core/shared/widgets/animation/tween_animation_widget.dart';
-import '../../../../../core/theming/styles.dart';
+import '../../../../../core/shared/widgets/custom_drawer_widget.dart';
+import '../../../../../core/shared/widgets/header_widget.dart';
+import '../../../../../core/shared/widgets/log_out_dialog.dart';
 import '../logic/cubit/home_cubit_cubit.dart';
 import 'widgets/create_post_widget.dart';
 import '../../../../../core/shared/widgets/post_card_widget.dart';
@@ -59,14 +60,14 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.white, 
-      statusBarIconBrightness: Brightness.dark, 
+      statusBarColor: Colors.white,
+      statusBarIconBrightness: Brightness.dark,
     ));
     return InfoWidget(
       builder: (context, deviceInfo) {
         return SafeArea(
           child: Scaffold(
-            backgroundColor: Colors.white,
+            endDrawer: CustomDrawerWidget(inMemberView: true),
             body: BlocListener<HomeCubit, HomeState>(
               listener: (context, state) {
                 if (state is PostDeleted || state is PostCreated) {
@@ -177,49 +178,38 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
   }
 
   Widget _buildHeader(DeviceInfo deviceInfo, BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: deviceInfo.localWidth * 0.02,
-        vertical: deviceInfo.localHeight * 0.01,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Image.asset(
-            'assets/images/Title_img.png',
-            width: deviceInfo.screenWidth * 0.48,
-            height: deviceInfo.screenHeight * 0.06,
-            fit: BoxFit.contain,
-          ),
-          SizedBox(
-            width: deviceInfo.screenWidth * 0.02,
-          ),
-          IconButton(
+    return HeaderWidget(
+      info: deviceInfo,
+      onBackPressed: () {},
+      titleImageAsset: 'assets/images/Title_img.png',
+      extraButtons: [
+        Padding(
+          padding: EdgeInsets.only(left: deviceInfo.screenWidth * 0.15),
+          child: IconButton(
             icon: Icon(
               Icons.search,
-              size: deviceInfo.screenWidth * 0.08,
               color: ColorsManager.primaryColor,
+              size: deviceInfo.screenWidth * 0.07,
             ),
-            onPressed: () => context.pushNamed(Routes.filteringScreen),
-            style: ElevatedButton.styleFrom(
-              shape: const CircleBorder(),
-              padding: EdgeInsets.all(deviceInfo.screenWidth * 0.02),
-              backgroundColor: ColorsManager.lightGreyColor,
-              shadowColor: Colors.transparent,
-            ).copyWith(elevation: ButtonStyleButton.allOrNull(0)),
-          ),
-          IconButton(
             onPressed: () {
-              logOutDialog(context, deviceInfo);
+              context.pushNamed(Routes.filteringScreen);
             },
-            iconSize: deviceInfo.screenWidth * 0.07,
-            icon: Icon(
-              Icons.logout_outlined,
-              color: ColorsManager.primaryColor,
-            ),
-          )
-        ],
-      ),
+          ),
+        ),
+        IconButton(
+          icon: Icon(
+            Icons.logout,
+            color: ColorsManager.primaryColor,
+            size: deviceInfo.screenWidth * 0.07,
+          ),
+          onPressed: () {
+            logOutDialog(context, deviceInfo);
+          },
+        ),
+      ],
+      isBackButtonVisible: false,
+      isAdmin: getIt.get<userMainDetailsCubit>().state.rolesIds!.contains(1),
+      isUser: getIt.get<userMainDetailsCubit>().state.rolesIds!.contains(2),
     );
   }
 
@@ -255,13 +245,24 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
       );
     }
 
-    // Replace the direct call to CherryToastMsgs.CherryToastError
     return SliverFillRemaining(
-      child: state is PostError
-          ? Center(
-              child: Text("Check your internet connection", style: TextStyles.inter18Regularblack.copyWith(color: ColorsManager.redColor)),
-            )
-          : Center(child: CircularProgressIndicator()),
+      child: Builder(
+        builder: (context) {
+          if (state is PostError) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              CherryToastMsgs.CherryToastError(
+                info: deviceInfo,
+                context: context,
+                title: "Error",
+                description: state.message,
+              );
+            });
+          }
+          return state is PostError
+              ? SizedBox() // Returning an empty widget instead of the toast
+              : Center(child: CircularProgressIndicator());
+        },
+      ),
     );
   }
 
@@ -298,13 +299,4 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
     }
     return const SliverToBoxAdapter(child: SizedBox.shrink());
   }
-
-  // void _showCreatePostDialog(DeviceInfo deviceInfo) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) => ShowCreatePostDialogWidget(
-  //       deviceInfo: deviceInfo,
-  //     ),
-  //   );
-  // }
 }

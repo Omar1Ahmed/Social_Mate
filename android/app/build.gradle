@@ -39,6 +39,10 @@ android {
     }
 }
 
+dependencies {
+
+    implementation 'com.amazon.device:amazon-appstore-sdk:+'
+}
 flutter {
     source = "../.."
 }

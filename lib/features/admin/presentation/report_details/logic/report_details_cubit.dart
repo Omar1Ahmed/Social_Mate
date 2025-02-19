@@ -7,6 +7,7 @@ part 'report_details_state.dart';
 class ReportDetailsCubit extends Cubit<ReportDetailsState> {
   final ReportDetailsRepository _repository;
   static int _reportId = 0;
+  // ignore: unused_field
   static int _postId = 0;
 
   // Fields to store comments count and average rating

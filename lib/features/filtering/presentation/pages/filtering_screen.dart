@@ -63,13 +63,10 @@ class _FilteringScreenState extends State<FilteringScreen> {
 
   void _onScroll() {
     final token = context.read<userMainDetailsCubit>().state.token;
-    if (scrollController.position.pixels ==
-        scrollController.position.maxScrollExtent) {
+    if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
       final queryParams = context.read<SharingDataCubit>().state.queryParams;
-      //print('new queryParams: $queryParams');
-      context
-          .read<FilteringCubit>()
-          .loadMoreFilteredPosts(queryParameters: queryParams, token: token!);
+      print('new queryParams: $queryParams');
+      context.read<FilteringCubit>().loadMoreFilteredPosts(queryParameters: queryParams, token: token!);
     }
     //print('queryParameters after pagination : $queryParameters');
   }
@@ -77,34 +74,9 @@ class _FilteringScreenState extends State<FilteringScreen> {
   @override
   Widget build(BuildContext context) {
     return InfoWidget(builder: (context, deviceInfo) {
-      return Scaffold(
-        // appBar: AppBar(
-        //   leading: IconButton(
-        //     onPressed: () => context.pop(),
-        //     icon: Icon(
-        //       Icons.arrow_back,
-        //       color: ColorsManager.primaryColor,
-        //       size: deviceInfo.screenWidth * 0.08,
-        //     ),
-        //   ),
-        //   actions: [
-        //     IconButton(
-        //       onPressed: () => context.pushNamed(Routes.reportsHomeScreen),
-        //       icon: Icon(
-        //         Icons.report_gmailerrorred_outlined,
-        //         color: ColorsManager.primaryColor,
-        //         size: deviceInfo.screenWidth * 0.08,
-        //       ),
-        //     ),
-        //   ],
-        //   title: Text(
-        //     'Filtering',
-        //     style: TextStyles.inter18BoldBlack,
-        //   ),
-        //   centerTitle: true,
-        // ),
-        body: SafeArea(
-          child: SingleChildScrollView(
+      return SafeArea(
+        child: Scaffold(
+          body: SingleChildScrollView(
             controller: scrollController,
             scrollDirection: Axis.vertical,
             clipBehavior: Clip.antiAlias,
@@ -118,29 +90,28 @@ class _FilteringScreenState extends State<FilteringScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   HeaderWidget(
+                    isAdmin: false,
+                    isUser: false,
+                    isBackButtonVisible: true,
                     info: deviceInfo,
                     onBackPressed: context.pop,
                     titleImageAsset: 'assets/images/Title_img.png',
                     extraButtons: [
                       Padding(
-                        padding: EdgeInsets.only(
-                            left: deviceInfo.screenWidth * 0.19),
+                        padding: EdgeInsets.only(left: deviceInfo.screenWidth * 0.19),
                         child: IconButton(
                           icon: Icon(
                             Icons.report,
                             color: ColorsManager.primaryColor,
                             size: deviceInfo.screenWidth * 0.08,
                           ),
-                          onPressed: () =>
-                              context.pushNamed(Routes.reportsHomeScreen),
+                          onPressed: () => context.pushNamed(Routes.reportsHomeScreen),
                         ),
                       ),
                     ],
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: deviceInfo.screenWidth * 0.04,
-                        vertical: deviceInfo.screenHeight * 0.01),
+                    padding: EdgeInsets.symmetric(horizontal: deviceInfo.screenWidth * 0.04, vertical: deviceInfo.screenHeight * 0.01),
                     child: FilteringTile(
                       homeCubit: context.read<HomeCubit>(),
                       filteringCubit: context.read<FilteringCubit>(),
@@ -169,8 +140,7 @@ class _FilteringScreenState extends State<FilteringScreen> {
                         if (posts.isEmpty) {
                           print('retrived data is empty ya 3m'); // Debug
                         }
-                        print(
-                            'this is the filtered ${posts.length.toString()}');
+                        print('this is the filtered ${posts.length.toString()}');
                         return Column(
                           children: [
                             ListView.builder(
@@ -180,28 +150,19 @@ class _FilteringScreenState extends State<FilteringScreen> {
                               itemBuilder: (context, index) {
                                 print('Filtering State: $state');
                                 if (index == posts.length && state.hasMore) {
-                                  return Center(
-                                      child: CircularProgressIndicator());
+                                  return Center(child: CircularProgressIndicator());
                                 }
-                                final isNotMatch = posts[index].createdBy.id ==
-                                        getIt<userMainDetailsCubit>()
-                                            .state
-                                            .userId
-                                    ? false
-                                    : true;
+                                final isNotMatch = posts[index].createdBy.id == getIt<userMainDetailsCubit>().state.userId ? false : true;
                                 return TweenAnimationWidget(
                                   deviceInfo: deviceInfo,
                                   index: index,
                                   child: PostCardWidget(
                                       onPressedDelete: () {
-                                        getIt
-                                            .get<HomeCubit>()
-                                            .deletePost(posts[index].id);
+                                        getIt.get<HomeCubit>().deletePost(posts[index].id);
 
                                         setState(() {
                                           print("${posts.length}");
-                                          posts.removeWhere((post) =>
-                                              post.id == posts[index].id);
+                                          posts.removeWhere((post) => post.id == posts[index].id);
 
                                           print("${posts.length}");
                                         });
@@ -238,8 +199,7 @@ class _FilteringScreenState extends State<FilteringScreen> {
                           child: Column(
                             children: [
                               Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: deviceInfo.screenHeight * 0.02),
+                                padding: EdgeInsets.symmetric(vertical: deviceInfo.screenHeight * 0.02),
                                 child: Image.asset(
                                   'assets/images/no-internet.png',
                                   height: 100,

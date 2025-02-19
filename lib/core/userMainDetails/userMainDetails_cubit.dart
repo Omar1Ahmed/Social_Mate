@@ -17,6 +17,10 @@ class userMainDetailsCubit extends Cubit<userMainDetailsState> {
   Future<void> decodeAndAssignToken(String token) async {
     try {
       final JwtModel jwt = _repository.decodeToken(token);
+
+      bool isAdmin = jwt.rolesIds!.contains(1);
+      bool isMember = jwt.rolesIds!.contains(2);
+
       emit(state.copyWith(
         token: token,
         userId: jwt.userId,
@@ -24,6 +28,8 @@ class userMainDetailsCubit extends Cubit<userMainDetailsState> {
         exp: jwt.exp,
         rolesIds: jwt.rolesIds,
         sub: jwt.sub,
+        isAdmin: isAdmin,
+        isMember: isMember,
       ));
     } catch (e) {
       print("Error decoding token: $e");
