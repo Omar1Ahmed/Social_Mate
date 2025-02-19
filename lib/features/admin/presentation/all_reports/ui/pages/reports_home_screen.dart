@@ -63,7 +63,6 @@ class _ReportsHomeScreenState extends State<ReportsHomeScreen> {
     return InfoWidget(builder: (context, deviceInfo) {
       return SafeArea(
         child: Scaffold(
-          backgroundColor: Colors.white,
           endDrawer: CustomDrawerWidget(inMemberView: false),
           body: RefreshIndicator(
             onRefresh: () async {

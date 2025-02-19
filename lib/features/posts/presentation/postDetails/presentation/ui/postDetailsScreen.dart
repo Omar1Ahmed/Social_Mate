@@ -163,7 +163,6 @@ class _post_details_screenState extends State<post_details_screen> {
         final postDetailsCubit = context.read<PostDetailsCubit>();
         final userMainDetails = context.read<userMainDetailsCubit>();
         return Scaffold(
-          backgroundColor: ColorsManager.whiteColor,
           body: RefreshIndicator(
             onRefresh: context.read<PostDetailsCubit>().refreshPostDetails,
             child: Column(

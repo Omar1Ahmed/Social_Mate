@@ -39,7 +39,6 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
       builder: (context, info) {
         return SafeArea(
           child: Scaffold(
-            backgroundColor: ColorsManager.whiteColor,
             body: CustomScrollView(
               slivers: [
                 _buildHeader(info),

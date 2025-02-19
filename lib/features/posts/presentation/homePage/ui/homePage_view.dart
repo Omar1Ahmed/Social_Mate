@@ -67,7 +67,6 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
       builder: (context, deviceInfo) {
         return SafeArea(
           child: Scaffold(
-            backgroundColor: Colors.white,
             endDrawer: CustomDrawerWidget(inMemberView: true),
             body: BlocListener<HomeCubit, HomeState>(
               listener: (context, state) {

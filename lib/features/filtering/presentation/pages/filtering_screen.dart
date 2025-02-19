@@ -76,7 +76,6 @@ class _FilteringScreenState extends State<FilteringScreen> {
     return InfoWidget(builder: (context, deviceInfo) {
       return SafeArea(
         child: Scaffold(
-          backgroundColor: Colors.white,
           body: SingleChildScrollView(
             controller: scrollController,
             scrollDirection: Axis.vertical,

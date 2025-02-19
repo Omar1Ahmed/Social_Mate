@@ -57,18 +57,13 @@ class _AuthScreenState extends State<AuthScreen> {
       }, builder: (context, state) {
         print('state: $state');
         return Scaffold(
-          backgroundColor: Colors.white,
           body: SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsetsDirectional.only(
-                  start: info.screenWidth * 0.1,
-                  end: info.screenWidth * 0.1,
-                  top: info.screenHeight * 0.15),
+              padding: EdgeInsetsDirectional.only(start: info.screenWidth * 0.1, end: info.screenWidth * 0.1, top: info.screenHeight * 0.15),
               child: Column(
                 children: [
                   Center(
-                    child: Image.asset("assets/images/fullLogo.png",
-                        height: info.screenHeight * 0.1),
+                    child: Image.asset("assets/images/fullLogo.png", height: info.screenHeight * 0.1),
                   ),
                   AuthHeader(
                     isSignIn: context.read<AuthCubit>().IsSignIn,
@@ -76,12 +71,9 @@ class _AuthScreenState extends State<AuthScreen> {
                   ),
                   Container(
                     height: info.screenHeight * 0.47,
-                    margin: EdgeInsetsDirectional.only(
-                        top: info.screenHeight * 0.016),
+                    margin: EdgeInsetsDirectional.only(top: info.screenHeight * 0.016),
                     child: Column(children: [
-                      context.read<AuthCubit>().IsSignIn
-                          ? SignInForm()
-                          : SignUpForm(),
+                      context.read<AuthCubit>().IsSignIn ? SignInForm() : SignUpForm(),
                     ]),
                   ),
                   // Row(
@@ -115,13 +107,10 @@ class _AuthScreenState extends State<AuthScreen> {
                   ),
                   if (state is AuthLogInErrorState)
                     Container(
-                        margin: EdgeInsetsDirectional.only(
-                            top: info.screenHeight * 0.02),
+                        margin: EdgeInsetsDirectional.only(top: info.screenHeight * 0.02),
                         child: Text(
                           state.message,
-                          style: TextStyle(
-                              color: Colors.red,
-                              fontSize: info.screenWidth * 0.04),
+                          style: TextStyle(color: Colors.red, fontSize: info.screenWidth * 0.04),
                         )),
                 ],
               ),
@@ -143,8 +132,7 @@ class AuthHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.white, // Transparent to show SafeArea effect
-      statusBarIconBrightness:
-          Brightness.dark, // Use Brightness.light for white icons
+      statusBarIconBrightness: Brightness.dark, // Use Brightness.light for white icons
     ));
 
     return InfoWidget(builder: (context, info) {
@@ -155,10 +143,7 @@ class AuthHeader extends StatelessWidget {
             onTap: onToggle,
             child: Text(
               "Sign in",
-              style: TextStyle(
-                  fontSize: info.screenWidth * 0.04,
-                  fontWeight: FontWeight.bold,
-                  color: isSignIn ? Colors.black : Colors.grey),
+              style: TextStyle(fontSize: info.screenWidth * 0.04, fontWeight: FontWeight.bold, color: isSignIn ? Colors.black : Colors.grey),
             ),
           ),
           SizedBox(width: info.screenWidth * 0.05),
@@ -166,10 +151,7 @@ class AuthHeader extends StatelessWidget {
             onTap: onToggle,
             child: Text(
               "Sign up",
-              style: TextStyle(
-                  fontSize: info.screenWidth * 0.04,
-                  fontWeight: FontWeight.bold,
-                  color: isSignIn ? Colors.grey : Colors.black),
+              style: TextStyle(fontSize: info.screenWidth * 0.04, fontWeight: FontWeight.bold, color: isSignIn ? Colors.grey : Colors.black),
             ),
           ),
         ],
