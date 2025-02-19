@@ -13,6 +13,7 @@ class HeaderWidget extends StatelessWidget {
   final bool isBackButtonVisible;
   final bool isAdmin;
   final bool isUser;
+  final String searchIconRoute;
 
   const HeaderWidget({
     super.key,
@@ -23,6 +24,7 @@ class HeaderWidget extends StatelessWidget {
     required this.isBackButtonVisible,
     required this.isAdmin,
     required this.isUser,
+    this.searchIconRoute = Routes.filteringScreen,
   });
 
   @override
@@ -65,10 +67,7 @@ class HeaderWidget extends StatelessWidget {
             Row(
               children: [
                 IconButton(
-                  onPressed: () {
-                    // Navigator.of(context).pushNamed(Routes.searchScreen);
-                    context.pushNamed(Routes.filteringScreen);
-                  },
+                  onPressed: () => context.pushNamed(searchIconRoute),
                   icon: Icon(Icons.search),
                   iconSize: info.screenWidth * 0.08,
                   color: ColorsManager.primaryColor,

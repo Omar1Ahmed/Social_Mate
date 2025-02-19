@@ -30,8 +30,8 @@ void logOutDialog(BuildContext context, DeviceInfo deviceInfo) {
         ),
         TextButton(
           onPressed: () {
-            getIt<userMainDetailsCubit>().logOut();
             context.pushNamedAndRemoveUntil(Routes.AuthScreen, predicate: (route) => false);
+            getIt<userMainDetailsCubit>().logOut();
           },
           child: Text(
             'Logout',

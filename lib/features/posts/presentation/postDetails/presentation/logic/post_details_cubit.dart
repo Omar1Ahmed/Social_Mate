@@ -151,50 +151,7 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
       isLoading = false;
     }
   }
-  //
-  // Future<void> giveReaction({
-  //   required int commentId,
-  //   required ReactionType reactionType,
-  //   required int index
-  // }) async {
-  //
-  //   if(selectedReactionType != reactionType) {
-  //
-  //    try {
-  //     emit(GiveReactionLoading());
-  //     final response = await postDetailsRepository.GiveReaction(
-  //         _PostId, commentId, reactionType);
-  //     print('give reaction: $response');
-  //     if (response['statusCode'] == 204) {
-  //       selectedReactionType = reactionType;
-  //       if (reactionType == ReactionType.LIKE) {
-  //         comments![index].numOfLikes++;
-  //       } else {
-  //         comments![index].numOfDisLikes++;
-  //       }
-  //       emit(GiveReactionSuccess());
-  //     } else {
-  //       selectedReactionType = null;
-  //       emit(GiveReactionFail('Failed to React to The post'));
-  //     }
-  //   } catch (e, trace) {
-  //     if (e is ErrorResponseModel) {
-  //       if (e.message.toString().contains(' already reacted')) {
-  //         selectedReactionType = reactionType;
-  //         emit(GiveReactionFail('Already Reacted to this comment'));
-  //       } else {
-  //         emit(GiveReactionFail(e.message.toString()));
-  //       }
-  //     } else {
-  //       emit(GiveReactionFail(e.toString()));
-  //     }
-  //   }
-  // }else{
-  //     emit(GiveReactionFail('You Already Reacted to this comment'));
-  //   }
-  // }
-  //
-  //
+
   Future<void> deleteComment(int commentId) async {
     commentfocusNode.unfocus();
     try {

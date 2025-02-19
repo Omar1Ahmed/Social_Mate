@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
 import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/helper/extantions.dart';
+import 'package:social_media/core/routing/routs.dart';
 import 'package:social_media/core/shared/widgets/animation/tween_animation_widget.dart';
 import 'package:social_media/core/shared/widgets/header_widget.dart';
 import 'package:social_media/core/theming/colors.dart';
@@ -90,24 +91,13 @@ class _ReportsHomeScreenState extends State<ReportsHomeScreen> {
                       0,
                     ),
                     child: HeaderWidget(
-                      isAdmin: getIt<userMainDetailsCubit>().state.rolesIds!.contains(1),
-                      isUser: getIt<userMainDetailsCubit>().state.rolesIds!.contains(2),
+                      isAdmin: getIt<userMainDetailsCubit>().state.isAdmin!,
+                      isUser: getIt<userMainDetailsCubit>().state.isMember!,
                       isBackButtonVisible: false,
                       info: deviceInfo,
                       onBackPressed: context.pop,
                       titleImageAsset: 'assets/images/Title_img.png',
-                      extraButtons: [
-                        Padding(
-                          padding: EdgeInsets.only(left: deviceInfo.screenWidth * 0.17),
-                          child: IconButton(
-                              icon: Icon(
-                                Icons.search,
-                                color: ColorsManager.primaryColor,
-                                size: deviceInfo.screenWidth * 0.08,
-                              ),
-                              onPressed: () {}),
-                        ),
-                      ],
+                      searchIconRoute: Routes.reportsFilterScreen,
                     ),
                   ),
                   Padding(

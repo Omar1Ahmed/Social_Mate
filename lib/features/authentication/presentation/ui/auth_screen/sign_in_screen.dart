@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
+import 'package:social_media/core/helper/FormValidator/Validator.dart';
 import 'package:social_media/features/authentication/presentation/logic/auth_cubit.dart';
 
 import '../widgets/customTextField.dart';
@@ -13,20 +14,27 @@ class SignInForm extends StatefulWidget {
 }
 
 class _SignInFormState extends State<SignInForm> {
+
   @override
   Widget build(BuildContext context) {
     return InfoWidget(builder: (context, info) {
       return  Container(
         margin: EdgeInsetsDirectional.only(top: info.screenHeight * 0.056),
         child: Column(
-          spacing: info.screenHeight * 0.031,
+
           children: [
 
             CustomTextField(
               label: "E-mail",
               hintText: "Email",
               controller: context.read<AuthCubit>().emailController,
+              formValidator:  ValidatorHelper.combineValidators([
+                ValidatorHelper.isNotEmpty,
+                ValidatorHelper.isValidEmail,
+              ]),
             ),
+
+            SizedBox(height: info.screenHeight * 0.015,),
 
             CustomTextField(
               label: "Password",
@@ -35,18 +43,25 @@ class _SignInFormState extends State<SignInForm> {
               controller: context.read<AuthCubit>().passController,
             ),
 
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(vertical: 8.0),
-            //   child: CustomButton(
-            //       text: "Login",
-            //       onPressed: () {
-            //
-            //
-            //       }),
-            // ),
+            SizedBox(height: info.screenHeight * 0.01,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Checkbox(
+                  value: context.read<AuthCubit>().isRememberMe,
+                  onChanged: (value) {
+                      context.read<AuthCubit>().isRememberMe = value!;
+
+                  },
+                ),
+                Text('Remember Me'),
+              ],
+            ),
+
           ],
         ),
       );
     });
   }
 }
+

@@ -21,6 +21,7 @@ class AuthCubit extends Cubit<AuthState> {
   TextEditingController passController = TextEditingController();
   TextEditingController retypePassController = TextEditingController();
 
+
   final Map<String, Icon> genderIcons = {
     'Male': Icon(Icons.male, color: Colors.blue),
     'Female': Icon(Icons.female, color: Colors.pinkAccent),
@@ -35,6 +36,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   set isRememberMe(bool value) {
     _isRememberMe = value;
+    emit(rememberMeState());
   }
 
   String get selectedGender => _selectedGender;
@@ -96,9 +98,7 @@ class AuthCubit extends Cubit<AuthState> {
 
       if (token.isNotEmpty) {
         print(token); // log the token
-        context
-            .read<userMainDetailsCubit>()
-            .decodeAndAssignToken(token); // Decode And Assign Token
+        context.read<userMainDetailsCubit>().decodeAndAssignToken(token); // Decode And Assign Token
 
         if (isRememberMe) {
           final SharedPrefHelper _sharedPrefHelper = getIt<SharedPrefHelper>();

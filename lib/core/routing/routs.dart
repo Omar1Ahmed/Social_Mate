@@ -10,4 +10,5 @@ class Routes {
   static const String profileScreen = '/profileScreen';
   static const String adminReportScreen = '/adminReportScreen';
   static const String reportsHomeScreen = '/reportsHomeScreen';
+  static const String reportsFilterScreen = '/reportsFilterScreen';
 }

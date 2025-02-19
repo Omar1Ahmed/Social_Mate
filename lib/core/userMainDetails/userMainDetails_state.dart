@@ -7,6 +7,8 @@ class userMainDetailsState extends Equatable {
   final int? exp; // Expiration Time
   final List<int>? rolesIds;
   final String? sub; // Subject
+  final bool? isMember;
+  final bool? isAdmin;
 
   userMainDetailsState({
     this.token,
@@ -15,6 +17,8 @@ class userMainDetailsState extends Equatable {
     this.exp,
     this.rolesIds,
     this.sub,
+    this.isMember,
+    this.isAdmin ,
   });
 
   userMainDetailsState copyWith({
@@ -24,6 +28,8 @@ class userMainDetailsState extends Equatable {
     int? exp,
     List<int>? rolesIds,
     String? sub,
+    bool? isMember,
+    bool? isAdmin
   }) {
     return userMainDetailsState(
       token: token ?? this.token,
@@ -32,6 +38,8 @@ class userMainDetailsState extends Equatable {
       exp: exp ?? this.exp,
       rolesIds: rolesIds ?? this.rolesIds,
       sub: sub ?? this.sub,
+      isMember: isMember ?? this.isMember,
+      isAdmin: isAdmin ?? this.isAdmin
     );
   }
 
@@ -42,7 +50,9 @@ class userMainDetailsState extends Equatable {
         iat,
         exp,
         rolesIds,
-        sub
+        sub,
+        isMember,
+        isAdmin
       ];
 }
 

@@ -21,10 +21,7 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  bool rememberMe = false;
-  void initState() {
-    super.initState();
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -76,27 +73,14 @@ class _AuthScreenState extends State<AuthScreen> {
                       context.read<AuthCubit>().IsSignIn ? SignInForm() : SignUpForm(),
                     ]),
                   ),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.center,
-                  //   children: [
-                  //     Checkbox(
-                  //       value: rememberMe,
-                  //       onChanged: (value) {
-                  //         setState(() {
-                  //           rememberMe = value!;
-                  //         });
-                  //       },
-                  //     ),
-                  //     Text('Remember Me'),
-                  //   ],
-                  // ),
+
                   SizedBox(
                     width: info.screenWidth * 0.6,
                     child: CustomButton(
                         text: "Join Now",
                         onPressed: () async {
                           if (context.read<AuthCubit>().IsSignIn) {
-                            context.read<AuthCubit>().isRememberMe = true;
+
                             context.read<AuthCubit>().logIn(
                                   context,
                                 );

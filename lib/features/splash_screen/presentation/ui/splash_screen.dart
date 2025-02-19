@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
 import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
+import 'package:social_media/features/admin/presentation/all_reports/logic/cubit/all_reports_cubit.dart';
+import 'package:social_media/features/admin/presentation/all_reports/ui/pages/reports_home_screen.dart';
+import 'package:social_media/features/admin/presentation/report_details/logic/report_details_cubit.dart';
 import 'package:social_media/features/posts/presentation/homePage/logic/cubit/home_cubit_cubit.dart';
 import 'package:social_media/features/posts/presentation/homePage/ui/homePage_view.dart';
 import '../../../on_boarding/presentation/ui/onboarding_screen.dart';
@@ -22,10 +25,31 @@ class SplashScreen extends StatelessWidget {
 
             if (context.read<userMainDetailsCubit>().state.token != null) {
               Future.delayed(Duration(seconds: 3));
-              return BlocProvider(
-                create: (context) => getIt<HomeCubit>(),
-                child: HomepageView(),
-              );
+              if(context.read<userMainDetailsCubit>().state.isAdmin == true){
+
+                return MultiBlocProvider(
+                  providers: [
+                    BlocProvider(
+                      create: (context) => getIt<ReportDetailsCubit>(),
+                    ),
+                    BlocProvider(
+                      create: (context) => getIt<AllReportsCubit>(),
+                    ),
+                  ],
+                  child: ReportsHomeScreen(),
+                );
+              }else if(context.read<userMainDetailsCubit>().state.isMember == true){
+                return BlocProvider(
+                  create: (context) => getIt<HomeCubit>(),
+                  child: HomepageView(),
+                );
+              }else{
+                return BlocProvider(
+                  create: (context) => getIt<HomeCubit>(),
+                  child: HomepageView(),
+                );
+
+              }
             } else {
               print('going to onboarding');
               return OnboardingScreen();
