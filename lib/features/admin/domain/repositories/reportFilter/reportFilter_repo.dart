@@ -5,5 +5,5 @@ abstract class reportFilterRepository {
   Future<
       (List<MainReportEntity>,
       int)
-      > getReports({ required int pageOffset, required int pageSize,Map <String,dynamic>? queryParams});
+      > getReports({Map <String,dynamic>? queryParams});
 }

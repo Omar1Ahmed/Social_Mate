@@ -16,31 +16,49 @@ class ReportFilterCubit extends Cubit<ReportFilterState> {
 
   List<MainReportEntity>? reports;
   int _currentPage = 0;
-  int _pageSize = 3;
-  bool hasMoreComments = true;
+  bool hasMoreReports = true;
   bool isLoading = false;
 
-  Future<void> getReports({int? pageOffset = null, int? pageSize = null }) async {
+  int? statusId;
+  int? categoryId;
+  String? createdOnFrom;
+  String? createdOnTo;
+  String orderBy = 'REPORT_CATEGORY';
+  String orderDir = 'DESC';
+  int pageOffset = 0;
+  int pageSize = 10;
+
+  Future<void> getReports({bool reset = false}) async {
     print('get reports');
 
-    if (!hasMoreComments || isLoading) return;
+    if (!hasMoreReports || isLoading) return;
 
+    if (reset) {
+      reports = [];
+      _currentPage = 0;
+      hasMoreReports = true;
+    }
     isLoading = true;
     int total =0;
+
+    final _queryParams = {
+      'statusId': statusId?.toString(),
+      'categoryId': categoryId?.toString(),
+      'createdOnFrom': createdOnFrom,
+      'createdOnTo': createdOnTo,
+      'pageOffset': _currentPage.toString(),
+      'pageSize': pageSize.toString(),
+    }..removeWhere((key, value) => value == null); // Remove null values
 
     try {
       emit(ReportFilterloading());
       final (newReports, total) = await ReportRepo.getReports(
-          pageSize: _pageSize,
-          pageOffset: _currentPage,
-      //     queryParams: {
-      //   'pageOffset': pageOffset ?? _currentPage,
-      //   'pageSize': pageSize ?? _pageSize
-      // },
+
+          queryParams: _queryParams,
 
       );
 
-      print('has more comments ${(_currentPage * _pageSize) < total}');
+      print('has more comments ${(_currentPage * pageSize) < total}');
       print('has more comments ${total}');
       print('has more comments ${_currentPage }');
 
@@ -48,15 +66,15 @@ class ReportFilterCubit extends Cubit<ReportFilterState> {
       // print('comments length ${comments!.length} $_currentPage $commentsCount ${newReports.length}');
 
       if(newReports.isEmpty) {
-        hasMoreComments = false;
+        hasMoreReports = false;
         reports ??= [];
       }else{
         reports ??= [];
         reports!.addAll(newReports);
 
         _currentPage++;
-        print('has more comments ${(_currentPage * _pageSize) < total}');
-        hasMoreComments = (_currentPage * _pageSize) < total;
+        print('has more comments ${(_currentPage * pageSize) < total}');
+        hasMoreReports = (_currentPage * pageSize) < total;
       }
 
       emit(ReportFilterloaded());
@@ -67,5 +85,15 @@ class ReportFilterCubit extends Cubit<ReportFilterState> {
     }finally{
       isLoading = false;
     }
+  }
+
+
+  void applyFilter(String fromDate, String toDate) {
+    createdOnFrom = fromDate.isNotEmpty ? fromDate : null;
+    createdOnTo = toDate.isNotEmpty ? toDate : null;
+    pageOffset = 0;
+    reports = [];
+    hasMoreReports = true;
+    getReports(reset: true);
   }
 }
