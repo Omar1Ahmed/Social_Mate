@@ -42,9 +42,50 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
             body: CustomScrollView(
               slivers: [
                 _buildHeader(info),
+                SliverToBoxAdapter(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: info.screenWidth * 0.05),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Report details",
+                          style: TextStyles.inter18BoldBlack.copyWith(fontSize: info.screenWidth * 0.046),
+                        ),
+                        Divider(
+                          thickness: 2,
+                          height: info.screenHeight * 0.02,
+                          color: ColorsManager.blackColor.withOpacity(0.6),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: SizedBox(height: info.screenHeight * 0.02),
+                ),
                 _buildReportDetailsSection(info),
                 SliverToBoxAdapter(
                   child: SizedBox(height: info.screenHeight * 0.02),
+                ),
+                SliverToBoxAdapter(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: info.screenWidth * 0.05),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Post details",
+                          style: TextStyles.inter18BoldBlack.copyWith(fontSize: info.screenWidth * 0.046),
+                        ),
+                        Divider(
+                          thickness: 2,
+                          height: info.screenHeight * 0.02,
+                          color: ColorsManager.blackColor.withOpacity(0.6),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
                 _buildPostDetailsSection(info),
                 SliverToBoxAdapter(
