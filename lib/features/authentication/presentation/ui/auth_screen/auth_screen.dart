@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
+import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 import 'package:social_media/features/authentication/presentation/logic/auth_cubit.dart';
 import 'package:social_media/features/authentication/presentation/logic/auth_state.dart';
 import 'package:social_media/features/authentication/presentation/ui/auth_screen/sign_up_screen.dart';
@@ -28,7 +29,12 @@ class _AuthScreenState extends State<AuthScreen> {
     return SafeArea(child: InfoWidget(builder: (context, info) {
       return BlocConsumer<AuthCubit, AuthState>(listener: (context, state) {
         if (state is AuthLogInTokenRetrivedState) {
-          Navigator.pushNamed(context, Routes.homePage);
+          if(context.read<userMainDetailsCubit>().state.isAdmin == true){
+            Navigator.pushNamed(context, Routes.reportsHomeScreen);
+          }else if(context.read<userMainDetailsCubit>().state.isMember == true){
+            Navigator.pushNamed(context, Routes.homePage);
+
+          }
         }
         if (state is AuthRegisterSuccessState) {
           CherryToast.success(
