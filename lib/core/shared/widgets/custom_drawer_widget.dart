@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
-import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/helper/extantions.dart';
 import 'package:social_media/core/routing/routs.dart';
 import 'package:social_media/core/shared/widgets/log_out_dialog.dart';
 import 'package:social_media/core/theming/colors.dart';
-import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 
 class CustomDrawerWidget extends StatelessWidget {
   const CustomDrawerWidget({super.key, required this.inMemberView});

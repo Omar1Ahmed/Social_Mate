@@ -14,54 +14,49 @@ class SignInForm extends StatefulWidget {
 }
 
 class _SignInFormState extends State<SignInForm> {
-
   @override
   Widget build(BuildContext context) {
     return InfoWidget(builder: (context, info) {
-      return  Container(
+      return Container(
         margin: EdgeInsetsDirectional.only(top: info.screenHeight * 0.056),
         child: Column(
-
           children: [
-
             CustomTextField(
               label: "E-mail",
               hintText: "Email",
               controller: context.read<AuthCubit>().emailController,
-              formValidator:  ValidatorHelper.combineValidators([
+              formValidator: ValidatorHelper.combineValidators([
                 ValidatorHelper.isNotEmpty,
                 ValidatorHelper.isValidEmail,
               ]),
             ),
-
-            SizedBox(height: info.screenHeight * 0.015,),
-
+            SizedBox(
+              height: info.screenHeight * 0.015,
+            ),
             CustomTextField(
               label: "Password",
               hintText: "Enter password",
               isPassword: true,
               controller: context.read<AuthCubit>().passController,
             ),
-
-            SizedBox(height: info.screenHeight * 0.01,),
+            SizedBox(
+              height: info.screenHeight * 0.01,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Checkbox(
                   value: context.read<AuthCubit>().isRememberMe,
                   onChanged: (value) {
-                      context.read<AuthCubit>().isRememberMe = value!;
-
+                    context.read<AuthCubit>().isRememberMe = value!;
                   },
                 ),
                 Text('Remember Me'),
               ],
             ),
-
           ],
         ),
       );
     });
   }
 }
-
