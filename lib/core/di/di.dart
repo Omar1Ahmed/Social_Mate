@@ -121,7 +121,7 @@ Future<void> initDependencies() async {
         userMainDetails: getIt<userMainDetailsCubit>()),
   );
 // report data source
-  getIt.registerFactory<ReportDetailsRemoteDataSource>(
+  getIt.registerFactory<ReportDetailsRemoteDataSourceImpl>(
     () => ReportDetailsRemoteDataSourceImpl(getIt<userMainDetailsCubit>(),
         postsDio:
             getIt<DioClient>(instanceName: diInstancesHelper.PostsDioClient),
