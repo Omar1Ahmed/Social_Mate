@@ -46,7 +46,7 @@ class CustomDrawerWidget extends StatelessWidget {
                     const SizedBox(height: 10),
                     // get user name from cubit
                     const Text(
-                      'User Name',
+                      'ZagSystems',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -66,7 +66,7 @@ class CustomDrawerWidget extends StatelessWidget {
                     )
                   : buildDrawerListItem(
                       leadingIcon: Icons.home,
-                      title: 'Home',
+                      title: 'Posts',
                       onTap: () {
                         // navigate to home screen
                         context.pushReplacementNamed(Routes.homePage);

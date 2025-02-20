@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/routing/routs.dart';
+import 'package:social_media/core/theming/colors.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 import 'core/routing/appRouting.dart';
 
@@ -53,6 +54,10 @@ class MyApp extends StatelessWidget {
       color: Colors.white,
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,
+        progressIndicatorTheme: ProgressIndicatorThemeData(
+          color: ColorsManager.primaryColor,
+          refreshBackgroundColor: Colors.white,
+        ),
       ),
       initialRoute: Routes.splashScreen,
       onGenerateRoute: appRouter.generateRoute,

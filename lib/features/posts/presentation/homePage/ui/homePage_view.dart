@@ -90,6 +90,7 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
                 builder: (context, state) {
                   return RefreshIndicator(
                     color: ColorsManager.primaryColor,
+                    backgroundColor: Colors.white,
                     onRefresh: () => context.read<HomeCubit>().onRefresh(),
                     child: GestureDetector(
                       onTap: () => FocusScope.of(context).unfocus(),
@@ -220,7 +221,7 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
       if (total == 0) {
         return const SliverToBoxAdapter(
           child: Center(
-        child: Text('No posts available'),
+            child: Text('No posts available'),
           ),
         );
       }
@@ -280,7 +281,7 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
         child: customShimmer(
           childWidget: Column(
             children: [
-              for (int i = 0; i < 3; i++) // Simulate 3 loading items
+              for (int i = 0; i < 2; i++)
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: deviceInfo.screenHeight * 0.01),
                   child: Column(

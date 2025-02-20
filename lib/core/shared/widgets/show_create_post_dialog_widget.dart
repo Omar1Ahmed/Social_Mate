@@ -3,6 +3,7 @@ import 'package:social_media/core/Responsive/Models/device_info.dart';
 import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/helper/extantions.dart';
 import 'package:social_media/core/shared/widgets/cherryToast/CherryToastMsgs.dart';
+import 'package:social_media/core/theming/styles.dart';
 import '../../routing/routs.dart';
 import '../../theming/colors.dart';
 import '../../../features/posts/presentation/homePage/logic/cubit/home_cubit_cubit.dart';
@@ -92,6 +93,7 @@ class ShowCreatePostDialogWidget extends StatelessWidget {
       maxLines: maxLines ?? 1,
       maxLength: maxLength,
       decoration: InputDecoration(
+        labelStyle: TextStyles.inter14RegularBlue,
         labelText: labelText,
         hintText: hintText,
         filled: true,

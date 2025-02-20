@@ -22,18 +22,15 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(child: InfoWidget(builder: (context, info) {
       return BlocConsumer<AuthCubit, AuthState>(listener: (context, state) {
         if (state is AuthLogInTokenRetrivedState) {
-          if(context.read<userMainDetailsCubit>().state.isAdmin == true){
-            Navigator.pushNamed(context, Routes.reportsHomeScreen);
-          }else if(context.read<userMainDetailsCubit>().state.isMember == true){
-            Navigator.pushNamed(context, Routes.homePage);
-
+          if (context.read<userMainDetailsCubit>().state.isAdmin == true) {
+            Navigator.pushReplacementNamed(context, Routes.reportsHomeScreen);
+          } else if (context.read<userMainDetailsCubit>().state.isMember == true) {
+            Navigator.pushReplacementNamed(context, Routes.homePage);
           }
         }
         if (state is AuthRegisterSuccessState) {
@@ -79,14 +76,12 @@ class _AuthScreenState extends State<AuthScreen> {
                       context.read<AuthCubit>().IsSignIn ? SignInForm() : SignUpForm(),
                     ]),
                   ),
-
                   SizedBox(
                     width: info.screenWidth * 0.6,
                     child: CustomButton(
                         text: "Join Now",
                         onPressed: () async {
                           if (context.read<AuthCubit>().IsSignIn) {
-
                             context.read<AuthCubit>().logIn(
                                   context,
                                 );
