@@ -23,7 +23,7 @@ class TagsWidget extends StatelessWidget {
       padding: EdgeInsets.only(top: deviceInfo.screenHeight * 0.03),
       child: Container(
         alignment: Alignment.center,
-        width: deviceInfo.screenWidth * 0.35,
+        width: deviceInfo.screenWidth * 0.38,
         height: deviceInfo.screenHeight * 0.04,
         decoration: BoxDecoration(
           color: tileColor,
@@ -40,7 +40,10 @@ class TagsWidget extends StatelessWidget {
           padding:
               EdgeInsets.symmetric(horizontal: deviceInfo.screenWidth * 0.02),
           child: Text(tagName,
-              style: TextStyles.inter16Bold.copyWith(color: textColor),
+              style: TextStyles.inter16Bold.copyWith(
+                color: textColor,
+                fontSize: deviceInfo.screenWidth * 0.038,
+              ),
               overflow: TextOverflow.ellipsis),
         ),
       ),
