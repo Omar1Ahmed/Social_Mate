@@ -29,9 +29,8 @@ class HomeCubit extends Cubit<HomeState> {
         posts,
         total
       ) = await postRepository.getPosts(_currentPage, _pageSize);
-
-      hasMorePosts = (_currentPage * _pageSize) < total;
-
+      hasMorePosts = _currentPage < total;
+      _currentPage += 4;
       emit(PostLoaded(posts, total));
     } catch (e, trace) {
       print(trace);
@@ -53,14 +52,14 @@ class HomeCubit extends Cubit<HomeState> {
       final (
         newPosts,
         total
-      ) = await postRepository.getPosts(_currentPage + 4, _pageSize);
+      ) = await postRepository.getPosts(_currentPage, _pageSize);
 
       if (newPosts.isEmpty) {
         hasMorePosts = false;
       } else {
-        _currentPage++;
+        _currentPage += 4;
         final updatedPosts = List<PostEntity>.from(currentState.posts)..addAll(newPosts);
-        hasMorePosts = (_currentPage * _pageSize) < total;
+        hasMorePosts = _currentPage < total;
         emit(PostLoaded(updatedPosts, total));
       }
     } catch (e, trace) {

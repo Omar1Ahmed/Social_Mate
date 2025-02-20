@@ -36,7 +36,7 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
     super.initState();
     _createPostAnimationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1000),
+      duration: const Duration(milliseconds: 500),
     )..forward();
     _scrollController = ScrollController()..addListener(_onScroll);
     // Fetch posts initially
@@ -216,12 +216,20 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
   Widget _buildPostList(DeviceInfo deviceInfo, HomeState state) {
     if (state is PostLoaded || state is PostLoadingMore) {
       final posts = state is PostLoaded ? state.posts : (state as PostLoadingMore).posts;
+      final total = state is PostLoaded ? state.total : (state as PostLoadingMore).total;
+      if (total == 0) {
+        return const SliverToBoxAdapter(
+          child: Center(
+        child: Text('No posts available'),
+          ),
+        );
+      }
       return SliverList(
+        key: const PageStorageKey('postList'),
         delegate: SliverChildBuilderDelegate(
           (context, index) {
-            if (index >= posts.length) return const SizedBox.shrink();
+            if (index >= total) return const SizedBox.shrink();
             final isNotMatch = posts[index].createdBy.id == getIt.get<userMainDetailsCubit>().state.userId ? false : true;
-
             return TweenAnimationWidget(
               index: index,
               deviceInfo: deviceInfo,
