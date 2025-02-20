@@ -168,7 +168,6 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
                   children: [
                     Text("Post Details", style: TextStyles.inter18BoldBlack.copyWith(fontSize: info.screenWidth * 0.045)),
                     PostDetailsPostCard(
-                      isReportScreen: true,
                       titleText: '',
                       contentText: '',
                       fullNameText: '',
@@ -203,7 +202,6 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
                     );
                   },
                   child: PostDetailsPostCard(
-                    isReportScreen: true,
                     info: info,
                     showStars: false,
                     titleText: report!.title,

@@ -179,10 +179,9 @@ class _post_details_screenState extends State<post_details_screen> {
                                 color: ColorsManager.greyColor,
                               ),
                               PostDetailsPostCard(
-                                isReportScreen: false,
                                 info: info,
-                                isTitleShimmer: state is PostDetailsLoading || state is PostDetailsInitial,
                                 titleText: postDetailsCubit.post?.title,
+                                isTitleShimmer: state is PostDetailsLoading || state is PostDetailsInitial,
                                 showDeleteButton: userMainDetails.state.userId == postDetailsCubit.post?.createdBy.id,
                                 DeleteButtonOnPressed: () {
                                   context.read<PostDetailsCubit>().commentfocusNode.unfocus();

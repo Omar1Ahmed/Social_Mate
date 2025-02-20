@@ -28,9 +28,7 @@ class PostDetailsPostCard extends StatelessWidget {
     this.disableStars = false,
     required this.SelectedRatingValue,
     this.setRateAverage,
-    required this.isReportScreen,
   });
-  final bool isReportScreen;
   final DeviceInfo info;
   final String? titleText;
   final bool isTitleShimmer;
@@ -81,20 +79,6 @@ class PostDetailsPostCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           mainAxisSize: MainAxisSize.min,
           children: [
-            isReportScreen
-                ? Padding(
-                    padding: EdgeInsets.only(top: info.screenHeight * 0.02),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Post Details",
-                          style: TextStyles.inter18BoldBlack.copyWith(fontSize: info.screenWidth * 0.044),
-                        ),
-                      ],
-                    ),
-                  )
-                : SizedBox(),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
