@@ -34,8 +34,6 @@ class _post_details_screenState extends State<post_details_screen> {
 
   @override
   void initState() {
-    print('initState');
-
     super.initState();
     context.read<PostDetailsCubit>().getPostDetails();
     _scrollController = ScrollController()..addListener(_onScroll);
@@ -58,8 +56,6 @@ class _post_details_screenState extends State<post_details_screen> {
     return InfoWidget(builder: (context, info) {
       return SafeArea(
           child: BlocConsumer<PostDetailsCubit, PostDetailsState>(listener: (context, state) {
-        print('state : $state');
-
         if (state is PostDetailsLoaded) {
           Future.wait(
             [
@@ -220,10 +216,12 @@ class _post_details_screenState extends State<post_details_screen> {
                                                   reason: reason,
                                                 ),
                                               );
+                                          // ignore: use_build_context_synchronously
                                           context.pop();
 
                                           CherryToastMsgs.CherryToastSuccess(
                                             info: info,
+                                            // ignore: use_build_context_synchronously
                                             context: context,
                                             title: 'Success!!',
                                             description: 'You Reported The Post Successfully',

@@ -98,7 +98,6 @@ class _reportsFilterScreenState extends State<reportsFilterScreen> {
                             EdgeInsets.all(info.screenWidth * 0.01),
                         expansionCallback: (panelIndex, isExpanded) {
                           setState(() {
-                            print('Expansion state toggled: $isExpanded');
                             _isExpanded = !_isExpanded;
                           });
                         },
@@ -181,7 +180,7 @@ class _reportsFilterScreenState extends State<reportsFilterScreen> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Container(
+                                      SizedBox(
                                         width: info.screenWidth * 0.3,
                                         child: TextField(
                                           controller: fromDateController,
@@ -196,7 +195,7 @@ class _reportsFilterScreenState extends State<reportsFilterScreen> {
                                           readOnly: true,
                                         ),
                                       ),
-                                      Container(
+                                      SizedBox(
                                         width: info.screenWidth * 0.3,
                                         child: TextField(
                                           controller: toDateController,

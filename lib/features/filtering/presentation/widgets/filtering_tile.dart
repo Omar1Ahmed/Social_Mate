@@ -109,7 +109,6 @@ class _FilteringTileState extends State<FilteringTile> {
     FocusScope.of(context).requestFocus(orderedByNode);
     setState(() {
       sortedByValue = value ?? '';
-      print(sortedByValue);
     });
     return () {};
   }
@@ -118,7 +117,6 @@ class _FilteringTileState extends State<FilteringTile> {
     FocusScope.of(context).unfocus();
     setState(() {
       orderedByValue = value ?? '';
-      print(orderedByValue);
     });
     return () {};
   }
@@ -143,7 +141,6 @@ class _FilteringTileState extends State<FilteringTile> {
         selectedFromDate = null;
       }
     });
-    print(selectedFromDate);
 
     return () {};
   }
@@ -154,7 +151,6 @@ class _FilteringTileState extends State<FilteringTile> {
         selectedToDate = null;
       }
     });
-    print(selectedToDate);
     return () {};
   }
 
@@ -179,14 +175,11 @@ class _FilteringTileState extends State<FilteringTile> {
 
       context.read<SharingDataCubit>().updateQueryParams(queryParameters);
       context.read<SharingDataCubit>().updatePosts([]);
-      print('Query Parameters: $queryParameters');
       filteringCubit.getFilteredPosts(
         queryParameters: queryParameters,
         token: token!,
       );
-      print('Form is valid');
     } else {
-      print('Form is invalid');
     }
   }
 
@@ -222,7 +215,6 @@ class _FilteringTileState extends State<FilteringTile> {
                 EdgeInsets.all(deviceInfo.screenWidth * 0.01),
             expansionCallback: (panelIndex, isExpanded) {
               setState(() {
-                print('Expansion state toggled: $isExpanded');
                 this.isExpanded = !this.isExpanded; // Toggle the state
               });
             },

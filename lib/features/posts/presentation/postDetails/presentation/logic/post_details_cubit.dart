@@ -65,8 +65,7 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
       post = await postDetailsRepository.getPostDetails(_postId);
 
       emit(PostDetailsLoaded(post!));
-    } catch (e, trace) {
-      print(trace);
+    } catch (e) {
       emit(PostDetailsError(e.toString()));
     }
   }
@@ -80,8 +79,7 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
       commentsCount = await postDetailsRepository.getPostCommentsCount(_postId);
 
       emit(CommentsCountLoaded());
-    } catch (e, trace) {
-      print(trace);
+    } catch (e) {
       emit(PostDetailsError(e.toString()));
     }
   }
@@ -93,28 +91,24 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
       emit(RatePostAverageLoading());
       rateAverage = await postDetailsRepository.getPostRateAverage(_postId);
 
-      print('rate Average ${rateAverage}');
 
       rateAverage ??= 0;
 
       selectedRatingValue = rateAverage!;
 
       emit(RatePostAverageLoaded());
-    } catch (e, trace) {
-      print('rate Error ${e.toString()}');
+    } catch (e) {
       if (e.toString().contains('null')) {
         rateAverage = 0;
         selectedRatingValue = 0;
         emit(RatePostAverageLoaded());
       }
-      print(trace);
       emit(PostDetailsError(e.toString()));
     }
   }
 
 
   Future<void> getPostComments({int? pageOffset = null, int? pageSize = null }) async {
-  print('get comments');
 
     if (!hasMoreComments || isLoading) return;
 
@@ -123,9 +117,6 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
       emit(CommentsLoading());
       final newComments = await postDetailsRepository.getPostComments(postId: _postId, pageOffset: pageOffset?? _currentPage, pageSize: pageSize??_pageSize);
 
-        print('has more comments ${(_currentPage * _pageSize) < commentsCount!}');
-        print('has more comments ${commentsCount!}');
-        print('has more comments ${_currentPage }');
 
 
       // print('comments length ${comments!.length} $_currentPage $commentsCount ${newComments.length}');
@@ -138,14 +129,12 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
         comments!.addAll(newComments);
 
         _currentPage++;
-        print('has more comments ${(_currentPage * _pageSize) < commentsCount!}');
         hasMoreComments = (_currentPage * _pageSize) < commentsCount!;
       }
 
       emit(CommentsLoaded());
-    } catch (e, trace) {
-      print('rate Error ${e.toString()}');
-      print(trace);
+    } catch (e) {
+
       emit(PostDetailsError(e.toString()));
     }finally{
       isLoading = false;
@@ -158,7 +147,6 @@ class PostDetailsCubit extends Cubit<PostDetailsState> {
       emit(deleteCommentLoading());
       final response = await postDetailsRepository.deleteComment(
           _postId, commentId);
-      print('give reaction: $response');
 
       if (response['statusCode'] == 204) {
         comments!.removeWhere((comment) => comment.id == commentId);

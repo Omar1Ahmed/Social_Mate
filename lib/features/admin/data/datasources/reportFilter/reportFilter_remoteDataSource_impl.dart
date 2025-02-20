@@ -25,9 +25,6 @@ class reportFilterRemoteDataSourceImpl implements ReportFilterRemoteDataSource {
         }
       );
 
-      print(response);
-      print('base Url : ${dio.baseUrl}');
-      print('base Url : ${dio.dio.options.baseUrl}');
       return MainReportModel.fromJson(response);
     } catch (e) {
       throw Exception("Error fetching posts: ${e.toString()}");

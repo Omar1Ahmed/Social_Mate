@@ -35,14 +35,12 @@ class _ShowReportPostDialogWidgetState extends State<ShowReportPostDialogWidget>
   Widget build(BuildContext context) {
     return BlocConsumer<HomeCubit, HomeState>(
       listener: (context, state) {
-        print('state22222: $state');
         if (state is PostReported) {
           // Future.delayed( Duration(seconds: 2), () => Navigator.pop(context));
-          print('reporteeeeeeeeeeeed');
+          CherryToastMsgs.CherryToastSuccess(info: widget.deviceInfo, context: context, title: 'Success', description: 'Your report has been sent successfully.');
         }
       },
       builder: (context, state) {
-        print('state: $state');
         if (state is LoadedReportCategories) {
           return _buildReportDialog(context, state.categories);
         } else if (state is PostReportedLoading) {
@@ -122,7 +120,6 @@ class _ShowReportPostDialogWidgetState extends State<ShowReportPostDialogWidget>
                 description: 'Your report has been sent successfully.',
               );
               await widget.onPressedReport!(categories[selectedCategory].id, reasonController.text);
-              print('reporteeeeeeeeeeeed55555555555555 ${context.read<HomeCubit>().state} ');
             }
           },
         ),

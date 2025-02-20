@@ -20,7 +20,7 @@ class CommentCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.center,
-      child: Container(
+      child: SizedBox(
         width: info.screenWidth * 0.9,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

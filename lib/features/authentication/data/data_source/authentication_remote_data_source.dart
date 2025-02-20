@@ -9,7 +9,6 @@ class AuthenticationRemoteDataSourceImp implements AuthenticationRemoteDataSourc
   // login setup by marwan
   @override
   Future<String> login(String email, String password) async {
-    print('url : ${dioNetworkClient.baseUrl}');
     final response = await dioNetworkClient.post(
       '/auth/login',
       body: {
@@ -27,17 +26,8 @@ class AuthenticationRemoteDataSourceImp implements AuthenticationRemoteDataSourc
 
   @override
   Future signUp(String firstName, String lastName, String email, String phone, String password, String selectedGender) async {
-    print('url : ${dioNetworkClient.baseUrl}');
 
-    // Debug: Print the request body
-    print('''{
-    "firstName": "$firstName",
-    "lastName": "$lastName",
-    "mobileNumber": "$phone",
-    "password": "$password",
-    "email": "$email",
-    "gender": "$selectedGender"
-  }''');
+
 
     final response = await dioNetworkClient.post('/auth/register', body: {
       "firstName": firstName,
@@ -50,7 +40,6 @@ class AuthenticationRemoteDataSourceImp implements AuthenticationRemoteDataSourc
       "Content-Type": "application/json"
     });
 
-    print('data source : ${response}');
     return response;
   }
 }

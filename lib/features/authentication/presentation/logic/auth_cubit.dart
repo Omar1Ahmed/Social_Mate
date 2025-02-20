@@ -78,8 +78,6 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> logIn(BuildContext context) async {
-    print(emailController.text);
-    print(passController.text);
 
     if (emailController.text.isEmpty && passController.text.isEmpty) {
       emit(AuthLogInErrorState(message: "Please enter required fields"));
@@ -97,7 +95,7 @@ class AuthCubit extends Cubit<AuthState> {
           emailController.text, passController.text);
 
       if (token.isNotEmpty) {
-        print(token); // log the token
+        
         context.read<userMainDetailsCubit>().decodeAndAssignToken(token); // Decode And Assign Token
 
         if (isRememberMe) {
@@ -106,20 +104,16 @@ class AuthCubit extends Cubit<AuthState> {
         }
         userMainDetailsState userDetailsState =
             context.read<userMainDetailsCubit>().state;
-        print('userDetailsState: $userDetailsState'); //loging
 
         if (userDetailsState is userMainDetailsErrorState) {
-          print(userDetailsState.message);
           emit(AuthLogInErrorState(message: userDetailsState.message));
         } else {
           emit(AuthLogInTokenRetrivedState());
         }
       } else {
-        print('token is not retrived well');
       }
     } catch (e) {
       String errMsg = '';
-      print('cubit exeption $e');
       if (e is ErrorResponseModel) {
         if (e.message.toString().contains('Internal Server')) {
           errMsg = "Server Error, please try again later";
@@ -134,14 +128,6 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> signUp(BuildContext context) async {
-    print(firstNameController.text[0].toUpperCase() +
-        firstNameController.text.substring(1));
-    print(lastNameController.text[0].toUpperCase() +
-        lastNameController.text.substring(1));
-    print(emailController.text);
-    print(phoneController.text);
-    print(passController.text);
-    print(retypePassController.text);
 
     if (state is AuthLoadingState) return;
 
@@ -165,7 +151,6 @@ class AuthCubit extends Cubit<AuthState> {
         !phoneController.text.startsWith('011') &&
         !phoneController.text.startsWith('012') &&
         !phoneController.text.startsWith('015')) {
-      print('phone is not valid: ${phoneController.text.length}');
       emit(AuthLogInErrorState(message: "Please enter valid phone number"));
       return;
     }
@@ -177,7 +162,7 @@ class AuthCubit extends Cubit<AuthState> {
 
     emit(AuthLoadingState());
     try {
-      final response = await authenticationRepository.signUp(
+       await authenticationRepository.signUp(
           firstNameController.text[0].toUpperCase() +
               firstNameController.text.substring(1),
           lastNameController.text[0].toUpperCase() +
@@ -187,16 +172,13 @@ class AuthCubit extends Cubit<AuthState> {
           passController.text,
           selectedGender[0]);
 
-      print('sign up response11111111 : $response');
 
       //if (response['statusCode'] == 201) {
       emit(AuthRegisterSuccessState());
       //}
     } catch (e) {
       String errMsg = '';
-      print('cubit exeption ${e}');
       if (e is ErrorResponseModel) {
-        print('cubit exeption ${e.message}');
         if (e.message.toString().contains('Internal Server')) {
           errMsg = "Server Error, please try again later";
         } else if (e.message.toString().contains('Invalid credentials')) {

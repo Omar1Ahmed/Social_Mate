@@ -37,10 +37,6 @@ class DioClient implements ApiCalls {
             headers: header,
           ),
         );
-        print('API Response: ${response.data}');
-        print('Response Type: ${response.data.runtimeType}');
-        print('Status Code: ${response.statusCode}');
-        print('Status Message: ${response.statusMessage}');
 
         return _validateResponseData(response);
       } on DioException catch (e) {
@@ -61,18 +57,11 @@ class DioClient implements ApiCalls {
           data: body,
           options: Options(headers: header),
         );
-        print('lololololo ${response.data}');
-        print('lololololo ${response.data.runtimeType}');
-        print('lololololo ${response.statusCode}');
-        print('lololololo ${response.statusMessage}');
+
 
         return _validateResponseData(response);
       } on DioException catch (e) {
-        print('lololololo222222222 ${e.error}');
-        print('lololololo2222222 ${e.response!.statusCode}');
-        print('lololololo2222222 ${e.response!.statusMessage}');
 
-        print(e.response!.data);
         throw DioExceptionHandler.handleError(e);
       }
     } else {

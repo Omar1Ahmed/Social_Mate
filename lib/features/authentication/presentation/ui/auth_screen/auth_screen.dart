@@ -55,7 +55,6 @@ class _AuthScreenState extends State<AuthScreen> {
           context.read<AuthCubit>().toggleAuth();
         }
       }, builder: (context, state) {
-        print('state: $state');
         return Scaffold(
           body: SingleChildScrollView(
             child: Padding(

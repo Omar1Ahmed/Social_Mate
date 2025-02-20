@@ -65,7 +65,6 @@ class _FilteringScreenState extends State<FilteringScreen> {
     if (scrollController.position.pixels ==
         scrollController.position.maxScrollExtent) {
       final queryParams = context.read<SharingDataCubit>().state.queryParams;
-      print('new queryParams: $queryParams');
       context
           .read<FilteringCubit>()
           .loadMoreFilteredPosts(queryParameters: queryParams, token: token!);
@@ -129,10 +128,8 @@ class _FilteringScreenState extends State<FilteringScreen> {
                         // }
                         posts = state.filteredPosts;
                         if (posts.isEmpty) {
-                          print('retrived data is empty ya 3m'); // Debug
                         }
-                        print(
-                            'this is the filtered ${posts.length.toString()}');
+
                         return Column(
                           children: [
                             ListView.builder(
@@ -140,7 +137,6 @@ class _FilteringScreenState extends State<FilteringScreen> {
                               physics: const NeverScrollableScrollPhysics(),
                               itemCount: posts.length + (state.hasMore ? 1 : 0),
                               itemBuilder: (context, index) {
-                                print('Filtering State: $state');
                                 if (index == posts.length && state.hasMore) {
                                   return Center(
                                       child: CircularProgressIndicator());
@@ -161,11 +157,9 @@ class _FilteringScreenState extends State<FilteringScreen> {
                                             .deletePost(posts[index].id);
 
                                         setState(() {
-                                          print("${posts.length}");
                                           posts.removeWhere((post) =>
                                               post.id == posts[index].id);
 
-                                          print("${posts.length}");
                                         });
                                         // final query = context
                                         //     .read<SharingDataCubit>()

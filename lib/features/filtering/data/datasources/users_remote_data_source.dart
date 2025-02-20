@@ -37,11 +37,9 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
       // Map each item in the 'data' array to a UserModel
       final users = (data).map((item) => UserModel.fromJson(item)).toList();
 
-      print('Parsed users: $users'); // Debug log
       return users;
     } catch (e) {
       // Re-throw the exception with additional context
-      print('Error parsing filtered users: $e');
       rethrow;
     }
   }

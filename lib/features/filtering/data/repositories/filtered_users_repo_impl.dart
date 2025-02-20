@@ -21,10 +21,8 @@ class FilteredUsersRepoImpl implements FilteredUsersRepo {
       final userModels = await filteredUsersRemoteSource.getFilteredUsers(
           queryParameters: queryParameters, token: token);
       if (userModels.isEmpty) {
-        print('UserModel data is empty');
         return [];
       }
-      print('userModels in the repo : $userModels');
       return userModels;
     } catch (e) {
       throw Exception('Failed to fetch filtered users: $e');

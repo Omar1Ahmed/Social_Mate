@@ -11,8 +11,9 @@ class CustomTextField extends StatefulWidget {
   final bool isPassword;
   final String? Function(String?)? formValidator;
 
-  CustomTextField({super.key, required this.label, required this.hintText, required this.controller, this.isPassword = false, this.formValidator = null});
+  const CustomTextField({super.key, required this.label, required this.hintText, required this.controller, this.isPassword = false, this.formValidator});
 
+  @override
   State<CustomTextField> createState() => _CustomTextFieldState();
 }
 
@@ -32,7 +33,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
       widget.formValidator?.call(widget.controller.text);
       setState(() {
         _errorMessage = widget.formValidator?.call(widget.controller.text);
-        print(widget.controller.text);
       });
     }
 
@@ -58,7 +58,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
                       validator: widget.formValidator,
                       onChanged: (value) {
                         if (widget.formValidator != null) {
-                          print(value);
                           _validate();
                         }
                       },

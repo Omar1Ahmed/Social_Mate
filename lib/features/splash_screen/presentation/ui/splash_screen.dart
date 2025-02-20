@@ -51,7 +51,6 @@ class SplashScreen extends StatelessWidget {
 
               }
             } else {
-              print('going to onboarding');
               return OnboardingScreen();
             }
           },

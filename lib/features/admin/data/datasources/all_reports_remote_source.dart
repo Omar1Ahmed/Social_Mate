@@ -46,8 +46,7 @@ class AllReportsRemoteSourceImpl implements AllReportsRemoteSource {
       'statusCode': 200, // If the request is successful
       'reports': reportList,
     };
-  } on DioException catch (e, stackTrace) {
-    print('DioException: $e\nStackTrace: $stackTrace');
+  } on DioException catch (e) {
 
     if (e.response != null) {
       final statusCode = e.response!.statusCode ?? 500;
@@ -66,8 +65,7 @@ class AllReportsRemoteSourceImpl implements AllReportsRemoteSource {
         'error': 'Network error: ${e.message}',
       };
     }
-  } catch (e, stackTrace) {
-    print('Unexpected Error: $e\nStackTrace: $stackTrace');
+  } catch (e) {
     return {
       'statusCode': 500,
       'reports': [],

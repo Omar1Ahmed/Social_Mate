@@ -79,7 +79,6 @@ class AllReportsCubit extends Cubit<AllReportsState> {
       );
 
       final statusCode = result['statusCode'] as int;
-      print('pagination status code: $statusCode');
       if (statusCode != 200) {
         if (!isClosed) emit(AllReportsStatusCodeError());
         return;

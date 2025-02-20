@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 import 'package:social_media/features/admin/domain/entities/main_report_entity.dart';
-import 'package:social_media/features/admin/domain/repositories/main_report_repo.dart';
 import 'package:social_media/features/admin/domain/repositories/reportFilter/reportFilter_repo.dart';
 
 part 'report_filter_state.dart';
@@ -29,7 +28,6 @@ class ReportFilterCubit extends Cubit<ReportFilterState> {
   int pageSize = 10;
 
   Future<void> getReports({bool reset = false}) async {
-    print('get reports');
 
     if (!hasMoreReports || isLoading) return;
 
@@ -60,9 +58,6 @@ class ReportFilterCubit extends Cubit<ReportFilterState> {
 
       );
 
-      print('has more comments ${(_currentPage * pageSize) < total}');
-      print('has more comments ${total}');
-      print('has more comments ${_currentPage }');
 
 
       // print('comments length ${comments!.length} $_currentPage $commentsCount ${newReports.length}');
@@ -75,14 +70,11 @@ class ReportFilterCubit extends Cubit<ReportFilterState> {
         reports!.addAll(newReports);
 
         _currentPage++;
-        print('has more comments ${(_currentPage * pageSize) < total}');
         hasMoreReports = (_currentPage * pageSize) < total;
       }
 
       emit(ReportFilterloaded());
-    } catch (e, trace) {
-      print('rate Error ${e.toString()}');
-      print(trace);
+    } catch (e) {
       emit(ReportFilterError(e.toString()));
     }finally{
       isLoading = false;

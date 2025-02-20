@@ -21,7 +21,6 @@ class AuthenticationRepositoryImp implements AuthenticationRepository {
     // if (await networkInfo.isConnected) {
       final response = await logInRemoteDataSource.signUp(firstName, lastName, email, phone, password, selectedGender);
 
-      print('reponse in repository $response');
       return response;
     // } else {
     //   throw Exception('No internet connection');

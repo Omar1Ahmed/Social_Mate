@@ -23,9 +23,7 @@ class PostDetailsRemoteDataSourceImpl implements PostDetailsRemoteDataSource {
         },
       );
 
-      print(response);
-      print('base Url : ${dio.baseUrl}');
-      print('base Url : ${dio.dio.options.baseUrl}');
+
       return PostData.fromJson(response);
     } catch (e) {
       throw Exception("Error fetching posts: ${e.toString()}");
@@ -35,7 +33,6 @@ class PostDetailsRemoteDataSourceImpl implements PostDetailsRemoteDataSource {
   @override
   Future<PostCommentsModel> getPostComments({required int postId, required int pageOffset, required int pageSize}) async {
     try {
-      print('post id : $postId page offset : $pageOffset  page size : $pageSize');
       final response = await dio.get(
         "/posts/$postId/comments?",
         header: {
@@ -48,9 +45,6 @@ class PostDetailsRemoteDataSourceImpl implements PostDetailsRemoteDataSource {
         }
       );
 
-      print('comments response in datasource : $response');
-      print('base Url : ${dio.baseUrl}');
-      print('base Url : ${dio.dio.options.baseUrl}');
       return PostCommentsModel.fromJson(response);
     } catch (e) {
       throw Exception("Error fetching Comments: ${e.toString()}");
@@ -110,7 +104,6 @@ class PostDetailsRemoteDataSourceImpl implements PostDetailsRemoteDataSource {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ${userMainDetails.state.token}',
         });
-    print('give reaction response : $response');
     return response;
   }
 
@@ -133,7 +126,6 @@ class PostDetailsRemoteDataSourceImpl implements PostDetailsRemoteDataSource {
     }, body: {
       "content": comment
     });
-    print('create comment response : $response');
 
     return response;
   }

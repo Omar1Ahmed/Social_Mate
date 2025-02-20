@@ -16,10 +16,8 @@ class FilteredUsersCubit extends Cubit<FilteredUsersState> {
     try {
       final filteredUsers = await filteredUsersRepo.getFilteredUsers(
           queryParameters: queryParameters, token: token);
-      print('filtered users : $filteredUsers');
       emit(FilteredUsersLoaded(filteredUsers: filteredUsers));
-    } catch (e , stackTrace) {
-      print('Error: $e\nStackTrace: $stackTrace');
+    } catch (e) {
       emit(FilteredUsersError(message: e.toString()));
     }
   }

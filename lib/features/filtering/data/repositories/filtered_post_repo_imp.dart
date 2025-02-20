@@ -41,7 +41,6 @@ class FilteredPostRepoImp implements FilteredPostRepo {
         // print("Filtered Posts: ${postEntities.length} items"); // Debug log
         return postModels.toEntities();
       } catch (e) {
-        print(e);
         throw Exception('Failed to fetch filtered posts: $e');
       }
     } else {

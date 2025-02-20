@@ -54,9 +54,8 @@ class ReportDetailsCubit extends Cubit<ReportDetailsState> {
       } else {
         emit(ReportDetailsError(message: 'No data available'));
       }
-    } catch (e, trace) {
+    } catch (e) {
       if (!isClosed) {
-        print("Error fetching report details: $e\nTrace: $trace");
         emit(ReportDetailsError(message: e.toString()));
       }
     }
@@ -71,9 +70,8 @@ class ReportDetailsCubit extends Cubit<ReportDetailsState> {
         emit(AddActionToReportSuccess());
         await getReportDetails();
       }
-    } catch (e, trace) {
+    } catch (e) {
       if (!isClosed) {
-        print("state error Trace : $trace");
         emit(AddActionToReportError(message: e.toString()));
       }
     }

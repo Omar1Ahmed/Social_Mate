@@ -9,13 +9,10 @@ import 'package:social_media/features/posts/presentation/postDetails/presentatio
 
 part 'comment_state.dart';
 
-
 class CommentCubit extends Cubit<CommentState> {
   PostDetailsRepository postDetailsRepository;
   CommentEntity comment;
   CommentCubit({required this.postDetailsRepository, required this.comment}) : super(CommentInitial());
-
-
 
   ReactionType? selectedReactionType;
 
@@ -23,46 +20,36 @@ class CommentCubit extends Cubit<CommentState> {
     required BuildContext context,
     required int postId,
     required ReactionType reactionType,
-
   }) async {
-
-    print('reactionType: $reactionType');
-    print('reactionType: $selectedReactionType');
-    if(selectedReactionType != reactionType) {
-
+    if (selectedReactionType != reactionType) {
       try {
         emit(GiveReactionLoading());
-        final response = await postDetailsRepository.GiveReaction(
-            postId, comment.id, reactionType);
-        print('give reaction: $response');
+        final response = await postDetailsRepository.GiveReaction(postId, comment.id, reactionType);
         if (response['statusCode'] == 204) {
-
-          if(reactionType == ReactionType.LIKE){
+          if (reactionType == ReactionType.LIKE) {
             comment.numOfLikes++;
-          }else if (reactionType == ReactionType.DIS_LIKE){
+          } else if (reactionType == ReactionType.DIS_LIKE) {
             comment.numOfDisLikes++;
           }
-          if(selectedReactionType == ReactionType.LIKE){
+          if (selectedReactionType == ReactionType.LIKE) {
             comment.numOfLikes--;
-          }else if (selectedReactionType == ReactionType.DIS_LIKE){
+          } else if (selectedReactionType == ReactionType.DIS_LIKE) {
             comment.numOfDisLikes--;
           }
           selectedReactionType = reactionType;
 
-
-          int commentIndex = context.read<PostDetailsCubit>().comments!.indexWhere((comment) => comment.id == this.comment.id);
-          context.read<PostDetailsCubit>().comments![commentIndex].numOfLikes = comment.numOfLikes;
-          context.read<PostDetailsCubit>().comments![commentIndex].numOfDisLikes = comment.numOfDisLikes;
+          if (context.mounted) {
+            int commentIndex = context.read<PostDetailsCubit>().comments!.indexWhere((comment) => comment.id == this.comment.id);
+            context.read<PostDetailsCubit>().comments![commentIndex].numOfLikes = comment.numOfLikes;
+            context.read<PostDetailsCubit>().comments![commentIndex].numOfDisLikes = comment.numOfDisLikes;
+          }
 
           emit(GiveReactionSuccess());
         } else {
           selectedReactionType = null;
           emit(GiveReactionFail('Failed to React to The post'));
         }
-      } catch (e, trace) {
-        print('reaction Error');
-        print(trace);
-        print(e);
+      } catch (e) {
         if (e is ErrorResponseModel) {
           if (e.message.toString().contains('already reacted')) {
             selectedReactionType = reactionType;
@@ -77,14 +64,8 @@ class CommentCubit extends Cubit<CommentState> {
         }
         selectedReactionType = null;
       }
-    }else{
+    } else {
       emit(GiveReactionFail('You Already Reacted to this comment'));
     }
   }
-
-
-
-
 }
-
-

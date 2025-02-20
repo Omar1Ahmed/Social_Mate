@@ -32,8 +32,7 @@ class HomeCubit extends Cubit<HomeState> {
       hasMorePosts = _currentPage < total;
       _currentPage += 4;
       emit(PostLoaded(posts, total));
-    } catch (e, trace) {
-      print(trace);
+    } catch (e) {
       emit(
         PostError(e.toString()),
       );
@@ -62,8 +61,7 @@ class HomeCubit extends Cubit<HomeState> {
         hasMorePosts = _currentPage < total;
         emit(PostLoaded(updatedPosts, total));
       }
-    } catch (e, trace) {
-      print(trace);
+    } catch (e) {
       emit(PostError(e.toString()));
     } finally {
       isLoadingMore = false;
@@ -101,12 +99,9 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   Future<void> reportPost(int postId, CreateReportModel createReportModel) async {
-    print('report');
     try {
       await postRepository.reportPost(postId, createReportModel);
-      print('report2');
       emit(PostReported());
-      print('report3');
     } catch (e) {
       emit(PostReportedFailed(e.toString()));
     }
@@ -116,7 +111,6 @@ class HomeCubit extends Cubit<HomeState> {
     try {
       emit(PostReportedLoading());
       final reportCategories = await postRepository.getCategories();
-      print("reportCategories$reportCategories");
       emit(LoadedReportCategories(reportCategories));
     } catch (e) {
       emit(PostReportedFailed(e.toString()));

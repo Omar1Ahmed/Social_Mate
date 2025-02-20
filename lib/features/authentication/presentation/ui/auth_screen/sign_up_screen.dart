@@ -24,7 +24,7 @@ class SignUpForm extends StatelessWidget {
           CustomTextField(label: "Password", hintText: "********", isPassword: true, controller: context.read<AuthCubit>().passController,),
           Row(
               children: [
-            Container(
+            SizedBox(
               width: info.screenWidth * 0.63,
               child:    CustomTextField(label: "Confirm Password", hintText: "********", isPassword: true, controller: context.read<AuthCubit>().retypePassController,),
             ) ,

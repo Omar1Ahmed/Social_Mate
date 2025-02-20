@@ -18,11 +18,9 @@ class FilteringCubit extends Cubit<FilteringState> {
 
   Future<void> getFilteredPosts(
       {Map<String, dynamic>? queryParameters, required String token}) async {
-    print('the cubit state now is : $isClosed');
     bool isConnected = await ConnectivityHelper.isConnected();
     if (!isConnected) {
       emit(FilteredPostsNetworkError());
-      print(state);
       return;
     }
     if (state is FilteredPostsIsLoading) return;
@@ -40,7 +38,6 @@ class FilteringCubit extends Cubit<FilteringState> {
         token: token,
       );
 
-      print("Filtered Posts: ${filteredPosts.length} items"); // Debug log
       if (filteredPosts.isEmpty) {
         emit(FilteredPostsIsEmpty(filteredPosts));
       } else {

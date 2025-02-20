@@ -32,7 +32,6 @@ class userMainDetailsCubit extends Cubit<userMainDetailsState> {
         isMember: isMember,
       ));
     } catch (e) {
-      print("Error decoding token: $e");
       emit(userMainDetailsErrorState(message: e.toString()));
     }
   }
@@ -41,11 +40,9 @@ class userMainDetailsCubit extends Cubit<userMainDetailsState> {
     try {
       final token = _sharedPrefHelper.getString(SharedPrefKeys.tokenKey);
       if (token != null) {
-        print('Saved token: $token');
         decodeAndAssignToken(token);
       }
     } catch (e) {
-      print(e);
       emit(userMainDetailsErrorState(message: e.toString()));
     }
   }
@@ -55,7 +52,6 @@ class userMainDetailsCubit extends Cubit<userMainDetailsState> {
       await _sharedPrefHelper.remove(SharedPrefKeys.tokenKey);
       emit(userMainDetailsState(token: null));
     } catch (e) {
-      print(e);
       emit(userMainDetailsErrorState(message: e.toString()));
     }
   }
