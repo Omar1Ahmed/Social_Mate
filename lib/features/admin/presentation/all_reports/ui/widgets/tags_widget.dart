@@ -36,13 +36,12 @@ class TagsWidget extends StatelessWidget {
                 offset: Offset(0, 3))
           ],
         ),
-        child: FittedBox(
-          alignment: Alignment.center,
-          fit: BoxFit.contain,
-          child: Text(
-            tagName,
-            style: TextStyles.inter16Bold.copyWith(color: textColor),
-          ),
+        child: Padding(
+          padding:
+              EdgeInsets.symmetric(horizontal: deviceInfo.screenWidth * 0.02),
+          child: Text(tagName,
+              style: TextStyles.inter16Bold.copyWith(color: textColor),
+              overflow: TextOverflow.ellipsis),
         ),
       ),
     );

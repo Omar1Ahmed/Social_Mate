@@ -29,26 +29,29 @@ class FormTextInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      onChanged: onChanged,
-      validator: validator,
-      controller: controller,
-      focusNode: focusNode,
-      minLines: 1,
-      decoration: formInputStyle(
-          hintText: hintText,
-          label: label,
-          onPressed: () {
-            controller.clear();
-          },
-          controller: controller),
-      onTap: onTap,
-      onTapOutside: (event) {
-        FocusScope.of(context).unfocus();
-      },
-      onFieldSubmitted: (value) {
-        FocusScope.of(context).requestFocus(nextNode);
-      },
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: screenHeight * 0.01),
+      child: TextFormField(
+        onChanged: onChanged,
+        validator: validator,
+        controller: controller,
+        focusNode: focusNode,
+        minLines: 1,
+        decoration: formInputStyle(
+            hintText: hintText,
+            label: label,
+            onPressed: () {
+              controller.clear();
+            },
+            controller: controller),
+        onTap: onTap,
+        onTapOutside: (event) {
+          FocusScope.of(context).unfocus();
+        },
+        onFieldSubmitted: (value) {
+          FocusScope.of(context).requestFocus(nextNode);
+        },
+      ),
     );
   }
 }

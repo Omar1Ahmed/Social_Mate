@@ -22,12 +22,13 @@ class FilteringTile extends StatefulWidget {
   final SharingDataCubit sharingDataCubit;
   final FilteredUsersCubit filteredUsersCubit;
 
-  const FilteringTile(
-      {super.key,
-      required this.filteringCubit,
-      required this.sharingDataCubit,
-      required this.filteredUsersCubit,
-      required this.homeCubit});
+  const FilteringTile({
+    super.key,
+    required this.filteringCubit,
+    required this.sharingDataCubit,
+    required this.filteredUsersCubit,
+    required this.homeCubit,
+  });
 
   @override
   State<FilteringTile> createState() => _FilteringTileState();
@@ -50,8 +51,8 @@ class _FilteringTileState extends State<FilteringTile> {
   final FocusNode noNode = FocusNode();
   final DateTime firstDate = DateTime(2021, 1, 1);
   final DateTime lastDate = DateTime(2026, 1, 1);
-  DateTime? selectedFromDate = DateTime.now();
-  DateTime? selectedToDate = DateTime.now();
+  DateTime? selectedFromDate;
+  DateTime? selectedToDate;
   late String sortedByValue = 'None';
   late String orderedByValue = 'None';
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -59,6 +60,7 @@ class _FilteringTileState extends State<FilteringTile> {
   late FilteringCubit filteringCubit;
   late HomeCubit homeCubit;
   late String postOwnerId = '';
+  bool isExpanded = false; // Manage the expanded state here
 
   @override
   void dispose() {
@@ -74,7 +76,6 @@ class _FilteringTileState extends State<FilteringTile> {
     noNode.dispose();
     postOwnerController.dispose();
     homeCubit.close();
-
     super.dispose();
   }
 
@@ -125,18 +126,14 @@ class _FilteringTileState extends State<FilteringTile> {
   void _handleFromDateSelected(DateTime newDate) {
     setState(() {
       selectedFromDate = newDate;
-      if (createdFromController.text.isEmpty) {
-        selectedFromDate = null;
-      }
+      createdFromController.text = newDate.toString().split(' ')[0];
     });
   }
 
   void _handleToDateSelected(DateTime newDate) {
     setState(() {
       selectedToDate = newDate;
-      if (createdToController.text.isEmpty) {
-        selectedToDate = null;
-      }
+      createdToController.text = newDate.toString().split(' ')[0];
     });
   }
 
@@ -166,11 +163,6 @@ class _FilteringTileState extends State<FilteringTile> {
 
     final token = getIt<userMainDetailsCubit>().state.token;
 
-    //print('Token: $token');
-    print("from date : $selectedFromDate");
-    print("to date : $selectedToDate");
-    print("from controller date : ${createdFromController.text}");
-    print("to controller date : ${createdToController.text}");
     if (_formKey.currentState!.validate()) {
       queryParameters = {
         if (titleController.text.isNotEmpty) 'title': titleController.text,
@@ -200,240 +192,228 @@ class _FilteringTileState extends State<FilteringTile> {
 
   @override
   Widget build(BuildContext context) {
-    print('initial sorted : $sortedByValue');
-    print('initial ordered : $orderedByValue');
     return InfoWidget(builder: (context, deviceInfo) {
-      return Container(
-        height: deviceInfo.screenHeight * 0.58,
-        width: deviceInfo.screenWidth,
-        padding: EdgeInsets.symmetric(
-            horizontal: deviceInfo.screenWidth * 0.05,
-            vertical: deviceInfo.screenWidth * 0.02),
-        decoration: BoxDecoration(
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-              color: Colors.black12,
-              offset: Offset(0, 2),
-              blurRadius: 4,
-              spreadRadius: 1,
+      return SingleChildScrollView(
+        child: Container(
+          width: deviceInfo.screenWidth,
+          padding: EdgeInsets.symmetric(
+              horizontal: deviceInfo.screenWidth * 0.05,
+              vertical: deviceInfo.screenWidth * 0.02),
+          decoration: BoxDecoration(
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                color: Colors.black12,
+                offset: Offset(0, 2),
+                blurRadius: 4,
+                spreadRadius: 1,
+              ),
+            ],
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(deviceInfo.screenWidth * 0.04),
+            border: Border.all(
+              color: ColorsManager.primaryColor,
+              width: 1,
             ),
-          ],
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(deviceInfo.screenWidth * 0.04),
-          border: Border.all(
-            color: ColorsManager.primaryColor,
-            width: 1,
           ),
-        ),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+          child: ExpansionPanelList(
+            elevation: 0,
+            expandIconColor: ColorsManager.primaryColor,
+            expandedHeaderPadding:
+                EdgeInsets.all(deviceInfo.screenWidth * 0.01),
+            expansionCallback: (panelIndex, isExpanded) {
+              setState(() {
+                print('Expansion state toggled: $isExpanded');
+                this.isExpanded = !this.isExpanded; // Toggle the state
+              });
+            },
             children: [
-              Flexible(
-                child: FormTextInput(
-                  nextNode: postOwnerNode,
-                  label: 'Title',
-                  hintText: 'Enter post title',
-                  focusNode: titleNode,
-                  controller: titleController,
-                  screenWidth: deviceInfo.screenWidth,
-                  screenHeight: deviceInfo.screenHeight,
-                ),
-              ),
-              SizedBox(height: deviceInfo.screenHeight * 0.02),
-              Flexible(
-                child: FormTextInput(
-                  controller: postOwnerController,
-                  nextNode: createdFromNode,
-                  focusNode: postOwnerNode,
-                  label: 'Post Owner',
-                  hintText: 'Click to select post owner',
-                  onTap: () => showDialog(
-                    context: context,
-                    builder: (context) {
-                      return Dialog(
-                        child: PostOwnerDialog(
-                          context: context,
-                          width: deviceInfo.screenWidth * 0.9,
-                          height: deviceInfo.screenHeight * 0.5,
-                          filteredUsersCubit: widget.filteredUsersCubit,
-                          parentController: postOwnerController,
-                          dialogController: dialogeController,
-                          onPostOwnerSelected: (selectedId) {
-                            setState(() {
-                              postOwnerId = selectedId;
-                            });
-                          },
-                        ),
-                      );
-                    },
-                  ),
-                  screenWidth: deviceInfo.screenWidth,
-                  screenHeight: deviceInfo.screenHeight,
-                ),
-              ),
-              SizedBox(height: deviceInfo.screenHeight * 0.02),
-              Flexible(
-                child: SizedBox(
-                  height: deviceInfo.screenHeight * 0.2,
-                  child: Row(
+              ExpansionPanel(
+                backgroundColor: ColorsManager.whiteColor,
+                isExpanded: isExpanded, // Bind the state to the panel
+                headerBuilder: (context, isExpanded) {
+                  return ListTile(
+                    title: Text(
+                      'Filter Options',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  );
+                },
+                body: Form(
+                  key: _formKey,
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Expanded(
-                        child: FormTextInput(
-                          label: 'Created From',
-                          hintText: selectedFromDate != null
-                              ? selectedFromDate.toString().split(' ')[0]
-                              : 'Select a date',
-                          focusNode: createdFromNode,
-                          nextNode: createdToNode,
-                          controller: createdFromController,
-                          onChanged: onDateFromChanged,
-                          onTap: () {
-                            showFromDatePicker(
-                              onDateSelected: _handleFromDateSelected,
-                              context: context,
-                              controller: createdFromController,
-                              firstDate: firstDate,
-                              lastDate: lastDate,
+                      FormTextInput(
+                        nextNode: postOwnerNode,
+                        label: 'Title',
+                        hintText: 'Enter post title',
+                        focusNode: titleNode,
+                        controller: titleController,
+                        screenWidth: deviceInfo.screenWidth,
+                        screenHeight: deviceInfo.screenHeight,
+                      ),
+                      FormTextInput(
+                        controller: postOwnerController,
+                        nextNode: createdFromNode,
+                        focusNode: postOwnerNode,
+                        label: 'Post Owner',
+                        hintText: 'Click to select post owner',
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (context) {
+                            return Dialog(
+                              child: PostOwnerDialog(
+                                context: context,
+                                width: deviceInfo.screenWidth * 0.9,
+                                height: deviceInfo.screenHeight * 0.5,
+                                filteredUsersCubit: widget.filteredUsersCubit,
+                                parentController: postOwnerController,
+                                dialogController: dialogeController,
+                                onPostOwnerSelected: (selectedId) {
+                                  setState(() {
+                                    postOwnerId = selectedId;
+                                  });
+                                },
+                              ),
                             );
                           },
-                          validator: (value) {
-                            return validateDateRange(
-                                createdFromController, createdToController);
-                          },
-                          screenWidth: deviceInfo.screenWidth,
-                          screenHeight: deviceInfo.screenHeight,
                         ),
+                        screenWidth: deviceInfo.screenWidth,
+                        screenHeight: deviceInfo.screenHeight,
                       ),
-                      SizedBox(
-                        width: deviceInfo.screenHeight * 0.03,
-                      ),
-                      Expanded(
-                        child: FormTextInput(
-                          label: 'Created To',
-                          hintText: selectedToDate != null
-                              ? selectedToDate.toString().split(' ')[0]
-                              : 'Select a date',
-                          focusNode: createdToNode,
-                          nextNode: sortedByNode,
-                          controller: createdToController,
-                          onChanged: onDateToChanged,
-                          onTap: () {
-                            if (createdToNode.hasFocus) {
-                            } else {
-                              showToDatePicker(
-                                context: context,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: FormTextInput(
+                                label: 'Created From',
+                                hintText: selectedFromDate != null
+                                    ? selectedFromDate.toString().split(' ')[0]
+                                    : 'Select a date',
+                                focusNode: createdFromNode,
+                                nextNode: createdToNode,
+                                controller: createdFromController,
+                                onChanged: onDateFromChanged,
+                                onTap: () {
+                                  showFromDatePicker(
+                                    onDateSelected: _handleFromDateSelected,
+                                    context: context,
+                                    controller: createdFromController,
+                                    firstDate: firstDate,
+                                    lastDate: lastDate,
+                                  );
+                                },
+                                validator: (value) {
+                                  return validateDateRange(
+                                      createdFromController,
+                                      createdToController);
+                                },
+                                screenWidth: deviceInfo.screenWidth,
+                                screenHeight: deviceInfo.screenHeight),
+                          ),
+                          SizedBox(
+                            width: deviceInfo.screenHeight * 0.03,
+                          ),
+                          Expanded(
+                            child: FormTextInput(
+                                label: 'Created To',
+                                hintText: selectedToDate != null
+                                    ? selectedToDate.toString().split(' ')[0]
+                                    : 'Select a date',
+                                focusNode: createdToNode,
+                                nextNode: sortedByNode,
                                 controller: createdToController,
-                                firstDate: firstDate,
-                                lastDate: lastDate,
-                                onDateSelected: _handleToDateSelected,
-                              );
-                            }
-                          },
-                          validator: (value) {
-                            return validateDateRange(
-                                createdFromController, createdToController);
-                          },
+                                onChanged: onDateToChanged,
+                                onTap: () {
+                                  showToDatePicker(
+                                    context: context,
+                                    controller: createdToController,
+                                    firstDate: firstDate,
+                                    lastDate: lastDate,
+                                    onDateSelected: _handleToDateSelected,
+                                  );
+                                },
+                                validator: (value) {
+                                  return validateDateRange(
+                                      createdFromController,
+                                      createdToController);
+                                },
+                                screenWidth: deviceInfo.screenWidth,
+                                screenHeight: deviceInfo.screenHeight),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Sorted By :',
+                            style: TextStyles.inter14Regular,
+                          ),
+                          DropMenu(
+                            selectedValue: sortedByValue,
+                            validator: (value) {
+                              return validateSortedBy(
+                                  sortedByValue, orderedByValue);
+                            },
+                            onSelected: sortedByOnSelected,
+                            menuLabel: 'Sorted By',
+                            sortedByNode: sortedByNode,
+                            menuItemController: sortedByItemController,
+                            screenWidth: deviceInfo.screenWidth,
+                            screenHeight: deviceInfo.screenHeight,
+                            sortedByEntries: [
+                              DropdownMenuEntry(value: 'None', label: 'None'),
+                              DropdownMenuEntry(value: 'TITLE', label: 'Title'),
+                              DropdownMenuEntry(
+                                  value: 'POST_OWNER', label: 'Post Owner'),
+                              DropdownMenuEntry(
+                                  value: 'CREATION_DATE',
+                                  label: 'Creation Date'),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Ordered By :',
+                            style: TextStyles.inter14Regular,
+                          ),
+                          DropMenu(
+                            selectedValue: orderedByValue,
+                            onSelected: orderedByOnSelected,
+                            menuLabel: 'Order Direction',
+                            sortedByNode: orderedByNode,
+                            menuItemController: orderedByItemController,
+                            screenWidth: deviceInfo.screenWidth,
+                            screenHeight: deviceInfo.screenHeight,
+                            sortedByEntries: [
+                              DropdownMenuEntry(value: 'None', label: 'None'),
+                              DropdownMenuEntry(
+                                  value: 'ASC', label: 'Ascending'),
+                              DropdownMenuEntry(
+                                  value: 'DESC', label: 'Descending'),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            vertical: deviceInfo.screenHeight * 0.02),
+                        child: FilteringButton(
+                          onPressed: _onFilterButtonPressed,
                           screenWidth: deviceInfo.screenWidth,
                           screenHeight: deviceInfo.screenHeight,
                         ),
                       ),
                     ],
                   ),
-                ),
-              ),
-              SizedBox(height: deviceInfo.screenHeight * 0.02),
-              Flexible(
-                flex: 2,
-                child: SizedBox(
-                  height: deviceInfo.screenHeight * 0.2,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        flex: 0,
-                        child: Text(
-                          'Sorted By :',
-                          style: TextStyles.inter14Regular,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: DropMenu(
-                          selectedValue: sortedByValue,
-                          validator: (value) {
-                            return validateSortedBy(
-                                sortedByValue, orderedByValue);
-                          },
-                          onSelected: sortedByOnSelected,
-                          menuLabel: 'Sorted By',
-                          sortedByNode: sortedByNode,
-                          menuItemController: sortedByItemController,
-                          screenWidth: deviceInfo.screenWidth,
-                          screenHeight: deviceInfo.screenHeight,
-                          sortedByEntries: [
-                            DropdownMenuEntry(value: 'None', label: 'None'),
-                            DropdownMenuEntry(value: 'TITLE', label: 'Title'),
-                            DropdownMenuEntry(
-                                value: 'POST_OWNER', label: 'Post Owner'),
-                            DropdownMenuEntry(
-                                value: 'CREATION_DATE', label: 'Creation Date'),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(height: deviceInfo.screenHeight * 0.01),
-              Flexible(
-                flex: 2,
-                child: SizedBox(
-                  height: deviceInfo.screenHeight * 0.1,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        flex: 0,
-                        child: Text(
-                          'Ordered By :',
-                          style: TextStyles.inter14Regular,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: DropMenu(
-                          selectedValue: orderedByValue,
-                          onSelected: orderedByOnSelected,
-                          menuLabel: 'Order Direction',
-                          sortedByNode: orderedByNode,
-                          menuItemController: orderedByItemController,
-                          screenWidth: deviceInfo.screenWidth,
-                          screenHeight: deviceInfo.screenHeight,
-                          sortedByEntries: [
-                            DropdownMenuEntry(value: 'None', label: 'None'),
-                            DropdownMenuEntry(value: 'ASC', label: 'Ascending'),
-                            DropdownMenuEntry(
-                                value: 'DESC', label: 'Descending'),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(height: deviceInfo.screenHeight * 0.02),
-              Flexible(
-                child: FilteringButton(
-                  onPressed: _onFilterButtonPressed,
-                  screenWidth: deviceInfo.screenWidth,
-                  screenHeight: deviceInfo.screenHeight,
                 ),
               ),
             ],

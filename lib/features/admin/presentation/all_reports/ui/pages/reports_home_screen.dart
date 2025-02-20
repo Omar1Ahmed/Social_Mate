@@ -34,9 +34,9 @@ class _ReportsHomeScreenState extends State<ReportsHomeScreen> {
     //allReportsCubit = getIt<AllReportsCubit>();
     final token = context.read<userMainDetailsCubit>().state.token;
 
-    context.read<AllReportsCubit>().getAllReports({
-      'statusId': 1
-    }, token: token!);
+    context
+        .read<AllReportsCubit>()
+        .getAllReports({'statusId': 1}, token: token!);
     scrollController.addListener(_onScroll);
   }
 
@@ -49,11 +49,10 @@ class _ReportsHomeScreenState extends State<ReportsHomeScreen> {
 
   void _onScroll() {
     final token = context.read<userMainDetailsCubit>().state.token;
-    if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
+    if (scrollController.position.pixels ==
+        scrollController.position.maxScrollExtent) {
       context.read<AllReportsCubit>().loadMoreReports(
-        {
-          'statusId': 1
-        },
+        {'statusId': 1},
         token: token!,
       );
     }
@@ -101,13 +100,16 @@ class _ReportsHomeScreenState extends State<ReportsHomeScreen> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: deviceInfo.screenWidth * 0.06),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: deviceInfo.screenWidth * 0.06),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
                           'Posts Reports',
-                          style: TextStyles.inter18Regularblack.copyWith(fontSize: deviceInfo.screenWidth * 0.07, color: Colors.black),
+                          style: TextStyles.inter18Regularblack.copyWith(
+                              fontSize: deviceInfo.screenWidth * 0.07,
+                              color: Colors.black),
                           textAlign: TextAlign.left,
                         ),
                       ],
@@ -128,7 +130,8 @@ class _ReportsHomeScreenState extends State<ReportsHomeScreen> {
                         return ListView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          itemCount: allReports.length + (state.hasMore ? 1 : 0),
+                          itemCount:
+                              allReports.length + (state.hasMore ? 1 : 0),
                           itemBuilder: (context, index) {
                             if (index == allReports.length && state.hasMore) {
                               return Center(child: CircularProgressIndicator());
@@ -154,7 +157,8 @@ class _ReportsHomeScreenState extends State<ReportsHomeScreen> {
                           child: Column(
                             children: [
                               Padding(
-                                padding: EdgeInsets.symmetric(vertical: deviceInfo.screenHeight * 0.02),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: deviceInfo.screenHeight * 0.02),
                                 child: Image.asset(
                                   'assets/images/no-internet.png',
                                   height: 100,
