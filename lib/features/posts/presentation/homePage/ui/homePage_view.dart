@@ -244,6 +244,7 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
                     final postId = posts[index].id;
                     getIt.get<HomeCubit>().deletePost(postId);
                     context.pushReplacementNamed(Routes.homePage);
+                    CherryToastMsgs.CherryToastSuccess(info: deviceInfo, context: context, title: "Deleted", description: "Post deleted successfully");
                   });
                 },
               ),

@@ -4,6 +4,7 @@ import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
 import 'package:social_media/core/helper/FormValidator/Validator.dart';
 import 'package:social_media/features/authentication/presentation/logic/auth_cubit.dart';
 
+import '../../../../../core/theming/colors.dart';
 import '../widgets/customTextField.dart';
 
 class SignInForm extends StatefulWidget {
@@ -46,6 +47,7 @@ class _SignInFormState extends State<SignInForm> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Checkbox(
+                  
                   value: context.read<AuthCubit>().isRememberMe,
                   onChanged: (value) {
                     context.read<AuthCubit>().isRememberMe = value!;

@@ -54,6 +54,10 @@ class MyApp extends StatelessWidget {
       color: Colors.white,
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,
+        checkboxTheme: CheckboxThemeData(
+          fillColor: MaterialStateProperty.all(Colors.white),
+          checkColor: MaterialStateProperty.all(ColorsManager.primaryColor),
+        ),
         progressIndicatorTheme: ProgressIndicatorThemeData(
           color: ColorsManager.primaryColor,
           refreshBackgroundColor: Colors.white,

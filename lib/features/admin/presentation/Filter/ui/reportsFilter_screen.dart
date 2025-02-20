@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:social_media/core/Responsive/Models/device_info.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
 import 'package:social_media/core/helper/extantions.dart';
 import 'package:social_media/core/shared/widgets/header_widget.dart';
 import 'package:social_media/features/admin/presentation/Filter/logic/report_filter_cubit.dart';
 import 'package:social_media/features/admin/presentation/all_reports/ui/widgets/main_report_card.dart';
+
+import '../../../../../core/theming/colors.dart';
 
 class reportsFilterScreen extends StatefulWidget {
   @override
@@ -25,8 +26,7 @@ class _reportsFilterScreenState extends State<reportsFilterScreen> {
     context.read<ReportFilterCubit>().getReports();
   }
 
-  Future<void> _selectDate(
-      BuildContext context, TextEditingController controller) async {
+  Future<void> _selectDate(BuildContext context, TextEditingController controller) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -64,8 +64,7 @@ class _reportsFilterScreenState extends State<reportsFilterScreen> {
                     ),
                     Container(
                       alignment: AlignmentDirectional.centerStart,
-                      padding: EdgeInsetsDirectional.only(
-                          start: info.screenWidth * 0.05),
+                      padding: EdgeInsetsDirectional.only(start: info.screenWidth * 0.05),
                       child: Text(
                         'Filter Reports',
                         style: TextStyle(
@@ -76,14 +75,12 @@ class _reportsFilterScreenState extends State<reportsFilterScreen> {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsetsDirectional.only(
-                          top: info.screenHeight * 0.01),
+                      margin: EdgeInsetsDirectional.only(top: info.screenHeight * 0.01),
                       width: info.screenWidth * 0.85,
                       clipBehavior: Clip.antiAlias,
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius:
-                            BorderRadius.circular(info.screenWidth * 0.05),
+                        borderRadius: BorderRadius.circular(info.screenWidth * 0.05),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.grey.withOpacity(0.5),
@@ -94,8 +91,7 @@ class _reportsFilterScreenState extends State<reportsFilterScreen> {
                         ],
                       ),
                       child: ExpansionPanelList(
-                        expandedHeaderPadding:
-                            EdgeInsets.all(info.screenWidth * 0.01),
+                        expandedHeaderPadding: EdgeInsets.all(info.screenWidth * 0.01),
                         expansionCallback: (panelIndex, isExpanded) {
                           setState(() {
                             _isExpanded = !_isExpanded;
@@ -103,25 +99,19 @@ class _reportsFilterScreenState extends State<reportsFilterScreen> {
                         },
                         children: [
                           ExpansionPanel(
+                            backgroundColor: Colors.white,
                             isExpanded: _isExpanded,
                             headerBuilder: (context, isExpanded) {
                               return ListTile(
-                                title: Text('Filter Options',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold)),
+                                title: Text('Filter Options', style: TextStyle(fontWeight: FontWeight.bold)),
                               );
                             },
                             body: Padding(
-                              padding: EdgeInsetsDirectional.only(
-                                  start: info.screenWidth * 0.05,
-                                  end: info.screenWidth * 0.04,
-                                  top: info.screenHeight * 0.01,
-                                  bottom: info.screenHeight * 0.01),
+                              padding: EdgeInsetsDirectional.only(start: info.screenWidth * 0.05, end: info.screenWidth * 0.04, top: info.screenHeight * 0.01, bottom: info.screenHeight * 0.01),
                               child: Column(
                                 children: [
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Expanded(
                                         child: DropdownButton<int>(
@@ -129,23 +119,13 @@ class _reportsFilterScreenState extends State<reportsFilterScreen> {
                                           value: cubit.statusId,
                                           hint: Text('Status'),
                                           onChanged: (value) {
-                                            setState(
-                                                () => cubit.statusId = value);
+                                            setState(() => cubit.statusId = value);
                                           },
                                           items: [
-                                            DropdownMenuItem(
-                                                value: 1,
-                                                child: Text('Pending')),
-                                            DropdownMenuItem(
-                                                value: 2,
-                                                child: Text('Approved')),
-                                            DropdownMenuItem(
-                                                value: 3,
-                                                child:
-                                                    Text('Cascaded Approval')),
-                                            DropdownMenuItem(
-                                                value: 4,
-                                                child: Text('Rejected')),
+                                            DropdownMenuItem(value: 1, child: Text('Pending')),
+                                            DropdownMenuItem(value: 2, child: Text('Approved')),
+                                            DropdownMenuItem(value: 3, child: Text('Cascaded Approval')),
+                                            DropdownMenuItem(value: 4, child: Text('Rejected')),
                                           ],
                                         ),
                                       ),
@@ -156,20 +136,12 @@ class _reportsFilterScreenState extends State<reportsFilterScreen> {
                                           isExpanded: true,
                                           hint: Text('Category'),
                                           onChanged: (value) {
-                                            setState(
-                                                () => cubit.categoryId = value);
+                                            setState(() => cubit.categoryId = value);
                                           },
                                           items: [
-                                            DropdownMenuItem(
-                                                value: 1, child: Text('Spam')),
-                                            DropdownMenuItem(
-                                                value: 2,
-                                                child: Text(
-                                                    'Copyright Violation')),
-                                            DropdownMenuItem(
-                                                value: 3,
-                                                child:
-                                                    Text('False Information')),
+                                            DropdownMenuItem(value: 1, child: Text('Spam')),
+                                            DropdownMenuItem(value: 2, child: Text('Copyright Violation')),
+                                            DropdownMenuItem(value: 3, child: Text('False Information')),
                                           ],
                                         ),
                                       )
@@ -177,8 +149,7 @@ class _reportsFilterScreenState extends State<reportsFilterScreen> {
                                   ),
                                   SizedBox(height: info.screenHeight * 0.01),
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       SizedBox(
                                         width: info.screenWidth * 0.3,
@@ -188,8 +159,7 @@ class _reportsFilterScreenState extends State<reportsFilterScreen> {
                                             labelText: 'From Date',
                                             suffixIcon: IconButton(
                                               icon: Icon(Icons.calendar_today),
-                                              onPressed: () => _selectDate(
-                                                  context, fromDateController),
+                                              onPressed: () => _selectDate(context, fromDateController),
                                             ),
                                           ),
                                           readOnly: true,
@@ -203,8 +173,7 @@ class _reportsFilterScreenState extends State<reportsFilterScreen> {
                                             labelText: 'To Date',
                                             suffixIcon: IconButton(
                                               icon: Icon(Icons.calendar_today),
-                                              onPressed: () => _selectDate(
-                                                  context, toDateController),
+                                              onPressed: () => _selectDate(context, toDateController),
                                             ),
                                           ),
                                           readOnly: true,
@@ -214,8 +183,7 @@ class _reportsFilterScreenState extends State<reportsFilterScreen> {
                                   ),
                                   SizedBox(height: info.screenHeight * 0.01),
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Expanded(
                                         child: DropdownButton<String>(
@@ -223,19 +191,12 @@ class _reportsFilterScreenState extends State<reportsFilterScreen> {
                                           value: cubit.orderBy,
                                           hint: Text('Order By'),
                                           onChanged: (value) {
-                                            setState(() => cubit.orderBy =
-                                                value.toString());
+                                            setState(() => cubit.orderBy = value.toString());
                                           },
                                           items: [
-                                            DropdownMenuItem(
-                                                value: 'REPORT_CATEGORY',
-                                                child: Text('Report Category')),
-                                            DropdownMenuItem(
-                                                value: 'REPORT_STATUS',
-                                                child: Text('Report Status')),
-                                            DropdownMenuItem(
-                                                value: 'CREATION_DATE',
-                                                child: Text('Creation Date')),
+                                            DropdownMenuItem(value: 'REPORT_CATEGORY', child: Text('Report Category')),
+                                            DropdownMenuItem(value: 'REPORT_STATUS', child: Text('Report Status')),
+                                            DropdownMenuItem(value: 'CREATION_DATE', child: Text('Creation Date')),
                                           ],
                                         ),
                                       ),
@@ -245,29 +206,30 @@ class _reportsFilterScreenState extends State<reportsFilterScreen> {
                                           value: cubit.orderDir,
                                           hint: Text('Order Direction'),
                                           onChanged: (value) {
-                                            setState(() => cubit.orderDir =
-                                                value.toString());
+                                            setState(() => cubit.orderDir = value.toString());
                                           },
                                           items: [
-                                            DropdownMenuItem(
-                                                value: 'ASC',
-                                                child: Text('Ascending')),
-                                            DropdownMenuItem(
-                                                value: 'DESC',
-                                                child: Text('Descending')),
+                                            DropdownMenuItem(value: 'ASC', child: Text('Ascending')),
+                                            DropdownMenuItem(value: 'DESC', child: Text('Descending')),
                                           ],
                                         ),
                                       ),
                                     ],
                                   ),
                                   ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: ColorsManager.primaryColor,
+                                    ),
                                     onPressed: () {
                                       cubit.applyFilter(
                                         fromDateController.text,
                                         toDateController.text,
                                       );
                                     },
-                                    child: Text('Apply Filter'),
+                                    child: Text(
+                                      'Apply Filter',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -284,9 +246,7 @@ class _reportsFilterScreenState extends State<reportsFilterScreen> {
                           ? Center(child: Text('No reports available'))
                           : ListView.builder(
                               itemCount: reports.length,
-                              padding: EdgeInsetsDirectional.only(
-                                  start: info.screenWidth * 0.02,
-                                  end: info.screenWidth * 0.02),
+                              padding: EdgeInsetsDirectional.only(start: info.screenWidth * 0.02, end: info.screenWidth * 0.02),
                               itemBuilder: (context, index) {
                                 return MainReportCard(
                                   deviceInfo: info,
@@ -305,22 +265,5 @@ class _reportsFilterScreenState extends State<reportsFilterScreen> {
                 ));
               }));
     });
-  }
-
-  SliverToBoxAdapter _buildHeader(DeviceInfo info) {
-    return SliverToBoxAdapter(
-      child: Padding(
-        padding: EdgeInsets.all(info.screenWidth * 0.05),
-        child: HeaderWidget(
-          isAdmin: false,
-          isUser: false,
-          extraButtons: [],
-          isBackButtonVisible: true,
-          info: info,
-          onBackPressed: () => context.pop(),
-          titleImageAsset: 'assets/images/Title_img.png',
-        ),
-      ),
-    );
   }
 }

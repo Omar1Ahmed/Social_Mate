@@ -65,13 +65,13 @@ class _PostCardWidgetState extends State<PostCardWidget> with SingleTickerProvid
               children: [
                 Row(
                   children: [
-                    Expanded(                      
+                    Expanded(
                       child: Text(
                         widget.post.title,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         softWrap: true,
-                        style: TextStyles.inter18BoldBlack.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.042),
+                        style: TextStyles.inter18BoldBlack.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.044),
                       ),
                     ),
                     widget.idNotMatch

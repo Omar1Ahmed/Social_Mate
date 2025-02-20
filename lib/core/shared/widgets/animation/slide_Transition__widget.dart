@@ -18,7 +18,7 @@ class _SlideTransitionWidgetState extends State<SlideTransitionWidget> with Tick
     super.initState();
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 1000),
     )..forward();
 
     _slideAnimation = Tween<Offset>(

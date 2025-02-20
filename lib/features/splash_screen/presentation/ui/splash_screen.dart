@@ -16,17 +16,12 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Future.delayed(const Duration(seconds: 3), () {
-
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) {
-
-
-
             if (context.read<userMainDetailsCubit>().state.token != null) {
               Future.delayed(Duration(seconds: 3));
-              if(context.read<userMainDetailsCubit>().state.isAdmin == true){
-
+              if (context.read<userMainDetailsCubit>().state.isAdmin == true) {
                 return MultiBlocProvider(
                   providers: [
                     BlocProvider(
@@ -38,17 +33,16 @@ class SplashScreen extends StatelessWidget {
                   ],
                   child: ReportsHomeScreen(),
                 );
-              }else if(context.read<userMainDetailsCubit>().state.isMember == true){
+              } else if (context.read<userMainDetailsCubit>().state.isMember == true) {
                 return BlocProvider(
                   create: (context) => getIt<HomeCubit>(),
                   child: HomepageView(),
                 );
-              }else{
+              } else {
                 return BlocProvider(
                   create: (context) => getIt<HomeCubit>(),
                   child: HomepageView(),
                 );
-
               }
             } else {
               return OnboardingScreen();
@@ -60,8 +54,7 @@ class SplashScreen extends StatelessWidget {
               child: child,
             );
           },
-          transitionDuration:
-              const Duration(milliseconds: 1000), // Adjust the duration
+          transitionDuration: const Duration(milliseconds: 1000), // Adjust the duration
         ),
       );
     });
@@ -74,14 +67,9 @@ class SplashScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Image.asset(
-                'assets/images/splash_screen.png',
+                'assets/images/ZagSystemsLogo.png',
                 width: deviceInfo.screenWidth * 0.7,
                 height: deviceInfo.screenHeight * 0.4,
-              ),
-              Image.asset(
-                'assets/images/fullLogo.png',
-                width: deviceInfo.screenWidth * 0.7,
-                height: deviceInfo.screenHeight * 0.16,
               ),
             ],
           ),
