@@ -52,7 +52,7 @@ class userMainDetailsCubit extends Cubit<userMainDetailsState> {
 
   Future<void> logOut() async {
     try {
-      _sharedPrefHelper.remove(SharedPrefKeys.tokenKey);
+      await _sharedPrefHelper.remove(SharedPrefKeys.tokenKey);
       emit(userMainDetailsState(token: null));
     } catch (e) {
       print(e);

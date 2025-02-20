@@ -103,17 +103,14 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
   /// Builds the header section with back button and title image.
   SliverToBoxAdapter _buildHeader(DeviceInfo info) {
     return SliverToBoxAdapter(
-      child: Padding(
-        padding: EdgeInsets.all(info.screenWidth * 0.05),
-        child: HeaderWidget(
-          isAdmin: false,
-          isUser: false,
-          extraButtons: [],
-          isBackButtonVisible: true,
-          info: info,
-          onBackPressed: () => context.pop(),
-          titleImageAsset: 'assets/images/Title_img.png',
-        ),
+      child: HeaderWidget(
+        isAdmin: false,
+        isUser: false,
+        extraButtons: [],
+        isBackButtonVisible: true,
+        info: info,
+        onBackPressed: () => context.pop(),
+        titleImageAsset: 'assets/images/Title_img.png',
       ),
     );
   }

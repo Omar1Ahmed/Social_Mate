@@ -92,23 +92,3 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
-flutter_launcher_icons:
-  android: true
-  ios: true
-  image_path: "assets/icons/app_icon.png"
-  min_sdk_android: 21
-  remove_alpha_ios: true
-
-flutter_native_splash:
-  color: "#ffffff"
-  image: "assets/icons/app_icon.png"
-  branding: "assets/images/fullLogo.png"
-  fullscreen: true
-  android: true
-  ios: true
-  web: false
-  android_12:
-    color: "#ffffff"
-    image: "assets/icons/app_icon.png"
-    branding: "assets/images/fullLogo.png"
-    fullscreen: true

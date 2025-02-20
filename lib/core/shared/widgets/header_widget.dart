@@ -36,7 +36,8 @@ class HeaderWidget extends StatelessWidget {
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center, // Ensure alignment
+        crossAxisAlignment: CrossAxisAlignment.center,
+        spacing: info.screenWidth * 0.01,
         children: [
           if (isBackButtonVisible)
             IconButton(

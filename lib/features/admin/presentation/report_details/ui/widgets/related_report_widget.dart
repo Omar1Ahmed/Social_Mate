@@ -80,7 +80,7 @@ class RelatedReportWidget extends StatelessWidget {
                     color: getStateColor(state),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.fromLTRB(deviceInfo.screenWidth * 0.02, deviceInfo.screenWidth * 0.01, deviceInfo.screenWidth * 0.02, deviceInfo.screenWidth * 0.01),
+                    padding: EdgeInsets.fromLTRB(deviceInfo.screenWidth * 0.032, deviceInfo.screenWidth * 0.01, deviceInfo.screenWidth * 0.02, deviceInfo.screenWidth * 0.01),
                     child: Text(
                       state,
                       style: TextStyles.inter18BoldBlack.copyWith(fontSize: deviceInfo.screenWidth * 0.03),
