@@ -15,14 +15,14 @@ class DioClient implements ApiCalls {
       'Content-Type': 'application/json',
     }));
 
-    dio.interceptors.add(LogInterceptor(
-      request: true,
-      error: true,
-      requestBody: true,
-      requestHeader: true,
-      responseBody: true,
-      responseHeader: true,
-    ));
+    // dio.interceptors.add(LogInterceptor(
+    //   request: true,
+    //   error: true,
+    //   requestBody: true,
+    //   requestHeader: true,
+    //   responseBody: true,
+    //   responseHeader: true,
+    // ));
   }
 
   @override
@@ -58,10 +58,8 @@ class DioClient implements ApiCalls {
           options: Options(headers: header),
         );
 
-
         return _validateResponseData(response);
       } on DioException catch (e) {
-
         throw DioExceptionHandler.handleError(e);
       }
     } else {
@@ -121,7 +119,6 @@ class DioClient implements ApiCalls {
         };
       }
     }
-
     if (response.data is Map<String, dynamic>) {
       return response.data;
     } else if (response.data != null) {

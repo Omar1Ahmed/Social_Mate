@@ -38,7 +38,6 @@ class ReportFilterCubit extends Cubit<ReportFilterState> {
     }
     isLoading = true;
     int total =0;
-
     final _queryParams = {
       'statusId': statusId?.toString(),
       'categoryId': categoryId?.toString(),

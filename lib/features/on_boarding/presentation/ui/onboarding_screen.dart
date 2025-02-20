@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
+import 'package:social_media/core/helper/extantions.dart';
+import 'package:social_media/core/routing/routs.dart';
 import 'package:social_media/core/theming/colors.dart';
 import 'package:social_media/features/authentication/presentation/ui/widgets/bottom_buttons.dart';
 import 'package:social_media/features/on_boarding/presentation/logic/on_boarding_cubit.dart';
@@ -41,6 +43,7 @@ class OnboardingScreen extends StatelessWidget {
       context.read<OnboardingCubit>().updatePage(currentIndex + 1);
     } else {
       // Navigate to another screen
+      context.pushReplacementNamed(Routes.AuthScreen);
     }
   }
 
@@ -59,7 +62,6 @@ class OnboardingScreen extends StatelessWidget {
               ),
             ),
             child: Column(
-
               children: [
                 Expanded(
                   flex: 3,
@@ -67,8 +69,7 @@ class OnboardingScreen extends StatelessWidget {
                     builder: (context, currentPage) {
                       return PageView.builder(
                         controller: _pageController,
-                        onPageChanged: (index) =>
-                            context.read<OnboardingCubit>().updatePage(index),
+                        onPageChanged: (index) => context.read<OnboardingCubit>().updatePage(index),
                         itemCount: pages.length,
                         itemBuilder: (context, index) {
                           return OnboardContent(page: pages[index]);
@@ -82,10 +83,9 @@ class OnboardingScreen extends StatelessWidget {
                     return PageIndicator(currentPage: currentPage, pageCount: pages.length);
                   },
                 ),
-                 SizedBox(height: info.screenHeight * 0.03),
+                SizedBox(height: info.screenHeight * 0.03),
                 BottomButtons(onNext: () => _nextPage(context)),
-                 SizedBox(height: info.screenHeight * 0.03),
-                
+                SizedBox(height: info.screenHeight * 0.03),
               ],
             ),
           ),

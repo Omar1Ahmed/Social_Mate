@@ -5,82 +5,96 @@ import 'package:social_media/features/authentication/presentation/logic/auth_cub
 import '../widgets/customTextField.dart';
 
 class SignUpForm extends StatelessWidget {
- 
-  const SignUpForm({super.key,});
+  const SignUpForm({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-
-
     return InfoWidget(builder: (context, info) {
-
       return Column(
         spacing: info.screenHeight * 0.016,
         children: [
-          CustomTextField(label: "First Name", hintText: "Omar", controller: context.read<AuthCubit>().firstNameController,),
-          CustomTextField(label: "Last Name", hintText: "Ahmed", controller: context.read<AuthCubit>().lastNameController,),
-          CustomTextField(label: "Email", hintText: "user123@example.com", controller: context.read<AuthCubit>().emailController,),
-          CustomTextField(label: "Phone", hintText: "01234567898", controller: context.read<AuthCubit>().phoneController,),
-          CustomTextField(label: "Password", hintText: "********", isPassword: true, controller: context.read<AuthCubit>().passController,),
+          CustomTextField(
+            label: "First Name",
+            hintText: "Omar",
+            controller: context.read<AuthCubit>().firstNameController,
+          ),
+          CustomTextField(
+            label: "Last Name",
+            hintText: "Ahmed",
+            controller: context.read<AuthCubit>().lastNameController,
+          ),
+          CustomTextField(
+            label: "Email",
+            hintText: "user123@example.com",
+            controller: context.read<AuthCubit>().emailController,
+          ),
+          CustomTextField(
+            label: "Phone",
+            hintText: "01234567898",
+            controller: context.read<AuthCubit>().phoneController,
+          ),
+          CustomTextField(
+            label: "Password",
+            hintText: "********",
+            isPassword: true,
+            controller: context.read<AuthCubit>().passController,
+          ),
           Row(
-              children: [
-            SizedBox(
-              width: info.screenWidth * 0.63,
-              child:    CustomTextField(label: "Confirm Password", hintText: "********", isPassword: true, controller: context.read<AuthCubit>().retypePassController,),
-            ) ,
+            children: [
+              SizedBox(
+                width: info.screenWidth * 0.63,
+                child: CustomTextField(
+                  label: "Confirm Password",
+                  hintText: "********",
+                  isPassword: true,
+                  controller: context.read<AuthCubit>().retypePassController,
+                ),
+              ),
+              Container(
+                margin: EdgeInsetsDirectional.only(start: info.screenWidth * 0.03),
+                padding: EdgeInsetsDirectional.only(start: info.screenWidth * 0.012),
+                width: info.screenWidth * 0.14,
+                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(info.screenWidth * 0.03), boxShadow: [
+                  BoxShadow(
+                    offset: const Offset(0, 4),
+                    color: Colors.black45,
+                    spreadRadius: info.screenWidth * 0.0001,
+                    blurRadius: info.screenWidth * 0.02,
+                  )
+                ]),
+                child: DropdownButton<String>(
+                  value: context.read<AuthCubit>().selectedGender, // Current selected value
+                  onChanged: (String? newValue) {
+                    context.read<AuthCubit>().selectedGender = newValue!;
+                  },
+                  items: context.read<AuthCubit>().genderIcons.entries.map((entry) {
+                    return DropdownMenuItem<String>(
+                      value: entry.key,
+                      child: Row(
+                        children: [
+                          entry.value, // Display gender icon
+                          SizedBox(width: info.screenWidth * 0.01),
+                          Text(entry.key),
+                        ],
+                      ),
+                    );
+                  }).toList(),
 
-                Container(
-                  margin: EdgeInsetsDirectional.only(start: info.screenWidth * 0.03),
-                  padding: EdgeInsetsDirectional.only(start: info.screenWidth * 0.012),
-                  width: info.screenWidth * 0.14,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(info.screenWidth * 0.03),
-                    boxShadow: [
-                      BoxShadow(
-                        offset: const Offset(0, 4),
-                        color: Colors.black45,
-                        spreadRadius: info.screenWidth * 0.0001,
-                        blurRadius: info.screenWidth * 0.02,
-                      )
-                    ]
-                  ),
-                  child:DropdownButton<String>(
-                    value: context.read<AuthCubit>().selectedGender, // Current selected value
-                    onChanged: (String? newValue) {
-                      context.read<AuthCubit>().selectedGender = newValue!;
-
-                    },
-                    items: context.read<AuthCubit>().genderIcons.entries.map((entry) {
-                      return DropdownMenuItem<String>(
-                        value: entry.key,
-                        child: Row(
-                          children: [
-                            entry.value, // Display gender icon
-                            SizedBox(width: info.screenWidth * 0.01),
-                            Text(entry.key),
-                          ],
-                        ),
-                      );
-                    }).toList(),
-
-                    selectedItemBuilder: (BuildContext context) {
-                      return context.read<AuthCubit>().genderIcons.entries.map((entry) {
-                        return entry.value;
-                      }).toList();
-                    },
-                    borderRadius: BorderRadius.circular(info.screenWidth * 0.03),
-                    dropdownColor: Colors.white,
-                    underline: Container(),
-                    menuWidth: info.screenWidth * 0.34,
-                    padding: EdgeInsets.zero,
-
-                  ),
-
-
-                )
-
-              ],
+                  selectedItemBuilder: (BuildContext context) {
+                    return context.read<AuthCubit>().genderIcons.entries.map((entry) {
+                      return entry.value;
+                    }).toList();
+                  },
+                  borderRadius: BorderRadius.circular(info.screenWidth * 0.03),
+                  dropdownColor: Colors.white,
+                  underline: Container(),
+                  menuWidth: info.screenWidth * 0.34,
+                  padding: EdgeInsets.zero,
+                ),
+              )
+            ],
           )
         ],
       );

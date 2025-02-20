@@ -184,18 +184,15 @@ class _HomepageViewState extends State<HomepageView> with TickerProviderStateMix
       onBackPressed: () {},
       titleImageAsset: 'assets/images/Title_img.png',
       extraButtons: [
-        Padding(
-          padding: EdgeInsets.only(left: deviceInfo.screenWidth * 0.15),
-          child: IconButton(
-            icon: Icon(
-              Icons.search,
-              color: ColorsManager.primaryColor,
-              size: deviceInfo.screenWidth * 0.07,
-            ),
-            onPressed: () {
-              context.pushNamed(Routes.filteringScreen);
-            },
+        IconButton(
+          icon: Icon(
+            Icons.search,
+            color: ColorsManager.primaryColor,
+            size: deviceInfo.screenWidth * 0.07,
           ),
+          onPressed: () {
+            context.pushNamed(Routes.filteringScreen);
+          },
         ),
         IconButton(
           icon: Icon(

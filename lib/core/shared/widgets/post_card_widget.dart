@@ -104,12 +104,12 @@ class _PostCardWidgetState extends State<PostCardWidget> with SingleTickerProvid
                     Expanded(
                       child: Text(
                         widget.post.createdBy.fullName,
-                        style: TextStyles.inter18BoldBlack.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.04),
+                        style: TextStyles.inter14BoldBlue.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.04, color: ColorsManager.primaryColorBold.withOpacity(0.7)),
                       ),
                     ),
                     Text(
                       widget.post.FormattedDate,
-                      style: TextStyles.inter18Regularblack.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.03),
+                      style: TextStyles.inter14BoldBlue.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.03, color: ColorsManager.primaryColorBold.withOpacity(0.7)),
                     ),
                   ],
                 ),

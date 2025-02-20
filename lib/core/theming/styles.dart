@@ -3,14 +3,19 @@ import 'package:flutter/material.dart';
 import 'colors.dart';
 
 class TextStyles {
-  static const inter18Bold =
-      TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'Inter');
+  static const inter18Bold = TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'Inter');
 
   static const inter14RegularBlue = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.normal,
     fontFamily: 'Inter',
     color: ColorsManager.primaryColor,
+  );
+  static const inter14BoldBlue = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.bold,
+    fontFamily: 'Inter',
+    color: ColorsManager.primaryColorBold,
   );
   static const inter14Regular = TextStyle(
     fontSize: 14,
@@ -83,13 +88,11 @@ class TextFieldStyles {
       borderRadius: BorderRadius.circular(100),
     ),
     enabledBorder: OutlineInputBorder(
-      borderSide:
-          BorderSide(color: ColorsManager.primaryColor.withOpacity(0.5)),
+      borderSide: BorderSide(color: ColorsManager.primaryColor.withOpacity(0.5)),
       borderRadius: BorderRadius.circular(100),
     ),
     focusedBorder: OutlineInputBorder(
-      borderSide:
-          BorderSide(color: ColorsManager.primaryColor.withOpacity(0.5)),
+      borderSide: BorderSide(color: ColorsManager.primaryColor.withOpacity(0.5)),
       borderRadius: BorderRadius.circular(100),
     ),
   );
@@ -97,28 +100,32 @@ class TextFieldStyles {
     fillColor: Colors.white,
     filled: true,
     border: OutlineInputBorder(
-      borderSide:
-          BorderSide(color: ColorsManager.primaryColor.withOpacity(0.5)),
+      borderSide: BorderSide(color: ColorsManager.primaryColor.withOpacity(0.5)),
       borderRadius: BorderRadius.circular(100),
     ),
     enabledBorder: OutlineInputBorder(
-      borderSide:
-          BorderSide(color: ColorsManager.primaryColor.withOpacity(0.5)),
+      borderSide: BorderSide(color: ColorsManager.primaryColor.withOpacity(0.5)),
       borderRadius: BorderRadius.circular(100),
     ),
     focusedBorder: OutlineInputBorder(
-      borderSide:
-          BorderSide(color: ColorsManager.primaryColor.withOpacity(0.5)),
+      borderSide: BorderSide(color: ColorsManager.primaryColor.withOpacity(0.5)),
       borderRadius: BorderRadius.circular(100),
     ),
   );
 }
 
 // created by Marwan for filtering
-InputDecoration formInputStyle(
-    {required String label, required String hintText , required VoidCallback onPressed , required TextEditingController controller}) {
+InputDecoration formInputStyle({required String label, required String hintText, required VoidCallback onPressed, required TextEditingController controller}) {
   return InputDecoration(
-    suffixIcon:controller.text.isNotEmpty ? IconButton(onPressed: onPressed, icon: Icon(Icons.clear_rounded , color: ColorsManager.redColor,),) : null,
+    suffixIcon: controller.text.isNotEmpty
+        ? IconButton(
+            onPressed: onPressed,
+            icon: Icon(
+              Icons.clear_rounded,
+              color: ColorsManager.redColor,
+            ),
+          )
+        : null,
     isDense: true,
     hintText: hintText,
     hintStyle: TextStyles.inter16RegularBlack.copyWith(color: Colors.grey),
