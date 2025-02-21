@@ -2,6 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:social_media/core/helper/format_time_ago.dart';
 import 'package:social_media/features/posts/data/model/entities/commentEntity.dart';
 import 'package:social_media/core/shared/model/post_response.dart';
+import 'package:social_media/features/posts/presentation/postDetails/presentation/logic/post_details_cubit.dart';
 
 part 'Comments_response.g.dart';
 
@@ -26,12 +27,13 @@ class Comment {
   final DateTime createdOn;
   final int numOfLikes;
   final int numOfDisLikes;
-
+  final ReactionType? currentUserReaction;
   Comment({
     required this.id,
     required this.content,
     required this.createdBy,
     required this.createdOn,
+    required this.currentUserReaction,
     required this.numOfLikes,
     required this.numOfDisLikes,
   });
@@ -49,6 +51,7 @@ class Comment {
         createdBy: createdBy.toEntity(),
         createdOn: createdOn,
         FormattedDate: FormattedDate,
+        currentUserReaction: currentUserReaction,
         numOfLikes: numOfLikes,
         numOfDisLikes: numOfDisLikes
     );

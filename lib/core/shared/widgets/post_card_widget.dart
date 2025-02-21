@@ -38,6 +38,7 @@ class _PostCardWidgetState extends State<PostCardWidget> with SingleTickerProvid
     return SlideTransitionWidget(
       child: InkWell(
         onTap: () {
+          print(widget.post.id);
           PostDetailsCubit.setSelectedPost(widget.post.id);
           context.pushNamed(
             Routes.postDetailsScreen,
@@ -104,7 +105,7 @@ class _PostCardWidgetState extends State<PostCardWidget> with SingleTickerProvid
                     Expanded(
                       child: Text(
                         widget.post.createdBy.fullName,
-                        style: TextStyles.inter14BoldBlue.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.04, color: ColorsManager.primaryColorBold.withOpacity(0.7)),
+                        style: TextStyles.inter14BoldBlue.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.04, color: ColorsManager.primaryColorBold.withOpacity(0.8)),
                       ),
                     ),
                     Text(
@@ -118,7 +119,7 @@ class _PostCardWidgetState extends State<PostCardWidget> with SingleTickerProvid
                   widget.post.content,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.justify,
+                  textAlign: TextAlign.start,
                   softWrap: true,
                   style: TextStyles.inter18RegularWithOpacity.copyWith(fontSize: widget.deviceInfo.screenWidth * 0.04),
                 ),

@@ -128,28 +128,31 @@ InputDecoration formInputStyle({required String label, required String hintText,
         : null,
     isDense: true,
     hintText: hintText,
-    hintStyle: TextStyles.inter16RegularBlack.copyWith(color: Colors.grey),
+    hintStyle: TextStyles.inter16RegularBlack.copyWith(color: Colors.grey[500],fontWeight: FontWeight.w500),
     contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-    floatingLabelAlignment: FloatingLabelAlignment.start,
-    floatingLabelBehavior: FloatingLabelBehavior.always,
-    alignLabelWithHint: false,
+    // floatingLabelAlignment: FloatingLabelAlignment.start,
+    // floatingLabelBehavior: FloatingLabelBehavior.always,
+    // alignLabelWithHint: false,
     label: Text(
       label,
-      style: TextStyles.inter18MediumBlack,
+      style: TextStyles.inter18MediumBlack.copyWith(fontSize: 15),
     ),
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(8),
-      borderSide: BorderSide(
-        color: ColorsManager.primaryColor,
-        width: 1,
-      ),
+      borderSide: BorderSide.none
+
+      // BorderSide(
+      //   color: ColorsManager.primaryColor,
+      //   width: 1,
+      // ),
     ),
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(8),
-      borderSide: BorderSide(
-        color: const Color.fromARGB(255, 1, 14, 27),
-        width: 1,
-      ),
+      // borderSide: BorderSide(
+      //   color: const Color.fromARGB(255, 1, 14, 27),
+      //   width: 1,
+      // ),
+        borderSide: BorderSide.none
     ),
     disabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(8),
@@ -172,6 +175,8 @@ InputDecoration formInputStyle({required String label, required String hintText,
         width: 1,
       ),
     ),
+    filled: true,
+    fillColor: ColorsManager.lightGreyColor,
     errorStyle: TextStyle(height: 1),
   );
 }

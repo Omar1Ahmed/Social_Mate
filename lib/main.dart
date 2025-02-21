@@ -15,27 +15,27 @@ Future<void> main() async {
   await initDependencies();
 
   // Run the app with DevicePreview enabled
-  // runApp(
-  //   BlocProvider(
-  //     create: (context) => getIt<userMainDetailsCubit>(),
-  //     child: MyApp(
-  //       appRouter: AppRouts(),
-  //     ),
-  //   ),
-  // );
-
   runApp(
-    DevicePreview(
-      // Wrap the app with DevicePreview
-      enabled: !bool.fromEnvironment('dart.vm.product'), // Disable in release mode
-      builder: (context) => BlocProvider(
-        create: (context) => getIt<userMainDetailsCubit>(),
-        child: MyApp(
-          appRouter: AppRouts(),
-        ),
+    BlocProvider(
+      create: (context) => getIt<userMainDetailsCubit>(),
+      child: MyApp(
+        appRouter: AppRouts(),
       ),
     ),
   );
+
+  // runApp(
+  //   DevicePreview(
+  //     // Wrap the app with DevicePreview
+  //     enabled: !bool.fromEnvironment('dart.vm.product'), // Disable in release mode
+  //     builder: (context) => BlocProvider(
+  //       create: (context) => getIt<userMainDetailsCubit>(),
+  //       child: MyApp(
+  //         appRouter: AppRouts(),
+  //       ),
+  //     ),
+  //   ),
+  // );
 }
 
 class MyApp extends StatelessWidget {

@@ -43,7 +43,7 @@ class ValidatorHelper {
     // - Starts with 010, 011, 012, or 015
     // - Followed by 8 more digits (making total length 11)
     if (!RegExp(r"^(010|011|012|015)\d{8}$").hasMatch(value)) {
-      return 'Enter a valid 11-digit phone number starting with 010, 011, 012, or 015';
+      return 'Enter a valid 11-digit phone number';
     }
     return null;
   }

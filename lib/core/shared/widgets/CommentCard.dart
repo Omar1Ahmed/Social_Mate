@@ -114,7 +114,7 @@ class CommentCard extends StatelessWidget {
                         context.read<CommentCubit>().giveReaction(context: context,postId: context.read<PostDetailsCubit>().post!.id, reactionType: ReactionType.LIKE);
                       },
                       icon: Icon(
-                        context.read<CommentCubit>().selectedReactionType == ReactionType.LIKE ? Icons.thumb_up_alt_rounded :
+                        comment.currentUserReaction == ReactionType.LIKE ? Icons.thumb_up_alt_rounded :
                         Icons.thumb_up_alt_outlined,
                         color: ColorsManager.primaryColor,
                         size: info.screenWidth * 0.06,
@@ -131,7 +131,7 @@ class CommentCard extends StatelessWidget {
 
                         },
                       icon: Icon(
-                        context.read<CommentCubit>().selectedReactionType == ReactionType.DIS_LIKE ? Icons.thumb_down_alt_rounded :
+                        comment.currentUserReaction == ReactionType.DIS_LIKE ? Icons.thumb_down_alt_rounded :
                         Icons.thumb_down_alt_outlined,
                         color: ColorsManager.redColor,
                         size: info.screenWidth * 0.06,

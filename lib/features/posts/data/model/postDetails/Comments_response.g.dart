@@ -23,6 +23,8 @@ Comment _$CommentFromJson(Map<String, dynamic> json) => Comment(
       content: json['content'] as String,
       createdBy: User.fromJson(json['createdBy'] as Map<String, dynamic>),
       createdOn: DateTime.parse(json['createdOn'] as String),
+      currentUserReaction: $enumDecodeNullable(
+          _$ReactionTypeEnumMap, json['currentUserReaction']),
       numOfLikes: (json['numOfLikes'] as num).toInt(),
       numOfDisLikes: (json['numOfDisLikes'] as num).toInt(),
     );
@@ -34,4 +36,11 @@ Map<String, dynamic> _$CommentToJson(Comment instance) => <String, dynamic>{
       'createdOn': instance.createdOn.toIso8601String(),
       'numOfLikes': instance.numOfLikes,
       'numOfDisLikes': instance.numOfDisLikes,
+      'currentUserReaction':
+          _$ReactionTypeEnumMap[instance.currentUserReaction],
     };
+
+const _$ReactionTypeEnumMap = {
+  ReactionType.LIKE: 'LIKE',
+  ReactionType.DIS_LIKE: 'DIS_LIKE',
+};

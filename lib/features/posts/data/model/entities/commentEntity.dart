@@ -1,4 +1,5 @@
 import 'package:social_media/core/shared/entities/post_entity.dart';
+import 'package:social_media/features/posts/presentation/postDetails/presentation/logic/post_details_cubit.dart';
 
 class CommentEntity {
   final int id;
@@ -6,6 +7,7 @@ class CommentEntity {
   final UserEntity createdBy;
   final DateTime createdOn;
   final String FormattedDate;
+  ReactionType? currentUserReaction;
   int numOfLikes;
   int numOfDisLikes;
 
@@ -15,6 +17,7 @@ class CommentEntity {
     required this.createdBy,
     required this.createdOn,
     required this.FormattedDate,
+    required this.currentUserReaction,
     required this.numOfLikes,
     required this.numOfDisLikes
   });

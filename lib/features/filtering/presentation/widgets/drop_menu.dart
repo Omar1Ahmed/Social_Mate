@@ -40,7 +40,8 @@ class DropMenu extends StatelessWidget {
               ),
               clipBehavior: Clip.antiAlias,
               decoration: BoxDecoration(
-                border: Border.all(color: ColorsManager.blackColor, width: 1),
+                color: ColorsManager.lightGreyColor,
+                border: Border.all(color: ColorsManager.blackColor, width: 0.3),
                 borderRadius: BorderRadius.circular(screenWidth * 0.02),
               ),
               child: DropdownButton<String>(
@@ -69,14 +70,11 @@ class DropMenu extends StatelessWidget {
                 ),
                 dropdownColor: Colors.white,
                 borderRadius: BorderRadius.circular(16),
-                underline: Container(
-                  height: 2,
-                  color: Colors.black,
-                ),
+                underline: Container(),
                 menuMaxHeight: screenHeight * 0.2,
               ),
             ),
-            if (field.hasError)
+
               Text(
                 field.errorText ?? '',
                 style: TextStyle(color: Colors.red, fontSize: 12),

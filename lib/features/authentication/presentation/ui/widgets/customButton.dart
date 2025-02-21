@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
 
 class CustomButton extends StatelessWidget {
-  final String text;
+  final Widget childWidget;
   final VoidCallback onPressed;
 
-  const CustomButton({super.key, required this.text, required this.onPressed});
+  const CustomButton({super.key, required this.childWidget, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +17,7 @@ class CustomButton extends StatelessWidget {
 
 
         ),
-        child: Text(text, style:  TextStyle(color: Colors.white,fontSize: info.screenWidth * 0.04, fontWeight: FontWeight.bold)),
+        child: childWidget);}
       );
-    });
+    }
   }
-}

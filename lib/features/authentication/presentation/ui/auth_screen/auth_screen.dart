@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
+import 'package:social_media/core/helper/FormValidator/Validator.dart';
+import 'package:social_media/core/shared/widgets/cherryToast/CherryToastMsgs.dart';
 import 'package:social_media/core/userMainDetails/userMainDetails_cubit.dart';
 import 'package:social_media/features/authentication/presentation/logic/auth_cubit.dart';
 import 'package:social_media/features/authentication/presentation/logic/auth_state.dart';
@@ -33,6 +35,7 @@ class _AuthScreenState extends State<AuthScreen> {
             Navigator.pushReplacementNamed(context, Routes.homePage);
           }
         }
+
         if (state is AuthRegisterSuccessState) {
           CherryToast.success(
             title: Text(
@@ -54,6 +57,11 @@ class _AuthScreenState extends State<AuthScreen> {
 
           context.read<AuthCubit>().toggleAuth();
         }
+
+        if (state is AuthLogInErrorState){
+          CherryToastMsgs.CherryToastError(info: info, context: context, title: 'Sign In Failed', description: state.message);
+        }
+
       }, builder: (context, state) {
         return Scaffold(
           body: SingleChildScrollView(
@@ -69,7 +77,9 @@ class _AuthScreenState extends State<AuthScreen> {
                     onToggle: () => context.read<AuthCubit>().toggleAuth(),
                   ),
                   Container(
-                    height: info.screenHeight * 0.47,
+                    constraints: BoxConstraints(
+                      minHeight: info.screenHeight * 0.47,
+                    ),
                     margin: EdgeInsetsDirectional.only(top: info.screenHeight * 0.016),
                     child: Column(children: [
                       context.read<AuthCubit>().IsSignIn ? SignInForm() : SignUpForm(),
@@ -78,9 +88,10 @@ class _AuthScreenState extends State<AuthScreen> {
                   SizedBox(
                     width: info.screenWidth * 0.6,
                     child: CustomButton(
-                        text: "Join Now",
+                        childWidget: state is AuthLoadingState ? CircularProgressIndicator(color: Colors.white) : Text(context.read<AuthCubit>().IsSignIn ? "Login" : "Join Now", style:  TextStyle(color: Colors.white,fontSize: info.screenWidth * 0.04, fontWeight: FontWeight.bold)),
                         onPressed: () async {
                           if (context.read<AuthCubit>().IsSignIn) {
+
                             context.read<AuthCubit>().logIn(
                                   context,
                                 );
@@ -89,13 +100,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           }
                         }),
                   ),
-                  if (state is AuthLogInErrorState)
-                    Container(
-                        margin: EdgeInsetsDirectional.only(top: info.screenHeight * 0.02),
-                        child: Text(
-                          state.message,
-                          style: TextStyle(color: Colors.red, fontSize: info.screenWidth * 0.04),
-                        )),
+
                 ],
               ),
             ),

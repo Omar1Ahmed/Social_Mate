@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
+import 'package:social_media/core/helper/FormValidator/Validator.dart';
 import 'package:social_media/features/authentication/presentation/logic/auth_cubit.dart';
 import '../widgets/customTextField.dart';
 
@@ -11,6 +12,11 @@ class SignUpForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    String? retypePasswordValidator(String? value) {
+      return ValidatorHelper.isPasswordConfirmed(context.read<AuthCubit>().passController.text, value);
+    }
+
     return InfoWidget(builder: (context, info) {
       return Column(
         spacing: info.screenHeight * 0.016,
@@ -19,27 +25,42 @@ class SignUpForm extends StatelessWidget {
             label: "First Name",
             hintText: "Omar",
             controller: context.read<AuthCubit>().firstNameController,
+            formValidator: ValidatorHelper.isNotEmpty,
+
           ),
           CustomTextField(
             label: "Last Name",
             hintText: "Ahmed",
             controller: context.read<AuthCubit>().lastNameController,
+            formValidator: ValidatorHelper.isNotEmpty,
           ),
           CustomTextField(
             label: "Email",
             hintText: "user123@example.com",
             controller: context.read<AuthCubit>().emailController,
+            formValidator: ValidatorHelper.combineValidators([
+              ValidatorHelper.isNotEmpty,
+              ValidatorHelper.isValidEmail,
+            ]),
           ),
           CustomTextField(
             label: "Phone",
             hintText: "01234567898",
             controller: context.read<AuthCubit>().phoneController,
+            formValidator: ValidatorHelper.combineValidators([
+              ValidatorHelper.isNotEmpty,
+              ValidatorHelper.isValidPhone,
+            ]),
           ),
           CustomTextField(
             label: "Password",
             hintText: "********",
             isPassword: true,
             controller: context.read<AuthCubit>().passController,
+            formValidator: ValidatorHelper.combineValidators([
+              ValidatorHelper.isNotEmpty,
+              ValidatorHelper.isValidPassword,
+            ]),
           ),
           Row(
             children: [
@@ -50,6 +71,10 @@ class SignUpForm extends StatelessWidget {
                   hintText: "********",
                   isPassword: true,
                   controller: context.read<AuthCubit>().retypePassController,
+                  formValidator: ValidatorHelper.combineValidators([
+                    ValidatorHelper.isNotEmpty,
+                    retypePasswordValidator,
+                  ]),
                 ),
               ),
               Container(
@@ -95,9 +120,13 @@ class SignUpForm extends StatelessWidget {
                 ),
               )
             ],
-          )
+          ),
+
+          SizedBox(height: info.screenHeight * 0.00001),
         ],
       );
     });
+
+
   }
 }

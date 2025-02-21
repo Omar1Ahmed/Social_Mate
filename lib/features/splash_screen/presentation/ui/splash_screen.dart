@@ -15,7 +15,7 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), ()  {
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) {
@@ -61,15 +61,29 @@ class SplashScreen extends StatelessWidget {
 
     return InfoWidget(builder: (context, deviceInfo) {
       return Scaffold(
-        body: Center(
+        body: Container(
+          color: Colors.white,
+          padding: EdgeInsetsDirectional.only(top: deviceInfo.screenHeight * 0.2),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+
+              Image.asset(
+                'assets/images/splash_screen.png',
+                width: deviceInfo.screenWidth ,
+                height: deviceInfo.screenHeight * 0.44,
+              ),
+
+              Image.asset(
+                'assets/images/fullLogo.png',
+                width: deviceInfo.screenWidth * 0.65 ,
+                height: deviceInfo.screenHeight * 0.1,
+              ),
+
+              SizedBox(height: deviceInfo.screenHeight * 0.14),
               Image.asset(
                 'assets/images/ZagSystemsLogo.png',
-                width: deviceInfo.screenWidth * 0.7,
-                height: deviceInfo.screenHeight * 0.4,
+                width: deviceInfo.screenWidth * 0.62,
+                height: deviceInfo.screenHeight * 0.1,
               ),
             ],
           ),

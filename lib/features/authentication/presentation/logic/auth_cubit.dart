@@ -30,7 +30,7 @@ class AuthCubit extends Cubit<AuthState> {
   String _selectedGender = 'Male';
 
   bool _isRememberMe = false;
-  bool _IsSignIn = true;
+  static bool _IsSignIn = true;
 
   bool get isRememberMe => _isRememberMe;
 
@@ -79,15 +79,6 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> logIn(BuildContext context) async {
 
-    if (emailController.text.isEmpty && passController.text.isEmpty) {
-      emit(AuthLogInErrorState(message: "Please enter required fields"));
-      return;
-    }
-    if (isValidEmail(emailController.text) == false) {
-      emit(AuthLogInErrorState(message: "Please enter valid email"));
-      return;
-    }
-
     if (state is AuthLoadingState) return;
     emit(AuthLoadingState());
     try {
@@ -131,34 +122,7 @@ class AuthCubit extends Cubit<AuthState> {
 
     if (state is AuthLoadingState) return;
 
-    if (firstNameController.text.isEmpty &&
-        lastNameController.text.isEmpty &&
-        emailController.text.isEmpty &&
-        passController.text.isEmpty &&
-        retypePassController.text.isEmpty) {
-      emit(AuthLogInErrorState(message: "Please enter required fields"));
-      return;
-    }
 
-    if (isValidEmail(emailController.text) == false) {
-      emit(AuthLogInErrorState(message: "Please enter valid email"));
-      return;
-    }
-
-    if (int.tryParse(phoneController.text) == null &&
-        phoneController.text.length != 11 &&
-        !phoneController.text.startsWith('010') &&
-        !phoneController.text.startsWith('011') &&
-        !phoneController.text.startsWith('012') &&
-        !phoneController.text.startsWith('015')) {
-      emit(AuthLogInErrorState(message: "Please enter valid phone number"));
-      return;
-    }
-
-    if (passController.text != retypePassController.text) {
-      emit(AuthLogInErrorState(message: "Password doesn't match"));
-      return;
-    }
 
     emit(AuthLoadingState());
     try {

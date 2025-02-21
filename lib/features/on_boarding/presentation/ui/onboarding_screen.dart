@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
+import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/helper/extantions.dart';
 import 'package:social_media/core/routing/routs.dart';
 import 'package:social_media/core/theming/colors.dart';
+import 'package:social_media/features/authentication/presentation/logic/auth_cubit.dart';
 import 'package:social_media/features/authentication/presentation/ui/widgets/bottom_buttons.dart';
 import 'package:social_media/features/on_boarding/presentation/logic/on_boarding_cubit.dart';
 import 'on_board_content.dart';
@@ -43,6 +45,7 @@ class OnboardingScreen extends StatelessWidget {
       context.read<OnboardingCubit>().updatePage(currentIndex + 1);
     } else {
       // Navigate to another screen
+      AuthCubit(getIt()).IsSignIn = false;
       context.pushReplacementNamed(Routes.AuthScreen);
     }
   }

@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:social_media/core/Responsive/Models/device_info.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
 import 'package:social_media/core/helper/extantions.dart';
 import 'package:social_media/core/shared/widgets/header_widget.dart';
+import 'package:social_media/core/theming/styles.dart';
 import 'package:social_media/features/admin/presentation/Filter/logic/report_filter_cubit.dart';
 import 'package:social_media/features/admin/presentation/all_reports/ui/widgets/main_report_card.dart';
+import 'package:social_media/features/filtering/presentation/widgets/form_text_input.dart';
+import 'package:social_media/features/filtering/presentation/widgets/helper_functions/date_picker_helper.dart';
+import 'package:social_media/features/filtering/presentation/widgets/helper_functions/form_field_validator.dart';
 
 import '../../../../../core/theming/colors.dart';
 
@@ -19,6 +24,12 @@ class _reportsFilterScreenState extends State<reportsFilterScreen> {
   final DateFormat _dateFormat = DateFormat('yyyy-MM-dd'); // Date format
   TextEditingController fromDateController = TextEditingController();
   TextEditingController toDateController = TextEditingController();
+
+  final FocusNode fromDateNode = FocusNode();
+  final FocusNode toDateNode = FocusNode();
+
+  final DateTime firstDate = DateTime(2021, 1, 1);
+  final DateTime lastDate = DateTime(2026, 1, 1);
 
   @override
   void initState() {
@@ -45,7 +56,11 @@ class _reportsFilterScreenState extends State<reportsFilterScreen> {
     return InfoWidget(builder: (context, info) {
       return SafeArea(
           child: BlocConsumer<ReportFilterCubit, ReportFilterState>(
-              listener: (context, state) {},
+              listener: (context, state) {
+                if(state is ReportFilterloaded){
+                  _isExpanded = false;
+                }
+              },
               builder: (context, state) {
                 var reports = context.watch<ReportFilterCubit>().reports ?? [];
                 var cubit = context.read<ReportFilterCubit>();
@@ -66,7 +81,7 @@ class _reportsFilterScreenState extends State<reportsFilterScreen> {
                       alignment: AlignmentDirectional.centerStart,
                       padding: EdgeInsetsDirectional.only(start: info.screenWidth * 0.05),
                       child: Text(
-                        'Filter Reports',
+                        'Post Reports',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: info.screenWidth * 0.05,
@@ -76,22 +91,31 @@ class _reportsFilterScreenState extends State<reportsFilterScreen> {
                     ),
                     Container(
                       margin: EdgeInsetsDirectional.only(top: info.screenHeight * 0.01),
-                      width: info.screenWidth * 0.85,
-                      clipBehavior: Clip.antiAlias,
+                      padding: EdgeInsets.all(info.screenWidth * 0.021),
+                      width: info.screenWidth * 0.87,
+                      clipBehavior: Clip.hardEdge,
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(info.screenWidth * 0.05),
-                        boxShadow: [
+                        boxShadow: <BoxShadow>[
                           BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: info.screenWidth * 0.01,
-                            blurRadius: info.screenWidth * 0.01,
-                            offset: const Offset(0, 3),
+                            color: Colors.black12,
+                            offset: Offset(0, 2),
+                            blurRadius: info.screenWidth * 0.02,
+                            spreadRadius: info.screenWidth * 0.015,
                           ),
                         ],
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(info.screenWidth * 0.08),
+                        border: Border.all(
+                          color: ColorsManager.primaryColor,
+                          width: info.screenWidth * 0.0015,
+                        ),
                       ),
+
                       child: ExpansionPanelList(
+
+                        elevation: 0,
                         expandedHeaderPadding: EdgeInsets.all(info.screenWidth * 0.01),
+                        expandIconColor: ColorsManager.primaryColor,
                         expansionCallback: (panelIndex, isExpanded) {
                           setState(() {
                             _isExpanded = !_isExpanded;
@@ -101,83 +125,52 @@ class _reportsFilterScreenState extends State<reportsFilterScreen> {
                           ExpansionPanel(
                             backgroundColor: Colors.white,
                             isExpanded: _isExpanded,
+                            canTapOnHeader: true,
+
                             headerBuilder: (context, isExpanded) {
                               return ListTile(
                                 title: Text('Filter Options', style: TextStyle(fontWeight: FontWeight.bold)),
                               );
                             },
-                            body: Padding(
+                            body: Container(
+
                               padding: EdgeInsetsDirectional.only(start: info.screenWidth * 0.05, end: info.screenWidth * 0.04, top: info.screenHeight * 0.01, bottom: info.screenHeight * 0.01),
                               child: Column(
                                 children: [
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Expanded(
-                                        child: DropdownButton<int>(
-                                          isExpanded: true,
-                                          value: cubit.statusId,
-                                          hint: Text('Status'),
-                                          onChanged: (value) {
-                                            setState(() => cubit.statusId = value);
-                                          },
-                                          items: [
-                                            DropdownMenuItem(value: 1, child: Text('Pending')),
-                                            DropdownMenuItem(value: 2, child: Text('Approved')),
-                                            DropdownMenuItem(value: 3, child: Text('Cascaded Approval')),
-                                            DropdownMenuItem(value: 4, child: Text('Rejected')),
-                                          ],
-                                        ),
+
+
+                                      DropMenuWidget(
+                                        info: info,
+                                        onChange: (value) {
+                                          setState(() => cubit.statusId = value);
+
+                                        },
+                                        value: cubit.statusId,
+                                        itemsList: [
+                                          DropdownMenuItem(value: 1, child: Text('Pending')),
+                                          DropdownMenuItem(value: 2, child: Text('Approved')),
+                                          DropdownMenuItem(value: 3, child: Text('Cascaded Approval')),
+                                          DropdownMenuItem(value: 4, child: Text('Rejected')),
+                                        ],
+                                        hintText: 'Status',
                                       ),
-                                      Expanded(
-                                        // width: info.screenWidth * 0.4,
-                                        child: DropdownButton<int>(
-                                          value: cubit.categoryId,
-                                          isExpanded: true,
-                                          hint: Text('Category'),
-                                          onChanged: (value) {
+
+                                      DropMenuWidget(
+                                        info: info,
+                                        onChange: (value) {
                                             setState(() => cubit.categoryId = value);
-                                          },
-                                          items: [
-                                            DropdownMenuItem(value: 1, child: Text('Spam')),
-                                            DropdownMenuItem(value: 2, child: Text('Copyright Violation')),
-                                            DropdownMenuItem(value: 3, child: Text('False Information')),
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(height: info.screenHeight * 0.01),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      SizedBox(
-                                        width: info.screenWidth * 0.3,
-                                        child: TextField(
-                                          controller: fromDateController,
-                                          decoration: InputDecoration(
-                                            labelText: 'From Date',
-                                            suffixIcon: IconButton(
-                                              icon: Icon(Icons.calendar_today),
-                                              onPressed: () => _selectDate(context, fromDateController),
-                                            ),
-                                          ),
-                                          readOnly: true,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: info.screenWidth * 0.3,
-                                        child: TextField(
-                                          controller: toDateController,
-                                          decoration: InputDecoration(
-                                            labelText: 'To Date',
-                                            suffixIcon: IconButton(
-                                              icon: Icon(Icons.calendar_today),
-                                              onPressed: () => _selectDate(context, toDateController),
-                                            ),
-                                          ),
-                                          readOnly: true,
-                                        ),
+
+                                        },
+                                        value: cubit.categoryId,
+                                        itemsList: [
+                                          DropdownMenuItem(value: 1, child: Text('Spam')),
+                                          DropdownMenuItem(value: 2, child: Text('Copyright Violation')),
+                                          DropdownMenuItem(value: 3, child: Text('False Information')),
+                                        ],
+                                        hintText: 'Category',
                                       ),
                                     ],
                                   ),
@@ -185,37 +178,98 @@ class _reportsFilterScreenState extends State<reportsFilterScreen> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
+                                      // SizedBox(
+                                      //   width: info.screenWidth * 0.3,
+                                      //   child: TextField(
+                                      //     controller: fromDateController,
+                                      //     decoration: InputDecoration(
+                                      //       labelText: 'From Date',
+                                      //       suffixIcon: IconButton(
+                                      //         icon: Icon(Icons.calendar_today),
+                                      //         onPressed: () => _selectDate(context, fromDateController),
+                                      //       ),
+                                      //     ),
+                                      //     readOnly: true,
+                                      //   ),
+                                      // ),
+
                                       Expanded(
-                                        child: DropdownButton<String>(
-                                          isExpanded: true,
-                                          value: cubit.orderBy,
-                                          hint: Text('Order By'),
-                                          onChanged: (value) {
-                                            setState(() => cubit.orderBy = value.toString());
-                                          },
-                                          items: [
-                                            DropdownMenuItem(value: 'REPORT_CATEGORY', child: Text('Report Category')),
-                                            DropdownMenuItem(value: 'REPORT_STATUS', child: Text('Report Status')),
-                                            DropdownMenuItem(value: 'CREATION_DATE', child: Text('Creation Date')),
-                                          ],
-                                        ),
+                                          child: FormTextInput(
+                                            controller: fromDateController,
+                                            label: 'From Date',
+                                            hintText: 'From Date',
+                                            screenWidth: info.screenWidth,
+                                            screenHeight: info.screenHeight,
+                                            focusNode: fromDateNode,
+                                            canRequestFucos: false,
+                                            onTap: () => _selectDate(context, fromDateController),
+                                              validator: (value) {
+                                                return validateDateRange(
+                                                    fromDateController,
+                                                    toDateController);
+                                              }
+                                          )),
+
+                                      SizedBox(width: info.screenWidth * 0.02),
+
+                                      Expanded(
+                                          child: FormTextInput(
+                                              controller: toDateController,
+                                              label: 'To Date',
+                                              hintText: 'To Date',
+                                              screenWidth: info.screenWidth,
+                                              screenHeight: info.screenHeight,
+                                              focusNode: toDateNode,
+                                              canRequestFucos: false,
+                                              onTap: () => _selectDate(context, toDateController),
+                                              validator: (value) {
+                                                return validateDateRange(
+                                                    fromDateController,
+                                                    toDateController);
+                                              }
+                                          )),
+                                    ],
+                                  ),
+
+
+                                  SizedBox(height: info.screenHeight * 0.01),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+
+                                      DropMenuWidget(
+                                        info: info,
+                                        onChange: (value) {
+                                          setState(() => cubit.orderBy = value.toString());
+                                        },
+                                        value: cubit.orderBy,
+                                        itemsList: [
+                                          DropdownMenuItem(value: 'REPORT_CATEGORY', child: Text('Report Category')),
+                                          DropdownMenuItem(value: 'REPORT_STATUS', child: Text('Report Status')),
+                                          DropdownMenuItem(value: 'CREATION_DATE', child: Text('Creation Date')),
+                                        ],
+                                        hintText: 'Order By',
                                       ),
-                                      Expanded(
-                                        child: DropdownButton<String>(
-                                          isExpanded: true,
-                                          value: cubit.orderDir,
-                                          hint: Text('Order Direction'),
-                                          onChanged: (value) {
-                                            setState(() => cubit.orderDir = value.toString());
-                                          },
-                                          items: [
-                                            DropdownMenuItem(value: 'ASC', child: Text('Ascending')),
-                                            DropdownMenuItem(value: 'DESC', child: Text('Descending')),
-                                          ],
-                                        ),
+
+
+
+                                      DropMenuWidget(
+                                        info: info,
+                                        onChange: (value) {
+                                          setState(() => cubit.orderDir = value.toString());
+                                        },
+                                        value: cubit.orderDir,
+                                        itemsList: [
+                                          DropdownMenuItem(value: 'ASC', child: Text('Ascending')),
+                                          DropdownMenuItem(value: 'DESC', child: Text('Descending')),
+                                        ],
+                                        hintText: 'Order Direction',
                                       ),
                                     ],
                                   ),
+
+                                  SizedBox(height: info.screenHeight * 0.01),
+
                                   ElevatedButton(
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: ColorsManager.primaryColor,
@@ -246,17 +300,20 @@ class _reportsFilterScreenState extends State<reportsFilterScreen> {
                           ? Center(child: Text('No reports available'))
                           : ListView.builder(
                               itemCount: reports.length,
-                              padding: EdgeInsetsDirectional.only(start: info.screenWidth * 0.02, end: info.screenWidth * 0.02),
+                              padding: EdgeInsetsDirectional.only(top: info.screenHeight * 0.01, start: info.screenWidth * 0.02, end: info.screenWidth * 0.02),
                               itemBuilder: (context, index) {
-                                return MainReportCard(
-                                  deviceInfo: info,
-                                  postTitle: reports[index].postTitle,
-                                  reportedBy: reports[index].reportedBy,
-                                  postId: reports[index].postId,
-                                  reportDate: reports[index].reportedOn,
-                                  reportCategory: reports[index].category,
-                                  reportStatus: reports[index].status,
-                                  reportId: reports[index].reportId,
+                                return Container(
+                                  margin: EdgeInsetsDirectional.only(top: info.screenHeight * 0.025),
+                                  child: MainReportCard(
+                                    deviceInfo: info,
+                                    postTitle: reports[index].postTitle,
+                                    reportedBy: reports[index].reportedBy,
+                                    postId: reports[index].postId,
+                                    reportDate: reports[index].reportedOn,
+                                    reportCategory: reports[index].category,
+                                    reportStatus: reports[index].status,
+                                    reportId: reports[index].reportId,
+                                  ),
                                 );
                               },
                             ),
@@ -266,4 +323,38 @@ class _reportsFilterScreenState extends State<reportsFilterScreen> {
               }));
     });
   }
+
+
+}
+
+
+Widget DropMenuWidget({required DeviceInfo info, required Function(dynamic)? onChange, required dynamic value, required List<DropdownMenuItem<dynamic>> itemsList, required String hintText}) {
+  return Container(
+    width: info.screenWidth * 0.35,
+    padding: EdgeInsets.symmetric(
+      horizontal: info.screenWidth * 0.02,
+    ),
+    clipBehavior: Clip.antiAlias,
+    decoration: BoxDecoration(
+      color: ColorsManager.lightGreyColor,
+      border: Border.all(color: ColorsManager.blackColor, width: 0.3),
+      borderRadius: BorderRadius.circular(info.screenWidth * 0.02),
+    ),
+    child: DropdownButton<dynamic>(
+      value: value,
+      isExpanded: true,
+      hint: Text(hintText,
+        style: TextStyles.inter16RegularBlack,
+
+      ),
+      style: TextStyles.inter16RegularBlack,
+      dropdownColor: Colors.white,
+      borderRadius: BorderRadius.circular(info.screenWidth * 0.04),
+
+      onChanged: onChange,
+      items: itemsList,
+      underline: Container(),
+
+    ),
+  );
 }

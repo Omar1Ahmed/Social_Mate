@@ -179,8 +179,16 @@ class _FilteringTileState extends State<FilteringTile> {
         queryParameters: queryParameters,
         token: token!,
       );
+      if(filteringCubit.state is FilteredPostsIsLoaded){
+        print('expandedd');
+        isExpanded = false;
+        setState(() {
+        });
+
+      }
     } else {
     }
+
   }
 
   @override
@@ -197,15 +205,16 @@ class _FilteringTileState extends State<FilteringTile> {
               BoxShadow(
                 color: Colors.black12,
                 offset: Offset(0, 2),
-                blurRadius: 4,
-                spreadRadius: 1,
+                blurRadius: deviceInfo.screenWidth * 0.02,
+                spreadRadius: deviceInfo.screenWidth * 0.015,
               ),
             ],
             color: Colors.white,
             borderRadius: BorderRadius.circular(deviceInfo.screenWidth * 0.04),
+
             border: Border.all(
               color: ColorsManager.primaryColor,
-              width: 1,
+              width: deviceInfo.screenWidth * 0.0015,
             ),
           ),
           child: ExpansionPanelList(
@@ -337,64 +346,77 @@ class _FilteringTileState extends State<FilteringTile> {
                           ),
                         ],
                       ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Sorted By :',
-                            style: TextStyles.inter14Regular,
-                          ),
-                          DropMenu(
-                            selectedValue: sortedByValue,
-                            validator: (value) {
-                              return validateSortedBy(
-                                  sortedByValue, orderedByValue);
-                            },
-                            onSelected: sortedByOnSelected,
-                            menuLabel: 'Sorted By',
-                            sortedByNode: sortedByNode,
-                            menuItemController: sortedByItemController,
-                            screenWidth: deviceInfo.screenWidth,
-                            screenHeight: deviceInfo.screenHeight,
-                            sortedByEntries: [
-                              DropdownMenuEntry(value: 'None', label: 'None'),
-                              DropdownMenuEntry(value: 'TITLE', label: 'Title'),
-                              DropdownMenuEntry(
-                                  value: 'POST_OWNER', label: 'Post Owner'),
-                              DropdownMenuEntry(
-                                  value: 'CREATION_DATE',
-                                  label: 'Creation Date'),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Ordered By :',
-                            style: TextStyles.inter14Regular,
-                          ),
-                          DropMenu(
-                            selectedValue: orderedByValue,
-                            onSelected: orderedByOnSelected,
-                            menuLabel: 'Order Direction',
-                            sortedByNode: orderedByNode,
-                            menuItemController: orderedByItemController,
-                            screenWidth: deviceInfo.screenWidth,
-                            screenHeight: deviceInfo.screenHeight,
-                            sortedByEntries: [
-                              DropdownMenuEntry(value: 'None', label: 'None'),
-                              DropdownMenuEntry(
-                                  value: 'ASC', label: 'Ascending'),
-                              DropdownMenuEntry(
-                                  value: 'DESC', label: 'Descending'),
-                            ],
-                          ),
-                        ],
-                      ),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: deviceInfo.screenWidth * 0.4,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Sorted By :',
+                                    style: TextStyles.inter14Regular,
+                                  ),
+                                  DropMenu(
+                                    selectedValue: sortedByValue,
+                                    validator: (value) {
+                                      return validateSortedBy(
+                                          sortedByValue, orderedByValue);
+                                    },
+                                    onSelected: sortedByOnSelected,
+                                    menuLabel: 'Sorted By',
+                                    sortedByNode: sortedByNode,
+                                    menuItemController: sortedByItemController,
+                                    screenWidth: deviceInfo.screenWidth,
+                                    screenHeight: deviceInfo.screenHeight,
+                                    sortedByEntries: [
+                                      DropdownMenuEntry(value: 'None', label: 'None'),
+                                      DropdownMenuEntry(value: 'TITLE', label: 'Title'),
+                                      DropdownMenuEntry(
+                                          value: 'POST_OWNER', label: 'Post Owner'),
+                                      DropdownMenuEntry(
+                                          value: 'CREATION_DATE',
+                                          label: 'Creation Date'),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                           SizedBox(
+                             width: deviceInfo.screenWidth * 0.4,
+                             child:  Column(
+                               mainAxisAlignment: MainAxisAlignment.center,
+                               crossAxisAlignment: CrossAxisAlignment.start,
+                               children: [
+                                 Text(
+                                   'Ordered By :',
+                                   style: TextStyles.inter14Regular,
+                                 ),
+                                 DropMenu(
+                                   selectedValue: orderedByValue,
+                                   onSelected: orderedByOnSelected,
+                                   menuLabel: 'Order Direction',
+                                   sortedByNode: orderedByNode,
+                                   menuItemController: orderedByItemController,
+                                   screenWidth: deviceInfo.screenWidth,
+                                   screenHeight: deviceInfo.screenHeight,
+                                   sortedByEntries: [
+                                     DropdownMenuEntry(value: 'None', label: 'None'),
+                                     DropdownMenuEntry(
+                                         value: 'ASC', label: 'Ascending'),
+                                     DropdownMenuEntry(
+                                         value: 'DESC', label: 'Descending'),
+                                   ],
+                                 ),
+                               ],
+                             ),
+                           )
+                          ],
+                        ),
+
                       Padding(
                         padding: EdgeInsets.symmetric(
                             vertical: deviceInfo.screenHeight * 0.02),

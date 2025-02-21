@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:social_media/core/Responsive/ui_component/info_widget.dart';
+import 'package:social_media/core/di/di.dart';
 import 'package:social_media/core/helper/extantions.dart';
 import 'package:social_media/core/routing/routs.dart';
 import 'package:social_media/core/theming/colors.dart';
+import 'package:social_media/features/authentication/presentation/logic/auth_cubit.dart';
 
 class BottomButtons extends StatelessWidget {
   final VoidCallback onNext;
@@ -37,7 +39,8 @@ class BottomButtons extends StatelessWidget {
             TextButton(
               onPressed: () {
                 // Navigate to Login
-                context.pushNamed(Routes.AuthScreen);
+                AuthCubit(getIt()).IsSignIn = true;
+                context.pushReplacementNamed(Routes.AuthScreen);
                 
               },
               child: Text(

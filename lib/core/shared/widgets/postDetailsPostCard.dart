@@ -180,7 +180,7 @@ class PostDetailsPostCard extends StatelessWidget {
                       ),
                 Container(
                   width: double.infinity,
-                  padding: EdgeInsetsDirectional.only(start: info.screenWidth * 0.052, end: info.screenWidth * 0.02, bottom: info.screenHeight * 0.01),
+                  padding: EdgeInsetsDirectional.only(start: info.screenWidth * 0.057, end: info.screenWidth * 0.02, bottom: info.screenHeight * 0.01),
                   child:
                       // state is PostDetailsLoading || state is PostDetailsInitial
                       isContentShimmer

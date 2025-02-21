@@ -38,6 +38,7 @@ class _SignInFormState extends State<SignInForm> {
               hintText: "Enter password",
               isPassword: true,
               controller: context.read<AuthCubit>().passController,
+              formValidator: ValidatorHelper.isNotEmpty,
             ),
             SizedBox(
               height: info.screenHeight * 0.01,
