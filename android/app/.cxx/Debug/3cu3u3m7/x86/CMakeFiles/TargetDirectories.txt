@@ -1,0 +1,2 @@
+C:/Users/T3MIA/Documents/GitHub/sm-mobile/android/app/.cxx/Debug/3cu3u3m7/x86/CMakeFiles/edit_cache.dir
+C:/Users/T3MIA/Documents/GitHub/sm-mobile/android/app/.cxx/Debug/3cu3u3m7/x86/CMakeFiles/rebuild_cache.dir

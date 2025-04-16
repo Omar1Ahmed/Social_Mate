@@ -9,7 +9,10 @@
 # packages, and plugins designed to encourage good coding practices.
 analyzer:
   errors:
+    camel_case_types: ignore
     deprecated_member_use: ignore
+    file_names: ignore
+    unnecessary_null_in_if_null_operators: ignore
 include: package:flutter_lints/flutter.yaml
 
 linter:
