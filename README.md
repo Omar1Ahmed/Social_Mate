@@ -76,11 +76,11 @@ This structure aligns with Clean Architecture by keeping feature code self-conta
 
 **Feature Implementers**
 
-- `admin` — Implemented by: Abdullah-T3 <eng.abdullahahmed59@gmail.com>
-- `authentication` — Implemented by: MetoIsTheKing <achrafmarwan76@gmail.com>
-- `filtering` — Implemented by: Omar <omarahmed2012006phone@gmail.com>
-- `on_boarding` — Implemented by: Abdullah-T3 <eng.abdullahahmed59@gmail.com>
-- `posts` — Implemented by: Abdullah-T3 <eng.abdullahahmed59@gmail.com>
-- `post_details ` — Implemented by: Omar <omarahmed2012006phone@gmail.com>
-- `comments` — Implemented by: Omar <omarahmed2012006phone@gmail.com>
+- `admin` — Implemented by: Abdullah-T3
+- `authentication` — Implemented by: MetoIsTheKing
+- `filtering` — Implemented by: Omar 
+- `on_boarding` — Implemented by: Abdullah-T3
+- `posts` — Implemented by: Abdullah-T3 
+- `post_details ` — Implemented by: Omar
+- `comments` — Implemented by: Omar 
 
